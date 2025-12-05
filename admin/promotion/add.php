@@ -40,10 +40,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $image_url = '/uploads/banners/' . $filename;
                 
                 $stmt = $pdo->prepare("
-                    INSERT INTO banners (title, subtitle, image_url, link_url, display_order, is_active)
-                    VALUES (?, ?, ?, ?, ?, ?)
+                    INSERT INTO banners (title, subtitle, banner_type, image_url, link_url, cta_text, display_order, is_active)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 ");
-                $stmt->execute([$title, $subtitle, $image_url, $link_url, $display_order, $is_active]);
+                $stmt->execute([$title, $subtitle, $banner_type, $image_url, $link_url, $cta_text, $display_order, $is_active]);
                 
                 $_SESSION['success'] = 'Banner added successfully!';
                 redirect('/admin/promotion/index.php');
