@@ -656,4 +656,123 @@ function formatNumber(num) {
 }
 </script>
 
+<!-- Complete Order & Review Functions -->
+<script>
+// Complete Order Function
+async function completeOrder(orderId) {
+    if (!confirm('Konfirmasi bahwa Anda sudah menerima pesanan ini?')) {
+        return;
+    }
+    
+    const btn = document.getElementById('completeBtn' + orderId);
+    btn.disabled = true;
+    btn.textContent = '⏳ Processing...';
+    
+    try {
+        const formData = new FormData();
+        formData.append('order_id', orderId);
+        
+        const response = await fetch('/api/orders/complete-order.php', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // Show success modal
+            showCompleteSuccessModal(orderId);
+        } else {
+            alert('Error: ' + result.message);
+            btn.disabled = false;
+            btn.textContent = '✅ Terima Pesanan';
+        }
+    } catch (error) {
+        alert('Terjadi kesalahan. Silakan coba lagi.');
+        btn.disabled = false;
+        btn.textContent = '✅ Terima Pesanan';
+    }
+}
+
+function showCompleteSuccessModal(orderId) {
+    const modal = document.createElement('div');
+    modal.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 9999;';
+    modal.innerHTML = `
+        <div style="background: white; border-radius: 20px; padding: 48px; max-width: 500px; text-align: center;">
+            <div style="font-size: 64px; margin-bottom: 16px;">✅</div>
+            <h2 style="font-size: 28px; margin-bottom: 16px;">Pesanan Diterima!</h2>
+            <p style="color: #6B7280; margin-bottom: 24px;">
+                Terima kasih! Pesanan Anda telah ditandai sebagai diterima.<br>
+                Bagaimana pengalaman Anda dengan produk kami?
+            </p>
+            <div style="display: flex; gap: 12px;">
+                <button onclick="window.location.href=window.location.href" style="flex: 1; padding: 14px; background: #6B7280; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                    Nanti Saja
+                </button>
+                <button onclick="showReviewOptions(${orderId})" style="flex: 1; padding: 14px; background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%); color: #92400E; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                    ⭐ Tulis Review Sekarang
+                </button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+// Show Review Options Function
+async function showReviewOptions(orderId) {
+    // Close any existing modals
+    document.querySelectorAll('.review-modal').forEach(m => m.remove());
+    
+    try {
+        const response = await fetch(`/api/orders/get-reviewable-items.php?order_id=${orderId}`);
+        const result = await response.json();
+        
+        if (!result.success || !result.items || result.items.length === 0) {
+            alert('Tidak ada produk yang bisa direview.');
+            return;
+        }
+        
+        const items = result.items;
+        
+        const modal = document.createElement('div');
+        modal.className = 'review-modal';
+        modal.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 9999; overflow-y: auto;';
+        
+        let itemsHtml = '';
+        items.forEach(item => {
+            itemsHtml += `
+                <div style="display: flex; gap: 16px; padding: 20px; background: #F9FAFB; border-radius: 12px; margin-bottom: 12px; align-items: center;">
+                    <img src="/uploads/products/${item.product_image}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;" alt="${item.product_name}">
+                    <div style="flex: 1;">
+                        <h4 style="margin-bottom: 4px;">${item.product_name}</h4>
+                        <p style="font-size: 13px; color: #6B7280;">Qty: ${item.quantity}</p>
+                    </div>
+                    <a href="/member/write-review.php?order_id=${orderId}&product_id=${item.product_id}" 
+                       style="padding: 10px 20px; background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px;">
+                        ✍️ Review
+                    </a>
+                </div>
+            `;
+        });
+        
+        modal.innerHTML = `
+            <div style="background: white; border-radius: 20px; padding: 32px; max-width: 600px; width: 90%;">
+                <h2 style="font-size: 24px; margin-bottom: 24px; text-align: center;">⭐ Pilih Produk untuk Direview</h2>
+                <div style="max-height: 400px; overflow-y: auto;">
+                    ${itemsHtml}
+                </div>
+                <button onclick="this.closest('.review-modal').remove()" 
+                        style="width: 100%; padding: 14px; background: #6B7280; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 16px;">
+                    Tutup
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+    } catch (error) {
+        alert('Terjadi kesalahan. Silakan coba lagi.');
+    }
+}
+</script>
+
 <?php include __DIR__ . '/../includes/footer.php'; ?>
