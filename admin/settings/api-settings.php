@@ -52,8 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ];
 
             foreach ($settings as $key => $value) {
-                $stmt = $pdo->prepare("INSERT INTO settings (setting_key, setting_value) VALUES (?, ?)
-                                      ON DUPLICATE KEY UPDATE setting_value = ?");
+                $stmt = $pdo->prepare("INSERT INTO settings (setting_key, $valueColumn) VALUES (?, ?)
+                                      ON DUPLICATE KEY UPDATE $valueColumn = ?");
                 $stmt->execute([$key, $value, $value]);
             }
 
