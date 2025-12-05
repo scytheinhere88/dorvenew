@@ -195,6 +195,12 @@ include __DIR__ . '/../includes/header.php';
                 <input type="password" name="password" class="form-input" required>
             </div>
 
+            <div style="text-align: right; margin-bottom: 20px;">
+                <a href="/auth/forgot-password.php" style="font-size: 13px; color: var(--charcoal); text-decoration: none;">
+                    Lupa Password?
+                </a>
+            </div>
+
             <button type="submit" class="btn-primary">Login</button>
         </form>
 
