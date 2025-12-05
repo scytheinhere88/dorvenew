@@ -37,6 +37,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($action === 'save_biteship') {
         try {
+            // Check which column name is used
+            $checkStmt = $pdo->query("DESCRIBE settings");
+            $columns = array_column($checkStmt->fetchAll(), 'Field');
+            $valueColumn = in_array('setting_value', $columns) ? 'setting_value' : 'value';
+            
             $settings = [
                 'biteship_enabled' => isset($_POST['biteship_enabled']) ? '1' : '0',
                 'biteship_api_key' => trim($_POST['biteship_api_key'] ?? ''),
