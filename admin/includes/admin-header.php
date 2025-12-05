@@ -78,6 +78,9 @@
                 <a href="/admin/settings/api-settings.php" class="nav-item <?php echo strpos($_SERVER['PHP_SELF'], '/settings/api-settings.php') !== false ? 'active' : ''; ?>">
                     🔌 API & Integrasi
                 </a>
+                <a href="/admin/integration/error-logs.php" class="nav-item <?php echo strpos($_SERVER['PHP_SELF'], '/integration/error-logs.php') !== false ? 'active' : ''; ?>">
+                    📊 Error & Webhook Logs
+                </a>
                 <a href="/admin/pages/index.php" class="nav-item <?php echo strpos($_SERVER['PHP_SELF'], '/pages/') !== false ? 'active' : ''; ?>">
                     📄 Halaman CMS
                 </a>
