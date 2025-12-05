@@ -6,7 +6,7 @@ if (!isAdmin()) redirect('/admin/login.php');
 $total_users = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
 $total_products = $pdo->query("SELECT COUNT(*) FROM products")->fetchColumn();
 $total_orders = $pdo->query("SELECT COUNT(*) FROM orders")->fetchColumn();
-$pending_deposits = $pdo->query("SELECT COUNT(*) FROM wallet_topups WHERE payment_status = 'pending'")->fetchColumn();
+$pending_deposits = $pdo->query("SELECT COUNT(*) FROM topups WHERE status = 'pending'")->fetchColumn();
 $recent_orders = $pdo->query("SELECT o.*, u.name as customer_name FROM orders o JOIN users u ON o.user_id = u.id ORDER BY o.created_at DESC LIMIT 5")->fetchAll();
 
 $page_title = 'Dashboard - Admin';
