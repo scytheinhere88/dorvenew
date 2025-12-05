@@ -1,168 +1,78 @@
 <?php
 /**
- * EMAIL HELPER - Professional Email Templates
- *
- * PRODUCTION READY:
- * - Uses responsive HTML email template
- * - Includes store logo
- * - Professional design
- * - 24-hour token expiry
- *
- * IMPORTANT: For production, use SMTP service like:
- * - SendGrid
- * - Mailgun
- * - AWS SES
- * - Brevo (Sendinblue)
+ * Email Helper Functions
+ * Professional email system for Dorve House
  */
+
+// Email configuration
+define('SMTP_HOST', 'smtp.gmail.com'); // Change based on your email provider
+define('SMTP_PORT', 587);
+define('SMTP_USERNAME', 'your-email@gmail.com'); // Change this
+define('SMTP_PASSWORD', 'your-app-password'); // Change this
+define('FROM_EMAIL', 'noreply@dorve.id');
+define('FROM_NAME', 'Dorve House');
+define('SITE_URL', 'https://dorve.id/');
 
 /**
- * Send verification email with professional template
- *
- * @param string $email User email
- * @param string $name User name
- * @param string $verification_link Full verification URL with token
- * @return bool Success status
+ * Send Email using PHP mail() function
+ * For production, consider using PHPMailer or SendGrid
  */
-function sendVerificationEmail($email, $name, $verification_link) {
-    $subject = '✓ Verifikasi Email Anda - Dorve House';
+function sendEmail($to, $subject, $html_body, $from_name = FROM_NAME, $from_email = FROM_EMAIL) {
+    $headers = "MIME-Version: 1.0" . "\r\n";
+    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+    $headers .= "From: " . $from_name . " <" . $from_email . ">" . "\r\n";
+    $headers .= "Reply-To: " . $from_email . "\r\n";
+    $headers .= "X-Mailer: PHP/" . phpversion();
+    
+    // For production, use PHPMailer or SMTP library
+    // This is a basic implementation
+    return mail($to, $subject, $html_body, $headers);
+}
 
-    // Get logo URL
-    $logo_url = SITE_URL . 'public/images/favicon.png';
-    $site_url = SITE_URL;
-
-    // Build professional HTML email
-    $message = '
+/**
+ * Get Email Template Wrapper
+ */
+function getEmailTemplate($title, $content) {
+    return '
     <!DOCTYPE html>
-    <html lang="id">
+    <html>
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Verifikasi Email - Dorve House</title>
+        <title>' . htmlspecialchars($title) . '</title>
     </head>
-    <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, \'Helvetica Neue\', Arial, sans-serif; background-color: #f8f9fa;">
-        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; padding: 40px 20px;">
+    <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, \'Helvetica Neue\', Arial, sans-serif; background-color: #F3F4F6;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #F3F4F6; padding: 40px 20px;">
             <tr>
                 <td align="center">
-                    <!-- Main Container -->
-                    <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
-
-                        <!-- Header with Logo -->
+                    <table width="600" cellpadding="0" cellspacing="0" style="background-color: #FFFFFF; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                        <!-- Header -->
                         <tr>
-                            <td style="background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%); padding: 40px 30px; text-align: center;">
-                                <img src="' . $logo_url . '" alt="Dorve House" style="width: 60px; height: 60px; margin-bottom: 16px;">
-                                <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: 2px; font-family: \'Playfair Display\', serif;">DORVE HOUSE</h1>
-                                <p style="margin: 8px 0 0 0; color: rgba(255,255,255,0.8); font-size: 14px; letter-spacing: 1px;">PREMIUM FASHION</p>
+                            <td style="background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%); padding: 40px 40px 30px; text-align: center;">
+                                <h1 style="margin: 0; color: #FFFFFF; font-size: 32px; font-weight: 700; letter-spacing: 2px;">DORVE HOUSE</h1>
+                                <p style="margin: 8px 0 0; color: rgba(255,255,255,0.8); font-size: 14px;">Fashion for Everyone</p>
                             </td>
                         </tr>
-
+                        
                         <!-- Content -->
                         <tr>
-                            <td style="padding: 50px 40px;">
-                                <h2 style="margin: 0 0 20px 0; color: #1A1A1A; font-size: 24px; font-weight: 700;">Selamat Datang, ' . htmlspecialchars($name) . '! 👋</h2>
-
-                                <p style="margin: 0 0 16px 0; color: #4B5563; font-size: 15px; line-height: 1.7;">
-                                    Terima kasih telah bergabung dengan <strong>Dorve House</strong>! Kami sangat senang menyambut Anda sebagai bagian dari keluarga fashion kami.
-                                </p>
-
-                                <p style="margin: 0 0 30px 0; color: #4B5563; font-size: 15px; line-height: 1.7;">
-                                    Untuk menyelesaikan registrasi dan mengaktifkan akun Anda, silakan klik tombol verifikasi di bawah ini:
-                                </p>
-
-                                <!-- CTA Button -->
-                                <table width="100%" cellpadding="0" cellspacing="0">
-                                    <tr>
-                                        <td align="center" style="padding: 10px 0 30px 0;">
-                                            <a href="' . $verification_link . '" style="display: inline-block; padding: 16px 48px; background: #1A1A1A; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 15px; letter-spacing: 0.5px;">
-                                                ✓ VERIFIKASI EMAIL SAYA
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </table>
-
-                                <!-- Alternative Link -->
-                                <div style="background-color: #F9FAFB; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
-                                    <p style="margin: 0 0 8px 0; color: #6B7280; font-size: 13px; font-weight: 600;">
-                                        Atau salin link berikut ke browser:
-                                    </p>
-                                    <p style="margin: 0; color: #3B82F6; font-size: 12px; word-break: break-all; line-height: 1.6;">
-                                        ' . $verification_link . '
-                                    </p>
-                                </div>
-
-                                <!-- Warning Box -->
-                                <div style="background-color: #FEF3C7; border-left: 4px solid #F59E0B; padding: 16px 20px; margin-bottom: 30px; border-radius: 4px;">
-                                    <p style="margin: 0; color: #92400E; font-size: 14px; line-height: 1.6;">
-                                        <strong>⏰ Penting:</strong> Link verifikasi ini berlaku selama <strong>24 jam</strong>. Setelah itu Anda perlu meminta link baru.
-                                    </p>
-                                </div>
-
-                                <!-- Benefits -->
-                                <h3 style="margin: 0 0 16px 0; color: #1A1A1A; font-size: 18px; font-weight: 700;">
-                                    Setelah Verifikasi, Anda Akan Mendapatkan:
-                                </h3>
-
-                                <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
-                                    <tr>
-                                        <td style="padding: 10px 0;">
-                                            <span style="color: #10B981; font-size: 18px; margin-right: 8px;">✓</span>
-                                            <span style="color: #4B5563; font-size: 14px;">Akun member aktif & full access</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 10px 0;">
-                                            <span style="color: #10B981; font-size: 18px; margin-right: 8px;">✓</span>
-                                            <span style="color: #4B5563; font-size: 14px;">Referral code untuk ajak teman & dapat komisi</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 10px 0;">
-                                            <span style="color: #10B981; font-size: 18px; margin-right: 8px;">✓</span>
-                                            <span style="color: #4B5563; font-size: 14px;">Wallet & tier system untuk rewards</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 10px 0;">
-                                            <span style="color: #10B981; font-size: 18px; margin-right: 8px;">✓</span>
-                                            <span style="color: #4B5563; font-size: 14px;">Akses belanja produk premium kami</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 10px 0;">
-                                            <span style="color: #10B981; font-size: 18px; margin-right: 8px;">✓</span>
-                                            <span style="color: #4B5563; font-size: 14px;">Notifikasi promo & koleksi terbaru</span>
-                                        </td>
-                                    </tr>
-                                </table>
-
-                                <!-- Divider -->
-                                <hr style="border: none; border-top: 1px solid #E5E7EB; margin: 30px 0;">
-
-                                <!-- Footer Note -->
-                                <p style="margin: 0; color: #9CA3AF; font-size: 13px; line-height: 1.6;">
-                                    Jika Anda tidak mendaftar di Dorve House, abaikan email ini. Akun tidak akan dibuat tanpa verifikasi.
-                                </p>
+                            <td style="padding: 40px;">
+                                ' . $content . '
                             </td>
                         </tr>
-
+                        
                         <!-- Footer -->
                         <tr>
-                            <td style="background-color: #F9FAFB; padding: 30px 40px; text-align: center; border-top: 1px solid #E5E7EB;">
-                                <p style="margin: 0 0 12px 0; color: #6B7280; font-size: 14px; font-weight: 600;">
-                                    Butuh Bantuan?
+                            <td style="background-color: #F9FAFB; padding: 30px 40px; border-top: 1px solid #E5E7EB;">
+                                <p style="margin: 0 0 12px; font-size: 14px; color: #6B7280; text-align: center;">
+                                    Butuh bantuan? <a href="https://dorve.id/pages/contact.php" style="color: #1A1A1A; text-decoration: none; font-weight: 600;">Hubungi Kami</a>
                                 </p>
-                                <p style="margin: 0 0 20px 0; color: #9CA3AF; font-size: 13px;">
-                                    Hubungi kami di <a href="mailto:' . SITE_EMAIL . '" style="color: #3B82F6; text-decoration: none;">' . SITE_EMAIL . '</a>
-                                </p>
-
-                                <p style="margin: 0 0 8px 0; color: #9CA3AF; font-size: 12px;">
-                                    &copy; ' . date('Y') . ' Dorve House. All rights reserved.
-                                </p>
-                                <p style="margin: 0; color: #9CA3AF; font-size: 11px;">
-                                    Email ini dikirim otomatis. Mohon tidak membalas.
+                                <p style="margin: 0; font-size: 12px; color: #9CA3AF; text-align: center;">
+                                    © 2025 Dorve House. All rights reserved.<br>
+                                    Email ini dikirim otomatis, mohon jangan balas.
                                 </p>
                             </td>
                         </tr>
-
                     </table>
                 </td>
             </tr>
@@ -170,194 +80,198 @@ function sendVerificationEmail($email, $name, $verification_link) {
     </body>
     </html>
     ';
-
-    // Email headers for HTML
-    $headers = [];
-    $headers[] = 'MIME-Version: 1.0';
-    $headers[] = 'Content-type: text/html; charset=utf-8';
-    $headers[] = 'From: Dorve House <' . SITE_EMAIL . '>';
-    $headers[] = 'Reply-To: ' . SITE_EMAIL;
-    $headers[] = 'X-Mailer: PHP/' . phpversion();
-
-    // Send email
-    // NOTE: For production, replace with SMTP service (SendGrid/Mailgun/etc)
-    $sent = mail($email, $subject, $message, implode("\r\n", $headers));
-
-    // Log email attempt
-    error_log(date('[Y-m-d H:i:s]') . " Email sent to: $email - Status: " . ($sent ? 'SUCCESS' : 'FAILED'));
-
-    return $sent;
 }
 
 /**
- * Send password reset email
- *
- * @param string $email User email
- * @param string $name User name
- * @param string $reset_link Full reset URL with token
- * @return bool Success status
+ * Send Verification Email
+ */
+function sendVerificationEmail($email, $name, $verification_link) {
+    $subject = 'Verifikasi Email Anda - Dorve House';
+    
+    $content = '
+    <h2 style="margin: 0 0 24px; font-size: 24px; color: #1F2937; font-weight: 700;">Selamat Datang, ' . htmlspecialchars($name) . '! 🎉</h2>
+    
+    <p style="margin: 0 0 16px; font-size: 16px; color: #374151; line-height: 1.6;">
+        Terima kasih sudah mendaftar di <strong>Dorve House</strong>. Untuk melanjutkan, silakan verifikasi email Anda dengan klik tombol di bawah:
+    </p>
+    
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin: 32px 0;">
+        <tr>
+            <td align="center">
+                <a href="' . $verification_link . '" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%); color: #FFFFFF; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; letter-spacing: 0.5px;">Verifikasi Email</a>
+            </td>
+        </tr>
+    </table>
+    
+    <p style="margin: 24px 0 0; font-size: 14px; color: #6B7280; line-height: 1.6;">
+        Atau copy link berikut ke browser Anda:<br>
+        <a href="' . $verification_link . '" style="color: #3B82F6; word-break: break-all;">' . $verification_link . '</a>
+    </p>
+    
+    <div style="margin-top: 32px; padding: 20px; background-color: #FEF3C7; border-left: 4px solid #F59E0B; border-radius: 6px;">
+        <p style="margin: 0; font-size: 14px; color: #92400E; line-height: 1.6;">
+            ⚠️ <strong>Link verifikasi berlaku selama 24 jam.</strong><br>
+            Jika Anda tidak mendaftar di Dorve House, abaikan email ini.
+        </p>
+    </div>
+    ';
+    
+    $html = getEmailTemplate('Verifikasi Email', $content);
+    return sendEmail($email, $subject, $html);
+}
+
+/**
+ * Send Password Reset Email
  */
 function sendPasswordResetEmail($email, $name, $reset_link) {
-    $subject = '🔐 Reset Password Anda - Dorve House';
-
-    $logo_url = SITE_URL . 'public/images/favicon.png';
-
-    $message = '
-    <!DOCTYPE html>
-    <html lang="id">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, \'Helvetica Neue\', Arial, sans-serif; background-color: #f8f9fa;">
-        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; padding: 40px 20px;">
-            <tr>
-                <td align="center">
-                    <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
-
-                        <tr>
-                            <td style="background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%); padding: 40px 30px; text-align: center;">
-                                <img src="' . $logo_url . '" alt="Dorve House" style="width: 60px; height: 60px; margin-bottom: 16px;">
-                                <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: 2px;">DORVE HOUSE</h1>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td style="padding: 50px 40px;">
-                                <h2 style="margin: 0 0 20px 0; color: #1A1A1A; font-size: 24px; font-weight: 700;">Reset Password Anda</h2>
-
-                                <p style="margin: 0 0 16px 0; color: #4B5563; font-size: 15px; line-height: 1.7;">
-                                    Halo <strong>' . htmlspecialchars($name) . '</strong>,
-                                </p>
-
-                                <p style="margin: 0 0 30px 0; color: #4B5563; font-size: 15px; line-height: 1.7;">
-                                    Kami menerima permintaan untuk reset password akun Anda. Klik tombol di bawah untuk membuat password baru:
-                                </p>
-
-                                <table width="100%" cellpadding="0" cellspacing="0">
-                                    <tr>
-                                        <td align="center" style="padding: 10px 0 30px 0;">
-                                            <a href="' . $reset_link . '" style="display: inline-block; padding: 16px 48px; background: #EF4444; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 15px;">
-                                                🔐 RESET PASSWORD
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </table>
-
-                                <div style="background-color: #FEE2E2; border-left: 4px solid #EF4444; padding: 16px 20px; margin-bottom: 30px; border-radius: 4px;">
-                                    <p style="margin: 0; color: #991B1B; font-size: 14px; line-height: 1.6;">
-                                        <strong>⚠️ Keamanan:</strong> Link ini berlaku selama <strong>1 jam</strong>. Jika Anda tidak meminta reset password, abaikan email ini.
-                                    </p>
-                                </div>
-
-                                <p style="margin: 0; color: #9CA3AF; font-size: 13px;">
-                                    Link alternatif: <span style="color: #3B82F6; word-break: break-all; font-size: 11px;">' . $reset_link . '</span>
-                                </p>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td style="background-color: #F9FAFB; padding: 30px 40px; text-align: center; border-top: 1px solid #E5E7EB;">
-                                <p style="margin: 0 0 8px 0; color: #9CA3AF; font-size: 12px;">
-                                    &copy; ' . date('Y') . ' Dorve House. All rights reserved.
-                                </p>
-                            </td>
-                        </tr>
-
-                    </table>
-                </td>
-            </tr>
-        </table>
-    </body>
-    </html>
+    $subject = 'Reset Password Anda - Dorve House';
+    
+    $content = '
+    <h2 style="margin: 0 0 24px; font-size: 24px; color: #1F2937; font-weight: 700;">Reset Password</h2>
+    
+    <p style="margin: 0 0 16px; font-size: 16px; color: #374151; line-height: 1.6;">
+        Halo <strong>' . htmlspecialchars($name) . '</strong>,
+    </p>
+    
+    <p style="margin: 0 0 16px; font-size: 16px; color: #374151; line-height: 1.6;">
+        Kami menerima permintaan untuk reset password akun Anda. Klik tombol di bawah untuk membuat password baru:
+    </p>
+    
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin: 32px 0;">
+        <tr>
+            <td align="center">
+                <a href="' . $reset_link . '" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%); color: #FFFFFF; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; letter-spacing: 0.5px;">Reset Password</a>
+            </td>
+        </tr>
+    </table>
+    
+    <p style="margin: 24px 0 0; font-size: 14px; color: #6B7280; line-height: 1.6;">
+        Atau copy link berikut ke browser Anda:<br>
+        <a href="' . $reset_link . '" style="color: #3B82F6; word-break: break-all;">' . $reset_link . '</a>
+    </p>
+    
+    <div style="margin-top: 32px; padding: 20px; background-color: #FEE2E2; border-left: 4px solid #EF4444; border-radius: 6px;">
+        <p style="margin: 0; font-size: 14px; color: #991B1B; line-height: 1.6;">
+            ⚠️ <strong>Link reset berlaku selama 1 jam.</strong><br>
+            Jika Anda tidak meminta reset password, abaikan email ini atau hubungi customer service.
+        </p>
+    </div>
     ';
-
-    $headers = [];
-    $headers[] = 'MIME-Version: 1.0';
-    $headers[] = 'Content-type: text/html; charset=utf-8';
-    $headers[] = 'From: Dorve House <' . SITE_EMAIL . '>';
-    $headers[] = 'Reply-To: ' . SITE_EMAIL;
-
-    $sent = mail($email, $subject, $message, implode("\r\n", $headers));
-
-    error_log(date('[Y-m-d H:i:s]') . " Password reset email sent to: $email - Status: " . ($sent ? 'SUCCESS' : 'FAILED'));
-
-    return $sent;
+    
+    $html = getEmailTemplate('Reset Password', $content);
+    return sendEmail($email, $subject, $html);
 }
 
 /**
- * Send order confirmation email
- *
- * @param string $email User email
- * @param string $name User name
- * @param string $order_number Order number
- * @param float $total_amount Total order amount
- * @return bool Success status
+ * Send Order Confirmation Email
  */
-function sendOrderConfirmationEmail($email, $name, $order_number, $total_amount) {
-    $subject = '✓ Pesanan Diterima #' . $order_number . ' - Dorve House';
+function sendOrderConfirmationEmail($email, $name, $order_number, $order_total, $order_items) {
+    $subject = 'Pesanan Anda Dikonfirmasi #' . $order_number;
+    
+    $items_html = '';
+    foreach ($order_items as $item) {
+        $items_html .= '
+        <tr>
+            <td style="padding: 12px; border-bottom: 1px solid #E5E7EB;">' . htmlspecialchars($item['name']) . '</td>
+            <td style="padding: 12px; border-bottom: 1px solid #E5E7EB; text-align: center;">' . $item['quantity'] . '</td>
+            <td style="padding: 12px; border-bottom: 1px solid #E5E7EB; text-align: right;">Rp ' . number_format($item['price'], 0, ',', '.') . '</td>
+        </tr>
+        ';
+    }
+    
+    $content = '
+    <h2 style="margin: 0 0 24px; font-size: 24px; color: #1F2937; font-weight: 700;">Terima Kasih, ' . htmlspecialchars($name) . '! 🎉</h2>
+    
+    <p style="margin: 0 0 16px; font-size: 16px; color: #374151; line-height: 1.6;">
+        Pesanan Anda telah kami terima dan sedang diproses.
+    </p>
+    
+    <div style="margin: 24px 0; padding: 20px; background-color: #DBEAFE; border-radius: 8px;">
+        <p style="margin: 0 0 8px; font-size: 14px; color: #1E40AF; font-weight: 600;">Order Number</p>
+        <p style="margin: 0; font-size: 24px; color: #1E3A8A; font-weight: 700;">#' . $order_number . '</p>
+    </div>
+    
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin: 24px 0; border: 1px solid #E5E7EB; border-radius: 8px; overflow: hidden;">
+        <thead>
+            <tr style="background-color: #F9FAFB;">
+                <th style="padding: 12px; text-align: left; font-size: 14px; color: #6B7280; font-weight: 600;">Item</th>
+                <th style="padding: 12px; text-align: center; font-size: 14px; color: #6B7280; font-weight: 600;">Qty</th>
+                <th style="padding: 12px; text-align: right; font-size: 14px; color: #6B7280; font-weight: 600;">Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            ' . $items_html . '
+            <tr style="background-color: #F9FAFB;">
+                <td colspan="2" style="padding: 12px; font-weight: 600; color: #1F2937;">Total</td>
+                <td style="padding: 12px; text-align: right; font-weight: 700; color: #1F2937; font-size: 18px;">Rp ' . number_format($order_total, 0, ',', '.') . '</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin: 32px 0;">
+        <tr>
+            <td align="center">
+                <a href="' . SITE_URL . 'member/orders.php" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%); color: #FFFFFF; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; letter-spacing: 0.5px;">Lihat Detail Pesanan</a>
+            </td>
+        </tr>
+    </table>
+    
+    <p style="margin: 24px 0 0; font-size: 14px; color: #6B7280; line-height: 1.6; text-align: center;">
+        Kami akan mengirim email update ketika pesanan Anda dikirim.
+    </p>
+    ';
+    
+    $html = getEmailTemplate('Order Confirmation', $content);
+    return sendEmail($email, $subject, $html);
+}
 
-    $logo_url = SITE_URL . 'public/images/favicon.png';
-    $order_url = SITE_URL . 'member/orders.php';
-
-    $message = '
-    <!DOCTYPE html>
-    <html lang="id">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f8f9fa;">
-        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; padding: 40px 20px;">
+/**
+ * Send Shipping Update Email
+ */
+function sendShippingUpdateEmail($email, $name, $order_number, $tracking_number, $courier) {
+    $subject = 'Pesanan Anda Sedang Dikirim #' . $order_number;
+    
+    $content = '
+    <h2 style="margin: 0 0 24px; font-size: 24px; color: #1F2937; font-weight: 700;">Pesanan Dalam Perjalanan! 📦</h2>
+    
+    <p style="margin: 0 0 16px; font-size: 16px; color: #374151; line-height: 1.6;">
+        Halo <strong>' . htmlspecialchars($name) . '</strong>,
+    </p>
+    
+    <p style="margin: 0 0 16px; font-size: 16px; color: #374151; line-height: 1.6;">
+        Kabar gembira! Pesanan Anda <strong>#' . $order_number . '</strong> telah dikirim dan sedang dalam perjalanan ke alamat Anda.
+    </p>
+    
+    <div style="margin: 24px 0; padding: 24px; background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%); border-radius: 12px;">
+        <table width="100%" cellpadding="0" cellspacing="0">
             <tr>
-                <td align="center">
-                    <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden;">
-
-                        <tr>
-                            <td style="background: linear-gradient(135deg, #10B981 0%, #059669 100%); padding: 40px 30px; text-align: center;">
-                                <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700;">✓ Pesanan Diterima!</h1>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td style="padding: 40px;">
-                                <p style="margin: 0 0 20px 0; color: #4B5563; font-size: 15px;">
-                                    Terima kasih <strong>' . htmlspecialchars($name) . '</strong>! Pesanan Anda telah kami terima.
-                                </p>
-
-                                <div style="background-color: #F9FAFB; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-                                    <p style="margin: 0 0 8px 0; color: #6B7280; font-size: 13px;">Order Number</p>
-                                    <p style="margin: 0; color: #1A1A1A; font-size: 20px; font-weight: 700;">' . $order_number . '</p>
-                                </div>
-
-                                <p style="margin: 0 0 20px 0; color: #4B5563; font-size: 15px;">
-                                    Total: <strong>' . formatPrice($total_amount) . '</strong>
-                                </p>
-
-                                <table width="100%" cellpadding="0" cellspacing="0">
-                                    <tr>
-                                        <td align="center">
-                                            <a href="' . $order_url . '" style="display: inline-block; padding: 14px 32px; background: #1A1A1A; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600;">
-                                                Lihat Pesanan
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-
-                    </table>
+                <td style="padding: 8px 0;">
+                    <p style="margin: 0; font-size: 14px; color: #1E40AF; font-weight: 600;">Kurir</p>
+                    <p style="margin: 4px 0 0; font-size: 18px; color: #1E3A8A; font-weight: 700;">' . htmlspecialchars($courier) . '</p>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 16px 0 8px;">
+                    <p style="margin: 0; font-size: 14px; color: #1E40AF; font-weight: 600;">Nomor Resi</p>
+                    <p style="margin: 4px 0 0; font-size: 20px; color: #1E3A8A; font-weight: 700; letter-spacing: 1px;">' . htmlspecialchars($tracking_number) . '</p>
                 </td>
             </tr>
         </table>
-    </body>
-    </html>
+    </div>
+    
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin: 32px 0;">
+        <tr>
+            <td align="center">
+                <a href="' . SITE_URL . 'member/orders.php" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, #10B981 0%, #059669 100%); color: #FFFFFF; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; letter-spacing: 0.5px;">Lacak Pesanan</a>
+            </td>
+        </tr>
+    </table>
+    
+    <p style="margin: 24px 0 0; font-size: 14px; color: #6B7280; line-height: 1.6; text-align: center;">
+        Terima kasih sudah berbelanja di Dorve House! 💚
+    </p>
     ';
-
-    $headers = [];
-    $headers[] = 'MIME-Version: 1.0';
-    $headers[] = 'Content-type: text/html; charset=utf-8';
-    $headers[] = 'From: Dorve House <' . SITE_EMAIL . '>';
-
-    return mail($email, $subject, $message, implode("\r\n", $headers));
+    
+    $html = getEmailTemplate('Shipping Update', $content);
+    return sendEmail($email, $subject, $html);
 }
