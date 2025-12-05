@@ -15,27 +15,27 @@ $canonical_url = getCanonicalUrl();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="index, follow">
-    <meta name="author" content="Dorve House Indonesia">
-    <meta name="publisher" content="Dorve House">
-    <meta property="og:site_name" content="Dorve House - Pusat Fashion Pria Wanita Indonesia">
+    <meta name="author" content="Dorve.id - Pusat Fashion Indonesia">
+    <meta name="publisher" content="Dorve.id">
+    <meta property="og:site_name" content="Dorve.id | Pusat Fashion Pria & Wanita Indonesia">
     <meta property="og:type" content="<?php echo $og_type ?? 'website'; ?>">
-    <meta property="og:title" content="<?php echo $page_title ?? 'Dorve House | Pusat Fashion Pria & Wanita – Toko Baju Online Kekinian'; ?>">
-    <meta property="og:description" content="<?php echo $page_description ?? 'Belanja baju pria, baju wanita, dan fashion unisex kekinian di Dorve House. Toko baju online terpercaya dengan koleksi murah berkualitas untuk sehari-hari.'; ?>">
+    <meta property="og:title" content="<?php echo $page_title ?? 'Dorve.id | Pusat Fashion Pria & Wanita Indonesia – Toko Baju Online Kekinian & Terlengkap'; ?>">
+    <meta property="og:description" content="<?php echo $page_description ?? 'Dorve.id adalah pusat fashion pria, wanita & unisex di Indonesia. Koleksi lengkap baju kekinian, dress, kemeja, kaos, hoodie dan outfit terbaru dengan harga terjangkau. Belanja aman, cepat & terpercaya di toko resmi Dorve.id.'; ?>">
     <meta property="og:url" content="<?php echo $canonical_url; ?>">
     <meta property="og:image" content="<?php echo getOgImage($og_image ?? null); ?>">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@dorvehouse">
-    <meta name="twitter:title" content="<?php echo $page_title ?? 'Dorve House - Pusat Fashion Pria Wanita'; ?>">
-    <meta name="twitter:description" content="<?php echo $page_description ?? 'Belanja fashion pria wanita trendy & kekinian di Dorve House'; ?>">
+    <meta name="twitter:site" content="@dorve.id">
+    <meta name="twitter:title" content="<?php echo $page_title ?? 'Dorve.id | Pusat Fashion Pria & Wanita Indonesia'; ?>">
+    <meta name="twitter:description" content="<?php echo $page_description ?? 'Dorve.id pusat fashion pria wanita & unisex Indonesia. Baju kekinian, dress, kemeja, kaos trendy dengan harga terjangkau.'; ?>">
     <meta name="twitter:image" content="<?php echo getOgImage($og_image ?? null); ?>">
     <link rel="canonical" href="<?php echo $canonical_url; ?>">
     <?php // generateAlternativeLanguageTags(); ?>
     <?php // generateAdvancedMetaTags($page_type ?? 'website'); ?>
-    <title><?php echo $page_title ?? 'Dorve House - Pusat Fashion Pria Wanita Terbaru Termurah | Baju Trendy & Kekinian 2024'; ?></title>
-    <meta name="description" content="<?php echo $page_description ?? 'Belanja fashion pria wanita trendy & kekinian di Dorve House Indonesia. Koleksi lengkap: dress, blouse, rok, celana. Gratis ongkir, COD, harga terjangkau. Toko baju online terpercaya Indonesia.'; ?>">
-    <meta name="keywords" content="<?php echo $page_keywords ?? 'baju pria, baju wanita, fashion pria, fashion wanita, baju trendy, baju kekinian, model baju terbaru, dress wanita, blouse wanita, rok wanita, celana wanita, baju online, toko baju wanita, fashion indonesia, baju murah, dorve house'; ?>">
+    <title><?php echo $page_title ?? 'Dorve.id | Pusat Fashion Pria & Wanita Indonesia – Toko Baju Online Kekinian & Terlengkap'; ?></title>
+    <meta name="description" content="<?php echo $page_description ?? 'Dorve.id adalah pusat fashion pria, wanita & unisex di Indonesia. Koleksi lengkap baju kekinian, dress, kemeja, kaos, hoodie dan outfit terbaru dengan harga terjangkau. Belanja aman, cepat & terpercaya di toko resmi Dorve.id.'; ?>">
+    <meta name="keywords" content="<?php echo $page_keywords ?? 'dorve.id, dorve id, toko baju online, fashion pria, fashion wanita, baju kekinian, baju trendy, dress wanita, kemeja pria, kaos, hoodie, baju online murah, fashion unisex, toko fashion indonesia, baju couple, outfit kekinian, model baju terbaru, fashion online indonesia'; ?>">
     <link rel="icon" type="image/png" href="/public/images/fav.ico">
     <link rel="shortcut icon" type="image/png" href="/public/images/fav.ico">
 
