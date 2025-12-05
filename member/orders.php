@@ -410,14 +410,59 @@ include __DIR__ . '/../includes/header.php';
 
                     <div class="order-actions">
                         <a href="/member/order-detail.php?id=<?php echo $order['id']; ?>" class="btn btn-primary">View Details</a>
-                        <?php if ($order['tracking_number'] || $order['shipping_status'] !== 'pending'): ?>
-                            <button onclick="openTrackingModal(<?php echo $order['id']; ?>)" class="btn btn-secondary" style="background: #10B981;">
+                        
+                        <?php if ($order['tracking_number'] || $order['delivery_status']): ?>
+                            <button onclick="openTrackingModal(<?php echo $order['id']; ?>)" class="btn btn-secondary" style="background: #10B981; color: white;">
                                 📦 Track Paket
                             </button>
                         <?php endif; ?>
-                        <?php if ($order['shipping_status'] === 'delivered'): ?>
-                            <a href="/member/reviews.php?order=<?php echo $order['id']; ?>" class="btn btn-secondary">Write Review</a>
+                        
+                        <?php 
+                        // Show "Terima Pesanan" button if paid and delivered/shipped but not completed
+                        if ($order['payment_status'] === 'paid' && !$order['completed_at'] && 
+                            ($order['delivery_status'] === 'delivered' || $order['delivery_status'] === 'courier_picked_up')): 
+                        ?>
+                            <button onclick="completeOrder(<?php echo $order['id']; ?>)" 
+                                    class="btn" 
+                                    id="completeBtn<?php echo $order['id']; ?>"
+                                    style="background: linear-gradient(135deg, #10B981 0%, #059669 100%); color: white; border: none; font-weight: 600;">
+                                ✅ Terima Pesanan
+                            </button>
                         <?php endif; ?>
+                        
+                        <?php 
+                        // Show review button if order completed and can review
+                        if ($order['completed_at'] && $order['can_review'] == 1):
+                            // Get order items to check which products can be reviewed
+                            $stmt = $pdo->prepare("
+                                SELECT oi.*, p.name as product_name,
+                                       (SELECT COUNT(*) FROM product_reviews WHERE order_id = ? AND product_id = oi.product_id) as has_review
+                                FROM order_items oi
+                                JOIN products p ON oi.product_id = p.id
+                                WHERE oi.order_id = ?
+                            ");
+                            $stmt->execute([$order['id'], $order['id']]);
+                            $orderItems = $stmt->fetchAll();
+                            
+                            $hasUnreviewedItems = false;
+                            foreach ($orderItems as $item) {
+                                if ($item['has_review'] == 0) {
+                                    $hasUnreviewedItems = true;
+                                    break;
+                                }
+                            }
+                            
+                            if ($hasUnreviewedItems):
+                        ?>
+                            <button onclick="showReviewOptions(<?php echo $order['id']; ?>)" 
+                                    class="btn" 
+                                    style="background: #FBBF24; color: #92400E; border: none; font-weight: 600;">
+                                ⭐ Tulis Review
+                            </button>
+                        <?php 
+                            endif;
+                        endif; 
+                        ?>
                     </div>
                 </div>
             <?php endforeach; ?>
