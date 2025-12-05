@@ -394,7 +394,7 @@ include __DIR__ . '/../includes/header.php';
             </div>
 
             <div class="form-section">
-                <h3>Shipping Method</h3>
+                <h3>🚚 Shipping Method</h3>
                 <?php foreach ($shipping_methods as $method): ?>
                     <div class="payment-method">
                         <input type="radio" name="shipping_method" value="<?php echo $method['id']; ?>" required>
