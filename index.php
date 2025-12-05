@@ -1368,56 +1368,14 @@ document.addEventListener('keydown', function(e) {
     </div>
 </section>
 
-<!-- New Arrivals -->
+<!-- Old New Arrivals section - REPLACED by luxury version in homepage-sections.php -->
+<?php /* COMMENTED OUT - Using new luxury sections
 <?php if (count($new_arrivals) > 0): ?>
 <section class="featured-section">
-    <div class="container">
-        <div class="section-header">
-            <div class="section-pretitle">Koleksi Terkini</div>
-            <h2 class="section-title">Produk Baru</h2>
-            <p class="section-description">Gaya fresh yang baru tiba. Jadilah yang pertama menemukan koleksi terbaru kami</p>
-        </div>
-
-        <div class="products-grid">
-            <?php foreach ($new_arrivals as $product): ?>
-                <a href="/pages/product-detail.php?id=<?php echo $product['id']; ?>" class="product-card">
-                    <div class="product-image">
-                        <?php if ($product['is_new']): ?>
-                            <div class="product-badge">Baru</div>
-                        <?php endif; ?>
-                        <?php if (!empty($product['image'])): ?>
-                            <img src="<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
-                        <?php else: ?>
-                            <img src="/public/images/image.png" alt="<?php echo htmlspecialchars($product['name']); ?>">
-                        <?php endif; ?>
-                    </div>
-                    <div class="product-info">
-                        <?php if ($product['category_name']): ?>
-                            <div class="product-category"><?php echo htmlspecialchars($product['category_name']); ?></div>
-                        <?php endif; ?>
-                        <div class="product-name"><?php echo htmlspecialchars($product['name']); ?></div>
-                        <div class="product-price">
-                            <?php if ($product['discount_price']): ?>
-                                <span class="product-price-discount"><?php echo formatPrice($product['price']); ?></span>
-                                <?php echo formatPrice($product['discount_price']); ?>
-                            <?php else: ?>
-                                <?php echo formatPrice($product['price']); ?>
-                            <?php endif; ?>
-                        </div>
-                        <?php if ($product['stock'] > 0): ?>
-                            <div class="product-stock in-stock">Tersedia</div>
-                        <?php else: ?>
-                            <div class="product-stock out-stock">Stok Habis</div>
-                        <?php endif; ?>
-                    </div>
-                </a>
-            <?php endforeach; ?>
-        </div>
-
-        <a href="/pages/new-collection.php" class="view-all-btn">Lihat Semua Produk Baru</a>
-    </div>
+... OLD CODE ...
 </section>
 <?php endif; ?>
+*/ ?>
 
 <!-- SEO Section 3: Men's Fashion & Couple Collection (Middle Section) -->
 <section class="category-info-section" style="background: var(--white);">
