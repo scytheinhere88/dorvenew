@@ -162,11 +162,27 @@ $pageTitle = 'My Vouchers';
         }
         
         .btn-use {
-            padding: 12px 24px; background: #1A1A1A; color: white; 
-            border-radius: 8px; font-weight: 600; border: none;
+            padding: 12px 24px; 
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%); 
+            color: white; border-radius: 10px; font-weight: 700; border: none;
             cursor: pointer; transition: all 0.3s; font-size: 14px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            position: relative; overflow: hidden;
         }
-        .btn-use:hover { background: #000; transform: scale(1.05); }
+        .btn-use::before {
+            content: ''; position: absolute; top: 50%; left: 50%;
+            width: 0; height: 0; border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        .btn-use:hover::before {
+            width: 200px; height: 200px;
+        }
+        .btn-use:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.5);
+        }
         
         .empty-state {
             text-align: center; padding: 80px 20px; background: white;
