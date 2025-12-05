@@ -252,56 +252,38 @@ if (!isAdmin()) {
 
             // STEP 5: Create sample vouchers
             try {
-                $sampleVouchers = [
-                    [
-                        'code' => 'FREESHIP50K',
-                        'name' => 'Gratis Ongkir (Max 50rb)',
-                        'description' => 'Gratis ongkos kirim maksimal Rp 50,000',
-                        'type' => 'free_shipping',
-                        'max_discount' => 50000,
-                        'min_purchase' => 100000,
-                        'terms_conditions' => 'Berlaku untuk semua kurir. Minimum pembelian Rp 100,000'
-                    ],
-                    [
-                        'code' => 'DISKON10',
-                        'name' => 'Diskon 10%',
-                        'description' => 'Diskon 10% untuk pembelian min Rp 200,000',
-                        'type' => 'discount',
-                        'discount_type' => 'percentage',
-                        'discount_value' => 10,
-                        'max_discount' => 50000,
-                        'min_purchase' => 200000,
-                        'terms_conditions' => 'Maksimal diskon Rp 50,000. Minimum pembelian Rp 200,000'
-                    ]
-                ];
-                
-                $validFrom = date('Y-m-d H:i:s');
-                $validUntil = date('Y-m-d H:i:s', strtotime('+30 days'));
-                
-                foreach ($sampleVouchers as $voucher) {
+                // Check if vouchers table exists
+                $stmt = $pdo->query("SHOW TABLES LIKE 'vouchers'");
+                if ($stmt->rowCount() > 0) {
+                    $validFrom = date('Y-m-d H:i:s');
+                    $validUntil = date('Y-m-d H:i:s', strtotime('+30 days'));
+                    
+                    // Insert Free Shipping Voucher
                     $stmt = $pdo->prepare("
-                        INSERT INTO vouchers (code, name, description, type, discount_type, discount_value, 
+                        INSERT IGNORE INTO vouchers (code, name, description, type, discount_type, discount_value, 
                                             max_discount, min_purchase, terms_conditions, valid_from, valid_until, 
                                             max_usage_per_user, is_active)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 3, 1)
-                        ON DUPLICATE KEY UPDATE updated_at = NOW()
+                        VALUES ('FREESHIP50K', 'Gratis Ongkir (Max 50rb)', 'Gratis ongkos kirim maksimal Rp 50,000', 
+                                'free_shipping', NULL, 0, 50000, 100000, 
+                                'Berlaku untuk semua kurir. Minimum pembelian Rp 100,000', ?, ?, 3, 1)
                     ");
-                    $stmt->execute([
-                        $voucher['code'],
-                        $voucher['name'],
-                        $voucher['description'],
-                        $voucher['type'],
-                        $voucher['discount_type'] ?? null,
-                        $voucher['discount_value'] ?? 0,
-                        $voucher['max_discount'] ?? null,
-                        $voucher['min_purchase'],
-                        $voucher['terms_conditions'],
-                        $validFrom,
-                        $validUntil
-                    ]);
+                    $stmt->execute([$validFrom, $validUntil]);
+                    
+                    // Insert Discount Voucher
+                    $stmt = $pdo->prepare("
+                        INSERT IGNORE INTO vouchers (code, name, description, type, discount_type, discount_value, 
+                                            max_discount, min_purchase, terms_conditions, valid_from, valid_until, 
+                                            max_usage_per_user, is_active)
+                        VALUES ('DISKON10', 'Diskon 10%', 'Diskon 10% untuk pembelian min Rp 200,000', 
+                                'discount', 'percentage', 10, 50000, 200000, 
+                                'Maksimal diskon Rp 50,000. Minimum pembelian Rp 200,000', ?, ?, 3, 1)
+                    ");
+                    $stmt->execute([$validFrom, $validUntil]);
+                    
+                    $results[] = ['success' => true, 'step' => 'Insert Sample Vouchers', 'message' => 'Created 2 sample vouchers'];
+                } else {
+                    $results[] = ['success' => false, 'step' => 'Insert Sample Vouchers', 'message' => 'Table vouchers not found. Skipped sample data.'];
                 }
-                
-                $results[] = ['success' => true, 'step' => 'Insert Sample Vouchers', 'message' => 'Created 2 sample vouchers'];
                 $successCount++;
             } catch (Exception $e) {
                 $results[] = ['success' => false, 'step' => 'Insert Sample Vouchers', 'message' => $e->getMessage()];
