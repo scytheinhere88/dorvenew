@@ -1,0 +1,142 @@
+================================================================================
+  DORVE.ID - BITESHIP INTEGRATION - QUICK INSTALL GUIDE
+================================================================================
+
+📦 APA YANG SAYA BUAT:
+----------------------
+✅ 14 file baru (order management, batch print, API endpoints)
+✅ 1 file diupdate (admin settings - fixed error)
+✅ 4 tabel database baru
+✅ 6 kolom baru di tabel orders
+✅ Fix settings table (normalize kolom)
+
+📋 YANG HARUS ANDA LAKUKAN DI SERVER:
+-------------------------------------
+
+STEP 1: BACKUP DATABASE
+  mysqldump -u [user] -p [database] > backup.sql
+  (atau via phpMyAdmin: Export → SQL)
+
+STEP 2: UPLOAD FILE INSTALL_MIGRATION.php
+  Upload ke root directory (sejajar dengan index.php)
+
+STEP 3: JALANKAN MIGRATION
+  1. Login sebagai admin di website
+  2. Buka browser: https://dorve.id/INSTALL_MIGRATION.php
+  3. Centang "Saya sudah backup database"
+  4. Klik "Jalankan Migration"
+  5. Tunggu sampai selesai
+  6. HAPUS file INSTALL_MIGRATION.php setelah selesai!
+
+STEP 4: UPLOAD FILE-FILE BARU
+  Upload folder ini ke server (replace yang lama):
+  
+  📁 /admin/orders/
+     - print-batch.php (BARU)
+     - update-status.php (BARU)
+     - picking-list.php (BARU)
+     
+  📁 /admin/orders/templates/
+     - label-a6.php (BARU)
+     
+  📁 /admin/assets/
+     - label-a6.css (BARU)
+     
+  📁 /admin/integration/
+     - test-biteship-api.php (BARU)
+     - test-webhook.php (BARU)
+     
+  📁 /api/shipping/
+     - calculate-rates.php (BARU)
+     
+  📁 /api/orders/
+     - create-from-payment.php (BARU)
+  
+  📁 /admin/settings/
+     - api-settings.php (UPDATE - replace yang lama)
+
+STEP 5: VERIFY
+  1. Login admin panel
+  2. Go to: Settings → API Settings
+  3. Klik "Test API Key" → harus sukses
+  4. Go to: Orders → harus muncul tab status baru
+
+STEP 6: CONFIGURE WEBHOOK BITESHIP
+  1. Login: https://business.biteship.com/
+  2. Go to: Settings → Webhooks
+  3. Add URL: https://dorve.id/api/biteship/webhook.php
+  4. Subscribe: order.status & order.waybill_id
+  5. Save
+
+================================================================================
+
+🎯 CARA PAKAI FITUR BARU:
+------------------------
+
+BULK PRINT LABELS:
+  1. Admin → Orders
+  2. Tab "Siap Print"
+  3. Centang orders yang mau diprint
+  4. Klik "🖨️ Print Labels"
+  5. Print → Status auto update ke "waiting_pickup"
+
+CALCULATE SHIPPING RATES (di checkout):
+  POST /api/shipping/calculate-rates.php
+  Body: {
+    "postal_code": "12345",
+    "items": [{"name":"Product","value":100000,"quantity":1,"weight":500}]
+  }
+
+CREATE BITESHIP ORDER (after payment):
+  POST /api/orders/create-from-payment.php
+  Body: {"order_id": 123}
+
+================================================================================
+
+✅ VERIFICATION CHECKLIST:
+-------------------------
+  □ Migration berhasil (no errors)
+  □ File INSTALL_MIGRATION.php sudah dihapus
+  □ Semua file baru sudah diupload
+  □ Admin → Settings → API Settings → Test API Key = Success
+  □ Admin → Orders → Tab status muncul (New, Siap Print, dll)
+  □ Webhook configured di Biteship Dashboard
+  □ Table di database: biteship_shipments, order_addresses, dll exist
+
+================================================================================
+
+📚 DOKUMENTASI LENGKAP:
+-----------------------
+  Baca file ini untuk detail:
+  - CHANGELOG_DETAIL.md (semua perubahan detail)
+  - BITESHIP_INTEGRATION_GUIDE.md (setup & API docs)
+  - database-migration.sql (manual SQL - backup option)
+
+================================================================================
+
+🆘 TROUBLESHOOTING:
+------------------
+  Error: "Table already exists"
+    → Migration sudah pernah jalan, jangan run lagi
+  
+  Error: "API connection failed"
+    → Check API key di admin settings
+    → Verify di Biteship Dashboard
+  
+  Error: "Webhook test failed"
+    → Check file /api/biteship/webhook.php ada
+    → Test akses langsung via browser
+  
+  Print Labels tidak update status:
+    → Check browser console (F12) untuk error
+    → Check table print_batches exists
+
+================================================================================
+
+📞 NEED HELP?
+------------
+  Kasih tau error message lengkapnya + screenshot kalau ada masalah!
+
+================================================================================
+  READY TO GO! 🚀
+================================================================================
