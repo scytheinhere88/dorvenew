@@ -54,6 +54,9 @@
                 <a href="/admin/promotion/index.php" class="nav-item <?php echo strpos($_SERVER['PHP_SELF'], '/promotion/') !== false ? 'active' : ''; ?>">
                     📢 Promosi & Banner
                 </a>
+                <a href="/admin/business-growth/index.php" class="nav-item <?php echo strpos($_SERVER['PHP_SELF'], '/business-growth/') !== false ? 'active' : ''; ?>">
+                    📊 Business Growth
+                </a>
 
                 <!-- Settings Section -->
                 <div style="margin: 12px 30px 8px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1);">
