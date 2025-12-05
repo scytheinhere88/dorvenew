@@ -10,7 +10,8 @@ if (file_exists(__DIR__ . '/seo-helper.php')) {
 
 $current_lang = $_SESSION['lang'] ?? 'id';
 $cart_count = getCartCount();
-$canonical_url = getCanonicalUrl();
+// Fixed: Check if function exists before calling
+$canonical_url = function_exists('getCanonicalUrl') ? getCanonicalUrl() : ($_SERVER['REQUEST_URI'] ?? '/');
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $current_lang; ?>">
