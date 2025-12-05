@@ -529,7 +529,12 @@ include __DIR__ . '/../includes/header.php';
         <div class="voucher-modal-header">
             <span class="close-modal" onclick="closeVoucherModal()">&times;</span>
             <h2>🎟️ Select Your Vouchers</h2>
-            <p>Choose up to 2 vouchers: 1 Free Shipping + 1 Discount</p>
+            <p style="margin-bottom: 8px;">Choose up to 2 vouchers: <strong>1 Free Shipping + 1 Discount</strong></p>
+            <div style="background: #FEF3C7; padding: 12px 16px; border-radius: 8px; border: 1px solid #FDE68A; margin-top: 8px;">
+                <p style="font-size: 13px; color: #92400E; margin: 0;">
+                    ⚠️ <strong>Note:</strong> Anda tidak dapat menggunakan 2 voucher diskon sekaligus. Pilih 1 Free Shipping + 1 Discount untuk benefit maksimal!
+                </p>
+            </div>
         </div>
         
         <div class="voucher-modal-body">
