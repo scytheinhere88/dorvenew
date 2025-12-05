@@ -46,8 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Insert product
             $stmt = $pdo->prepare("
-                INSERT INTO products (name, slug, price, discount_price, category_id, gender, is_new, is_best_seller, is_active, stock, status)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 'published')
+                INSERT INTO products (name, slug, price, discount_price, category_id, gender, is_new, is_best_seller, is_active, stock)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)
             ");
             $stmt->execute([$name, $slug, $price, $discount_price, $category_id, $gender, $is_new, $is_best_seller, $is_active]);
 
