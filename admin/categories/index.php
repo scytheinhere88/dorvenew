@@ -100,7 +100,7 @@ include __DIR__ . '/../includes/admin-header.php';
 
 <div class="form-container">
     <h2 style="margin-bottom: 20px;">Tambah Kategori</h2>
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         <input type="hidden" name="action" value="add">
         <div class="form-row">
             <div class="form-group">
@@ -111,6 +111,11 @@ include __DIR__ . '/../includes/admin-header.php';
                 <label>Slug (optional)</label>
                 <input type="text" name="slug" placeholder="dresses">
             </div>
+        </div>
+        <div class="form-group">
+            <label>Category Image</label>
+            <input type="file" name="image" accept="image/*">
+            <small>Upload an image for this category. Recommended size: 400x400px</small>
         </div>
         <button type="submit" class="btn btn-primary">Tambah Kategori</button>
     </form>
