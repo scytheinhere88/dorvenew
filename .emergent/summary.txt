@@ -1,170 +1,194 @@
 <analysis>**original_problem_statement:**
-The user initially wanted to fix a deleted database for their PHP e-commerce site, . The scope has since expanded to a full rebuild and feature enhancement of the legacy PHP application. The current session focused on completing a complex Biteship shipping integration and has now moved on to building a highly detailed, brand-new voucher system.
+The user's initial goal was to rebuild and enhance a legacy PHP e-commerce site, . The project has evolved rapidly through several large feature requests. This session focused on fixing a database migration for a new voucher system, then building out that system, and immediately moved into a massive project to integrate the Midtrans payment gateway, enhance the admin dashboard with sound notifications, and improve the member area with new features like a Google Maps-based address book.
 
 PRODUCT REQUIREMENTS:
-1.  **Biteship Integration (Now considered complete):** A full-featured integration including live rate calculation, order creation, webhook handling for status updates, a complete admin order management panel with advanced search, and a batch printing system for A6 shipping labels. The user also requested a customer-facing tracking page and an admin-facing error log viewer.
-2.  **Voucher System (New & In Progress):**
-    *   Create a full voucher management system in the admin panel (CRUD operations).
-    *   Support two distinct voucher types: **Free Shipping** (fixed amount reduction on shipping cost) and **Discount** (percentage or fixed amount reduction on cart total).
-    *   Allow customers to **use two vouchers simultaneously** at checkout (one of each type).
-    *   Implement a **modal at checkout** where users can see all their available vouchers and select which ones to apply.
-    *   Admin should be able to set **voucher conditions**, such as minimum purchase amount.
-    *   Admin can **upload an image/icon** for each voucher, which should be displayed in the checkout modal.
-    *   Vouchers should have associated **Terms & Conditions (S&K)**.
-3.  **Payment Gateway Integration:** (Upcoming) Integrate a payment gateway like Midtrans.
-4.  **Business Growth Dashboard:** (Future) A dashboard showing daily/monthly stats.
-5.  **Fix Broken Admin Pages:** (Future) Fix or remove the non-functional  and  pages.
+1.  **Voucher System (Mostly Complete):** A full voucher management system (CRUD in admin), supporting Free Shipping & Discount types, use of two vouchers at checkout via a modal, voucher conditions, and image uploads.
+2.  **Payment Gateway Integration (In Progress):**
+    *   Integrate **Midtrans** alongside a **Wallet** system and **Direct Bank Transfer**.
+    *   Admin panel must have toggles to enable/disable payment methods.
+    *   Direct Bank Transfer flow requires a unique 3-digit code, a modal with a timer, proof of payment upload, and a WhatsApp notification to the admin.
+    *   Checkout and Top-up amounts must be exact.
+    *   Successful payments for orders should automatically trigger the Biteship shipping integration.
+    *   User's tier level should increase based on top-ups and checkout values.
+3.  **Smart Order Handling (Mostly Complete):**
+    *   Orders should have an expiry time (e.g., 1 hour) and auto-cancel if unpaid.
+    *   Members should see pending orders with a countdown timer and a Pay Now button to resume payment.
+    *   A notification badge for pending orders should appear in the site header.
+4.  **Admin Experience (In Progress):**
+    *   A professional admin order dashboard showing product images, SKUs, and filters.
+    *   **Sound notifications** for new orders (repeating every 10s) and new deposits.
+    *   A system for printing shipping labels.
+5.  **Member Area Enhancements (In Progress):**
+    *   **Address Book with Google Maps:** Allow members to select their address by dropping a pin on an embedded map.
+    *   **Referral System:** Ensure every user has a unique referral code and the referral menu is present on all member pages.
+    *   **User Auth:** Implement Forgot Password and Email Verification flows.
+    *   **A6 Print Template:** A professional A6 shipping label template.
+    *   Update all member-facing pages with a consistent, modern, professional style.
 
 **User's preferred language**: The user's primary language is **Indonesian (Bahasa Indonesia)**. The next agent MUST respond in Indonesian.
 
 **what currently exists?**
-The application is a monolithic legacy PHP e-commerce site. The agent's development environment does not run the PHP/MySQL stack; therefore, the established workflow is for the agent to write PHP code and SQL migration scripts, which the user then deploys and executes on their own production server. The complex Biteship shipping integration is now considered feature-complete by the agent, with numerous backend, admin, and customer-facing features having been built. The agent has just begun work on a new, highly detailed voucher system, starting with the database migration script.
+The application is a monolithic procedural PHP e-commerce site. The agent has completed a massive amount of work, building out the backend and frontend for a comprehensive voucher system and a multi-faceted payment system (Midtrans, Wallet, Bank Transfer). A new, more professional admin dashboard and member order-tracking page have been created. The development workflow remains offline, where the agent produces PHP files and migration scripts for the user to deploy and test on their own server.
 
 **Last working item**:
--   **Last item agent was working:** The agent was creating the database migration script () for the new, comprehensive voucher system. The script failed to execute due to an SQL error when inserting sample data.
+-   **Last item agent was working:** The agent was in the middle of implementing a large, multi-part feature request from the user (Chat Message 154). The immediate last action was starting the Address Book with Google Maps feature by creating the file .
 -   **Status:** IN PROGRESS
 -   **Agent Testing Done:** N
--   **Which testing method agent to use?** NA. The development workflow involves creating PHP files and migration scripts for the user to execute on their own server. The agent cannot directly test the application.
+-   **Which testing method agent to use?** NA. The workflow requires the user to test all code on their production server.
 -   **User Testing Done:** N
 
 **All Pending/In progress Issue list**:
--   **Issue 1: Voucher System migration script fails** (P0)
-
-**Issues Detail:**
--   **Issue 1: Voucher System migration script fails**
-    -   **Attempted fixes:** The agent created the script . The user ran it and reported an SQL error: . The agent attempted a fix by correcting column names, but the error persisted, likely because the  table was already partially created from the first failed attempt. The agent's last action was to edit the script again, this time planning to skip the insertion of sample data to avoid the error.
-    -   **Next debug checklist:**
-        1.  Review the edited  to ensure the problematic  statements for sample vouchers are removed or corrected.
-        2.  The script should ideally be idempotent, either by using  for table creation or by including  statements at the beginning to ensure a clean slate on each run.
-        3.  Inform the user of the updated script and provide clear instructions to run it again.
-    -   **Why fix this issue and what will be achieved with the fix?** This is a **blocker** for the entire voucher system feature. The database schema must be successfully created before any other development on this feature can proceed.
-    -   **Status:** IN PROGRESS
-    -   **Is recurring issue?** Y
-    -   **Should Test frontend/backend/both after fix?** Backend (The user must test the migration script on their server).
-    -   **Blocked on other issue:** None.
+There are no blocking *issues*. All pending work consists of feature development and user verification of previously completed features.
 
 **In progress Task List**:
--   **Task 1: Build the complete Voucher System** (P0)
+-   **Task 1: Complete the User's Latest Multi-Feature Request (P0)**
 
 **Task Detail:**
--   **Task 1: Build the complete Voucher System**
-    -   **Where to resume:** Immediately after fixing the migration script (Issue 1), the agent must create the full suite of files for the voucher system. The agent has already created two API files (, ) but still needs to build:
-        1.  The full admin panel for voucher CRUD operations ().
-        2.  The checkout page modifications to include a Use Voucher button.
-        3.  The frontend modal for selecting available vouchers.
-        4.  The JavaScript logic to apply vouchers to the cart and recalculate totals.
-    -   **What will be achieved with this?** A complete, professional voucher system as per the user's detailed specifications, seamlessly integrated into the checkout flow.
+-   **Task 1: Complete the User's Latest Multi-Feature Request**
+    -   **Where to resume:** The agent just created . The next steps are:
+        1.  Implement the Google Maps integration within , allowing users to select a location from a map and save it.
+        2.  Integrate the saved address into the  auto-fill.
+        3.  Overhaul the **Referral System**: ensure unique codes per user and add the referral link to a consistent member sidebar across all member pages.
+        4.  Build the **Forgot Password** and **Email Verification** systems.
+        5.  Finalize the professional A6 print template in .
+        6.  Review and standardize the styling across all member-area pages () for a consistent, professional look.
+    -   **What will be achieved with this?** This will complete another large set of user requirements, significantly improving member account management, address handling, and user authentication.
     -   **Status:** IN PROGRESS
-    -   **Should Test frontend/backend/both after fix?** Both (user will test on their server).
-    -   **Blocked on something:** **Issue 1: Voucher System migration script fails**.
+    -   **Should Test frontend/backend/both after fix?** Both (User will test on their server).
+    -   **Blocked on something:** None.
 
 **Upcoming and Future Tasks**
--   **P0: Payment Gateway Integration:** The user has confirmed this is the next major feature after the expedition/shipping system is complete. The agent proposed Midtrans, Xendit, or Doku.
--   **P1: Build Business Growth Dashboard:** Implement the backend logic and frontend for the admin dashboard.
+-   **P0: User Verification of Completed Systems:** The user needs to run the migration scripts (, ) and test the following large systems:
+    -   The entire Voucher System (Admin CRUD, checkout modal).
+    -   The entire Payment Gateway System (Midtrans, Wallet, Bank Transfer on both checkout and top-up pages).
+    -   The Smart Order Handling (Pending orders, countdowns, Pay Now button).
+    -   The new Admin Dashboard with sound notifications (user must provide  files).
+-   **P1: Build Business Growth Dashboard:** Implement the backend logic and frontend for the admin dashboard showing stats.
 -   **P2: Enhance Product Detail Page:** Add Customer Reviews and You Might Also Like sections.
--   **P2: Complete User Management Features:** Implement the admin's ability to add/subtract from a user's wallet.
 -   **P3: Fix Remaining Broken Admin Pages:** Address the  and  pages.
--   **P3: Overhaul Referral System:** Revisit the original request for a percentage-based referral system.
 
 **Completed work in this session**
--   **Clarified Development Workflow:** The agent and user established a critical workflow: the agent writes PHP code and SQL migration scripts, and the user deploys/executes them on their own production server. This resolved major confusion about the development environment.
--   **Biteship Integration Completion:**
-    -   Upgraded the admin Orders page () with powerful multi-field search (by Order ID, Order Number, Customer, etc.) and status tabs.
-    -   Added a customer-facing order tracking system, including a Track Paket button on the My Orders page () that opens a real-time tracking modal.
-    -   Implemented an admin-facing error log viewer () for easier debugging of Biteship webhooks.
-    -   Improved the shipping rate calculation API () to automatically filter out couriers unavailable for a given destination.
-    -   Created an all-in-one PHP migration script () to handle all Biteship-related database schema changes.
-    -   Provided extensive documentation and step-by-step installation guides to the user.
+-   **Voucher System Foundation:**
+    -   Fixed the failing database migration script () by making it idempotent.
+    -   Built the Admin Panel for voucher CRUD ().
+    -   Built the member-facing page to view available vouchers ().
+    -   Redesigned the checkout page () with a modern UI and a voucher application modal.
+-   **Comprehensive Payment Integration (Midtrans):**
+    -   Created a database migration script () for , , , and .
+    -   Built API endpoints for creating topups (), creating orders (), and handling Midtrans webhooks ().
+    -   The webhook now automatically triggers the Biteship integration upon successful payment.
+    -   Created an admin settings page () to manage payment methods.
+-   **Smart Order & Payment Handling:**
+    -   Implemented an order expiry system by adding an  column to the  table.
+    -   Completely revamped the member orders page () to show a Pending Orders section with countdown timers and a Pay Now button to resume payments.
+    -   Created an API to resume payments ().
+    -   Created a helper to show a notification badge for pending orders in the site header.
+-   **Admin Experience & Notifications:**
+    -   Created a new, professional Admin Orders Dashboard ().
+    -   Implemented a polling mechanism to check for new orders and deposits to trigger **sound notifications**.
+    -   Created placeholder file () instructing the user to add  and .
+    -   Created APIs for the admin dashboard: , , .
+    -   Started the A6 shipping label template ().
+-   **Member Area Foundation:**
+    -   Started the Address Book with Google Maps feature by creating .
 
 **Earlier issues found/mentioned but not fixed**
--   **Issue 1: You Might Also Like & Reviews sections.** On the product detail page.
--   **Issue 2: Broken Admin Pages (, ).**
+-   **Issue 1:** You Might Also Like & Reviews sections are still missing from the product detail page.
+-   **Issue 2:** The legacy admin pages  and  are still broken and have not been prioritized.
 
 **Known issue recurrence from previous fork**
--   The issue of broken admin pages (, ) persists from the previous session and has not yet been prioritized.
+-   The broken admin pages (, ) persist and have not been addressed.
 
 **Code Architecture**
--   **Monolithic Legacy PHP Application:** No framework detected. Code is procedural.
--   **Development Model:** The agent acts as an offline developer, producing code and SQL migration scripts (wrapped in user-friendly PHP files) for the user to execute on their own live server. Direct testing within the agent's environment is not possible.
--   **Directory Structure:** Standard PHP structure with top-level directories like , , , .
+-   **Monolithic Legacy PHP Application:** Procedural code, no framework.
+-   **Development Model:** Agent acts as an offline developer, producing PHP files and migration scripts for the user to execute on their live server.
+-   **Directory Structure:** Standard PHP structure with , , , ,  directories.
 
 **Key Technical Concepts**
--   **Backend:** PHP (procedural)
--   **Database:** MySQL (on user's server, managed via PDO in PHP)
--   **Frontend:** HTML, CSS, JavaScript (jQuery)
--   **Key Integrations:** Biteship Shipping API
+-   **Backend:** PHP (procedural), PDO for MySQL.
+-   **Database:** MySQL (managed by user).
+-   **Frontend:** HTML, CSS, JavaScript (jQuery), AJAX for dynamic updates.
+-   **Key Integrations:** Biteship API, **Midtrans API (Snap.js)**, Google Maps API (planned).
 
 **key DB schema**
--   : {id, user_id, order_number, total_payable_amount, payment_status, shipping_status, **fulfillment_status**, **shipping_courier**, **shipping_service**, **shipping_cost**, **tracking_number**, **notes**}
--   : Renamed to .
--   : {id, received_at, headers, body, status}
--   : {id, batch_code, printed_at}
--   : Stores shipping/billing address per order.
--   **(New)** : {id, code, type ('DISCOUNT', 'FREE_SHIPPING'), value, max_value, min_purchase, start_date, end_date, image_icon, terms, is_active}
--   **(New)** : {id, user_id, voucher_id, is_used, used_at}
+-   : {id, code, type, value, max_value, min_purchase, start_date, end_date, image_icon, terms, is_active}
+-   : {id, user_id, voucher_id, is_used, used_at}
+-   : {id, user_id, amount, unique_code, payment_method, status, snap_token, created_at, paid_at}
+-   : Adds {snap_token, snap_redirect_url, paid_at, **expired_at**, **printed_at**}
+-   : {id, order_id, product_id, product_name, quantity, price}
+-   : {id, setting_key, setting_value, setting_type, description}
 
 **All files of reference**
--   **Voucher System (In Progress):**
-    -    (The failing migration script, needs fixing)
+-   **Migrations (Critical):**
+    -    (Created & Fixed)
+    -    (Created & Updated)
+-   **Payment System (New):**
+    -   
+    -   
+    -   
+    -   
+    -   
+    -   
+-   **Smart Order Handling (New):**
+    -   
+    -   
+    -   
+-   **Admin Experience (New/Updated):**
+    -   
+    -   
+    -   
+    -   
+    -   
+    -   
+    -   
+-   **Member Area (New/Updated):**
+    -    (Heavily modified)
+    -    (Heavily modified)
     -    (Created)
-    -    (Created)
--   **Biteship Completion (Recent):**
-    -    (Rewritten with advanced search)
-    -    (Updated with tracking button)
-    -    (New)
-    -    (New)
-    -    (New)
-    -    (Updated to filter unavailable couriers)
-    -    (Biteship DB setup script)
-    -   ,  (Documentation)
+    -    (Created, in progress)
+-   **Voucher System (New):**
+    -   , , 
 
 **Critical Info for New Agent**
--   **WORKFLOW IS KEY:** You are not working on a live, testable application. Your role is to produce PHP code and self-executing PHP migration scripts (). The user will take these files and run them on their own production server. All instructions and explanations must be extremely clear.
--   **PRIORITY:** The immediate task is to **fix the failing voucher system migration script** (). This is a hard blocker for the user's current request.
--   After fixing the migration script, proceed to build the rest of the voucher system feature, which is a large task.
--   The Biteship integration is considered functionally complete. Do not revisit it unless the user reports a specific bug. The next major integration will be a payment gateway.
-
-**documents created in this job**
--   
--   
--   
--   
--   
--   
+-   **WORKFLOW IS KEY:** You are not working on a live, testable application. Your role is to produce clear, robust PHP code and self-executing PHP migration scripts. The user will run these on their own server. Provide extremely clear instructions for any necessary actions (e.g., running migration scripts, providing sound files).
+-   **RESUME CURRENT TASK:** The immediate priority is to continue and complete the multi-part feature request from the user's last message (Chat #154). Start with the Google Maps integration for the address book, then move to the referral system, user auth, and consistent styling.
+-   **VERIFICATION IS NEEDED:** A massive amount of new functionality has been built but remains completely untested by the user. After completing the current task, you must guide the user through testing the Voucher, Payment, and Admin Notification systems.
+-   **USER-PROVIDED ASSETS:** The sound notification system requires the user to place  and  in the  directory. You will also need a Google Maps API Key from the user to implement the address book feature.
 
 **Last 10 User Messages and any pending user messages**
-1.  **User:** Asks for a powerful admin search on the orders page by Order ID.
-2.  **Agent:** Implements the advanced search on .
-3.  **User:** Confirms that unavailable couriers should not appear at checkout.
-4.  **Agent:** Updates the  API to filter unavailable couriers.
-5.  **User:** Asks for confirmation that shipping price estimates are shown, asks about SQL migrations, and confirms if the Biteship integration is fully connected before moving to payment gateway integration.
-6.  **Agent:** Provides a detailed, comprehensive confirmation that all Biteship features are complete and connected, and reminds the user about the  file for DB changes. Asks which payment gateway to integrate next.
-7.  **User:** Pivots to a new, large feature request: a complex voucher system with free shipping & discount types, ability to use two at once, admin management with image uploads, and a checkout modal.
-8.  **Agent:** Acknowledges the request and starts by creating the DB migration script ().
-9.  **User:** Reports the migration script failed with an SQL error ().
-10. **Agent:** Attempts to fix the script, but the user reports the same error again. The agent identifies the recurring issue and decides on a new fix (skipping sample data).
+1.  **User (Msg 77):** Clarifies payment logic: amounts must be exact, details the complex bank transfer flow (unique code, timer, proof upload, WhatsApp alert), and confirms tier system rules.
+2.  **Agent (Msg 78):** Acknowledges and starts Phase 2 of the payment integration.
+3.  **User (Msg 94):** Asks about a critical edge case: what happens if a user closes the payment window? Proposes a smart system with pending orders, a Pay Now button, a countdown, and auto-cancellation.
+4.  **Agent (Msg 95):** Agrees this is critical and lays out a plan to build the Smart Payment Flow.
+5.  **User (Msg 129):** Asks if there are any database updates needed.
+6.  **Agent (Msg 130-131):** Realizes a required  was missed from the migration script and corrects it, ensuring all DB changes are in one file.
+7.  **User (Msg 134):** Asks for payment to be integrated with Biteship, a professional admin order dashboard with product details, and sound notifications for new orders and deposits.
+8.  **Agent (Msg 135):** Agrees and starts building the admin experience enhancements.
+9.  **User (Msg 141):** Provides the list of remaining files to be built for the admin sound notification feature and the necessary SQL for a  column.
+10. **User (Msg 154):** Submits a new, large list of requests: a professional A6 print template, forgot password/email verification, a Google Maps-powered address book, and a revamp of the referral system and member area styling. This is the current, active task.
 
 **Project Health Check:**
--   **Broken:**
-    -   The new **Voucher System** is blocked by a failing database migration script ().
+-   **Broken:** None technically broken, but many new features are incomplete.
 -   **Needs User Testing:**
-    -   The entire **Biteship Integration**, while feature-complete from the agent's side, needs to be fully deployed and tested by the user on their server.
--   **Mocked:** None.
+    -   Voucher System (Entire feature)
+    -   Midtrans Payment Gateway (Entire feature)
+    -   Smart Order Handling (Pending orders, countdowns)
+    -   Admin Dashboard with Sound Notifications
+-   **Mocked:** The sound notification feature is mocked until the user provides the actual  sound files.
 
 **3rd Party Integrations**:
--   **Biteship:** Shipping API. Requires a User API Key. Status: Functionally complete, pending user deployment and testing.
+-   **Biteship:** Shipping API. Requires a User API Key.
+-   **Midtrans:** Payment Gateway API. Requires User-provided , , and .
+-   **Google Maps:** Geocoding/Places API. Will require a User API Key for the address book feature.
 
 **Testing status**
--   **Testing agent used after significant changes:** NO (Not applicable for this workflow)
--   **Troubleshoot agent used after agent stuck in loop:** YES, the agent correctly used the troubleshoot agent to identify the initial environment mismatch (PHP/MySQL vs the provided React/Mongo env).
+-   **Testing agent used after significant changes:** NO
+-   **Troubleshoot agent used after agent stuck in loop:** NO
 -   **Test files created:** None.
--   **Known regressions:**  and  admin pages remain broken from a previous session.
+-   **Known regressions:**  and  admin pages remain broken.
 
 **Credentials to test flow:**
--   **Role:** Admin
--   **User 1:**  / 
--   **User 2:**  / 
-(Note: These are for the user's production site. The agent cannot use them.)
+-   Not applicable for agent. User tests on their own live server with their own credentials.
 
 **What agent forgot to execute**
--   The agent is currently focused on the user's immediate, high-priority requests. Lower-priority tasks from the initial handoff (Business Growth Dashboard, Product Page enhancements, etc.) have been deferred, not forgotten.</analysis>
+-   The agent did not forget but was in the process of implementing the user's last request (from message #154) when the session likely ended. The remaining parts of that request (Referral system, Forgot Password, Member UI consistency) are the immediate next steps.</analysis>
