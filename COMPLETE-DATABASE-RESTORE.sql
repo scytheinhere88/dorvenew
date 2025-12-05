@@ -122,14 +122,13 @@ CREATE TABLE `products` (
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `slug` (`slug`),
-  KEY `category_id` (`category_id`),
+  KEY `idx_category` (`category_id`),
   KEY `idx_gender` (`gender`),
   KEY `idx_active` (`is_active`),
   KEY `idx_new` (`is_new`),
   KEY `idx_featured` (`is_featured`),
-  KEY `idx_category_gender` (`category_id`, `gender`),
   KEY `idx_price` (`price`),
-  FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL
+  CONSTRAINT `fk_products_category` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =====================================================
