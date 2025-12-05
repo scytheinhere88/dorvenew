@@ -277,33 +277,125 @@ include __DIR__ . '/../includes/admin-header.php';
             </select>
         </div>
 
-        <!-- BitShip Settings -->
+        <!-- Biteship Settings (Full Integration) -->
         <div id="bitshipSettings" style="display: none;">
-            <h3 style="margin: 30px 0 15px; font-size: 18px;">BitShip Configuration</h3>
-            <div class="form-group">
-                <div class="checkbox-group">
-                    <input type="checkbox" id="bitship_enabled" name="bitship_enabled" value="1"
-                           <?php echo ($settings['bitship_enabled'] ?? '0') === '1' ? 'checked' : ''; ?>>
-                    <label for="bitship_enabled" style="margin: 0; cursor: pointer;">
-                        ✅ Enable BitShip Integration
-                    </label>
+            <form method="POST" action="">
+                <input type="hidden" name="action" value="save_biteship">
+                
+                <h3 style="margin: 30px 0 15px; font-size: 18px;">🚚 Biteship Configuration</h3>
+                
+                <!-- Enable Toggle -->
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="biteship_enabled" name="biteship_enabled" value="1"
+                               <?php echo ($settings['biteship_enabled'] ?? '0') === '1' ? 'checked' : ''; ?>>
+                        <label for="biteship_enabled" style="margin: 0; cursor: pointer;">
+                            ✅ Enable Biteship Integration
+                        </label>
+                    </div>
                 </div>
-            </div>
-
-            <div class="form-group">
-                <label for="bitship_api_key">BitShip API Key</label>
-                <input type="password" id="bitship_api_key" name="bitship_api_key"
-                       value="<?php echo htmlspecialchars($settings['bitship_api_key'] ?? ''); ?>"
-                       placeholder="bitship_xxxxxxxxxxxxx">
-                <small style="color: #666; display: block; margin-top: 8px;">
-                    Register at <a href="https://bitship.id" target="_blank">bitship.id</a> to get API key
-                </small>
-            </div>
-
-            <button type="button" class="btn btn-secondary" onclick="testBitshipAPI()">
-                🧪 Test BitShip Connection
-            </button>
-            <div id="bitshipTestResult" style="margin-top: 15px; display: none;"></div>
+                
+                <!-- API Key -->
+                <div class="form-group">
+                    <label for="biteship_api_key">Biteship API Key *</label>
+                    <input type="text" id="biteship_api_key" name="biteship_api_key"
+                           value="<?php echo htmlspecialchars($settings['biteship_api_key'] ?? ''); ?>"
+                           placeholder="biteship_live.xxxxxxxxxxxxx" required>
+                    <small style="color: #666; display: block; margin-top: 8px;">
+                        Get your API key from <a href="https://business.biteship.com/" target="_blank">Biteship Dashboard</a>
+                    </small>
+                </div>
+                
+                <!-- Environment -->
+                <div class="form-group">
+                    <label>Environment</label>
+                    <select name="biteship_environment">
+                        <option value="sandbox" <?php echo ($settings['biteship_environment'] ?? 'production') === 'sandbox' ? 'selected' : ''; ?>>
+                            Sandbox (Testing)
+                        </option>
+                        <option value="production" <?php echo ($settings['biteship_environment'] ?? 'production') === 'production' ? 'selected' : ''; ?>>
+                            Production (Live)
+                        </option>
+                    </select>
+                </div>
+                
+                <!-- Webhook URL Display -->
+                <div style="background: #DBEAFE; padding: 20px; border-radius: 8px; margin: 24px 0; border: 2px solid #3B82F6;">
+                    <h4 style="margin: 0 0 12px; color: #1E40AF; font-size: 16px;">📡 Webhook Configuration</h4>
+                    <p style="margin: 0 0 12px; font-size: 14px; color: #1E40AF;">
+                        Copy this webhook URL and add it to your Biteship Dashboard:
+                    </p>
+                    <div style="background: white; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 13px; word-break: break-all; border: 1px solid #93C5FD;">
+                        https://dorve.id/api/biteship/webhook.php
+                    </div>
+                    <p style="margin: 12px 0 0; font-size: 13px; color: #1E40AF;">
+                        Go to: <a href="https://business.biteship.com/settings/webhook" target="_blank" style="color: #2563EB; font-weight: 600;">Biteship Dashboard → Settings → Webhooks</a>
+                    </p>
+                    <p style="margin: 8px 0 0; font-size: 13px; color: #1E40AF;">
+                        Subscribe to events: <strong>order.status</strong>, <strong>order.waybill_id</strong>
+                    </p>
+                </div>
+                
+                <!-- Default Couriers -->
+                <div class="form-group">
+                    <label for="biteship_default_couriers">Default Couriers</label>
+                    <input type="text" id="biteship_default_couriers" name="biteship_default_couriers"
+                           value="<?php echo htmlspecialchars($settings['biteship_default_couriers'] ?? 'jne,jnt,sicepat,anteraja,idexpress'); ?>">
+                    <small>Comma-separated courier codes (e.g., jne,jnt,sicepat)</small>
+                </div>
+                
+                <!-- Store Origin Address (Required for Shipping) -->
+                <h4 style="margin: 30px 0 15px; font-size: 16px; color: #374151;">📍 Store Origin Address (Pickup Location)</h4>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Store Name *</label>
+                        <input type="text" name="store_name" value="<?php echo htmlspecialchars($settings['store_name'] ?? 'Dorve.id Official Store'); ?>" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Store Phone *</label>
+                        <input type="text" name="store_phone" value="<?php echo htmlspecialchars($settings['store_phone'] ?? '+62-813-7737-8859'); ?>" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Full Address *</label>
+                    <textarea name="store_address" rows="3" required><?php echo htmlspecialchars($settings['store_address'] ?? ''); ?></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>City *</label>
+                        <input type="text" name="store_city" value="<?php echo htmlspecialchars($settings['store_city'] ?? 'Jakarta Selatan'); ?>" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Province *</label>
+                        <input type="text" name="store_province" value="<?php echo htmlspecialchars($settings['store_province'] ?? 'DKI Jakarta'); ?>" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Postal Code *</label>
+                        <input type="text" name="store_postal_code" value="<?php echo htmlspecialchars($settings['store_postal_code'] ?? ''); ?>" required maxlength="10">
+                    </div>
+                    <div class="form-group">
+                        <label>Webhook Secret (Optional)</label>
+                        <input type="text" name="biteship_webhook_secret" value="<?php echo htmlspecialchars($settings['biteship_webhook_secret'] ?? ''); ?>">
+                        <small>For webhook signature validation</small>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div style="margin-top: 30px; display: flex; gap: 12px;">
+                    <button type="submit" class="btn btn-primary">💾 Save Biteship Settings</button>
+                    <button type="button" class="btn btn-secondary" onclick="testBiteshipConnection()">
+                        🧪 Test Connection
+                    </button>
+                </div>
+                
+                <div id="biteshipTestResult" style="margin-top: 15px; display: none;"></div>
+            </form>
         </div>
 
         <!-- Shipper Settings -->
