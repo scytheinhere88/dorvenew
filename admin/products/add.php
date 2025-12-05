@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $discount_price = !empty($_POST['discount_price']) ? floatval($_POST['discount_price']) : null;
     $category_id = !empty($_POST['category_id']) ? intval($_POST['category_id']) : null;
     $gender = $_POST['gender'] ?? 'unisex';
-    $is_new_collection = isset($_POST['is_new']) ? 1 : 0;
+    $is_new = isset($_POST['is_new']) ? 1 : 0;
     $is_best_seller = isset($_POST['is_featured']) ? 1 : 0;
     $is_active = isset($_POST['is_active']) ? 1 : 0;
 
@@ -46,10 +46,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Insert product
             $stmt = $pdo->prepare("
-                INSERT INTO products (name, slug, price, discount_price, category_id, gender, is_new_collection, is_best_seller, is_active, stock, status)
+                INSERT INTO products (name, slug, price, discount_price, category_id, gender, is_new, is_best_seller, is_active, stock, status)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 'published')
             ");
-            $stmt->execute([$name, $slug, $price, $discount_price, $category_id, $gender, $is_new_collection, $is_best_seller, $is_active]);
+            $stmt->execute([$name, $slug, $price, $discount_price, $category_id, $gender, $is_new, $is_best_seller, $is_active]);
 
             $product_id = $pdo->lastInsertId();
 

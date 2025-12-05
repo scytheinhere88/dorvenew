@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $discount_percent = $_POST['discount_percent'] ?? 0;
         $category_id = $_POST['category_id'] ?? null;
         $gender = $_POST['gender'] ?? 'women';
-        $is_new_collection = isset($_POST['is_new_collection']) ? 1 : 0;
+        $is_new = isset($_POST['is_new']) ? 1 : 0;
         $is_best_seller = isset($_POST['is_best_seller']) ? 1 : 0;
         $status = $_POST['status'] ?? 'published';
 
@@ -55,10 +55,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     UPDATE products
                     SET name = ?, slug = ?, short_description = ?, long_description = ?,
                         price = ?, discount_percent = ?, category_id = ?, gender = ?,
-                        is_new_collection = ?, is_best_seller = ?, status = ?
+                        is_new = ?, is_best_seller = ?, status = ?
                     WHERE id = ?
                 ");
-                $stmt->execute([$name, $slug, $short_description, $long_description, $price, $discount_percent, $category_id, $gender, $is_new_collection, $is_best_seller, $status, $id]);
+                $stmt->execute([$name, $slug, $short_description, $long_description, $price, $discount_percent, $category_id, $gender, $is_new, $is_best_seller, $status, $id]);
 
                 $success = 'Produk berhasil diupdate!';
 
@@ -524,7 +524,7 @@ $page_title = 'Edit Produk - Admin';
                     <div class="form-row">
                         <div class="form-group">
                             <label class="checkbox-group">
-                                <input type="checkbox" name="is_new_collection" value="1" <?php echo $product['is_new_collection'] ? 'checked' : ''; ?>>
+                                <input type="checkbox" name="is_new" value="1" <?php echo $product['is_new'] ? 'checked' : ''; ?>>
                                 <span>Koleksi Baru</span>
                             </label>
                         </div>
