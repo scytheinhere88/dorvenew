@@ -3,8 +3,10 @@ if (!isset($pdo)) {
     require_once __DIR__ . '/../config.php';
 }
 
-// Temporarily commented for debugging
-// require_once __DIR__ . '/seo-helper.php';
+// SEO Helper included but not called automatically to avoid errors
+if (file_exists(__DIR__ . '/seo-helper.php')) {
+    require_once __DIR__ . '/seo-helper.php';
+}
 
 $current_lang = $_SESSION['lang'] ?? 'id';
 $cart_count = getCartCount();
