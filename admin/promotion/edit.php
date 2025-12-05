@@ -19,7 +19,9 @@ if (!$banner) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = trim($_POST['title'] ?? '');
     $subtitle = trim($_POST['subtitle'] ?? '');
+    $banner_type = $_POST['banner_type'] ?? 'slider';
     $link_url = trim($_POST['link_url'] ?? '');
+    $cta_text = trim($_POST['cta_text'] ?? 'Shop Now');
     $display_order = intval($_POST['display_order'] ?? 0);
     $is_active = isset($_POST['is_active']) ? 1 : 0;
     
