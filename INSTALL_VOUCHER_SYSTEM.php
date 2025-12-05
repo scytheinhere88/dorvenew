@@ -213,7 +213,7 @@ if (!isAdmin()) {
 
             // STEP 3: Create voucher_usage table
             try {
-                $sql = "CREATE TABLE IF NOT EXISTS `voucher_usage` (
+                $sql = "CREATE TABLE `voucher_usage` (
                     `id` INT AUTO_INCREMENT PRIMARY KEY,
                     `order_id` INT NOT NULL,
                     `user_id` INT NOT NULL,
