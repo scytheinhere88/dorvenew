@@ -29,18 +29,13 @@ $variants = $stmt->fetchAll();
 $colors = array_values(array_unique(array_filter(array_column($variants, 'color'))));
 $sizes = array_values(array_unique(array_filter(array_column($variants, 'size'))));
 
-$stmt = $pdo->prepare("SELECT r.*, u.name as user_name
-                       FROM reviews r
-                       JOIN users u ON r.user_id = u.id
-                       WHERE r.product_id = ? AND r.is_approved = 1
-                       ORDER BY r.created_at DESC");
-$stmt->execute([$product['id']]);
-$reviews = $stmt->fetchAll();
+// Get reviews from new system
+require_once __DIR__ . '/../includes/review-helper.php';
+$reviews = getProductReviews($product['id'], 20);
+$reviewStats = getReviewStats($product['id']);
 
-$avg_rating = 0;
-if (!empty($reviews)) {
-    $avg_rating = array_sum(array_column($reviews, 'rating')) / count($reviews);
-}
+$avg_rating = $product['average_rating'] ?? 0;
+$total_reviews = $product['total_reviews'] ?? 0;
 
 $stmt = $pdo->prepare("SELECT p.*, pi.image_path FROM products p
                        LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_primary = 1
