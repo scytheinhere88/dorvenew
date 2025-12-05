@@ -304,19 +304,47 @@ $addresses = $stmt->fetchAll();
         </div>
     </div>
 
-    <!-- Google Maps API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places"></script>
+    <!-- Google Maps API - PLACEHOLDER -->
+    <!-- TODO: Replace YOUR_GOOGLE_MAPS_API_KEY with actual API key from user -->
     <script>
-    let map, marker, geocoder;
-
+    // NOTE: Google Maps API Key belum diatur
+    // User perlu mendapatkan API Key dari: https://console.cloud.google.com/google/maps-apis/
+    const GOOGLE_MAPS_API_KEY = 'YOUR_GOOGLE_MAPS_API_KEY'; // GANTI INI!
+    
     function openModal() {
         document.getElementById('addressModal').style.display = 'block';
-        setTimeout(initMap, 100); // Initialize map after modal opens
+        
+        if (GOOGLE_MAPS_API_KEY === 'YOUR_GOOGLE_MAPS_API_KEY') {
+            // Show warning if API key not set
+            document.getElementById('map').innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: #FEF3C7; flex-direction: column; padding: 20px; text-align: center;">
+                    <div style="font-size: 48px; margin-bottom: 16px;">🗺️</div>
+                    <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">Google Maps Belum Diatur</div>
+                    <div style="font-size: 13px; color: #92400E;">
+                        Admin perlu menambahkan Google Maps API Key untuk mengaktifkan fitur ini.<br>
+                        Sementara itu, silakan isi alamat secara manual.
+                    </div>
+                </div>
+            `;
+            return;
+        }
+        
+        // Load Google Maps script if not loaded yet
+        if (!window.google || !window.google.maps) {
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places`;
+            script.onload = () => setTimeout(initMap, 100);
+            document.head.appendChild(script);
+        } else {
+            setTimeout(initMap, 100);
+        }
     }
 
     function closeModal() {
         document.getElementById('addressModal').style.display = 'none';
     }
+
+    let map, marker, geocoder;
 
     function initMap() {
         // Default to Jakarta
