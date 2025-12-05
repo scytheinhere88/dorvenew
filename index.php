@@ -191,11 +191,14 @@ include __DIR__ . '/includes/header.php';
         box-shadow: 0 12px 32px rgba(0,0,0,0.2);
     }
 
-    .hero-slider {
+    /* ===== HERO SLIDER - PROFESSIONAL ===== */
+    .hero-slider-container {
         position: relative;
-        height: 80vh;
-        min-height: 600px;
+        height: 85vh;
+        min-height: 650px;
+        max-height: 900px;
         overflow: hidden;
+        margin-bottom: 120px;
     }
 
     .hero-slide {
@@ -205,59 +208,167 @@ include __DIR__ . '/includes/header.php';
         width: 100%;
         height: 100%;
         opacity: 0;
-        transition: opacity 1s ease;
-        background-size: cover;
-        background-position: center;
+        visibility: hidden;
+        transition: opacity 1.2s ease, visibility 0s 1.2s;
     }
 
     .hero-slide.active {
         opacity: 1;
+        visibility: visible;
+        transition: opacity 1.2s ease, visibility 0s;
     }
 
-    .hero-content {
+    .hero-slide-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .hero-slide-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.1) 100%);
+    }
+
+    .hero-slide-content {
         position: absolute;
         top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
+        left: 10%;
+        transform: translateY(-50%);
+        max-width: 600px;
         color: var(--white);
         z-index: 10;
-        max-width: 800px;
-        padding: 40px;
+        text-shadow: 0 4px 20px rgba(0,0,0,0.4);
     }
 
-    .hero-title {
+    .hero-slide-title {
         font-family: 'Playfair Display', serif;
-        font-size: 64px;
-        font-weight: 600;
-        margin-bottom: 20px;
+        font-size: 72px;
+        font-weight: 700;
+        margin-bottom: 24px;
         line-height: 1.1;
-        text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        letter-spacing: -1px;
+        animation: slideInLeft 0.8s ease forwards;
+        opacity: 0;
     }
 
-    .hero-subtitle {
-        font-size: 18px;
-        margin-bottom: 40px;
-        letter-spacing: 1px;
-        text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    .hero-slide.active .hero-slide-title {
+        animation: slideInLeft 0.8s 0.2s ease forwards;
     }
 
-    .hero-btn {
+    .hero-slide-subtitle {
+        font-size: 20px;
+        margin-bottom: 36px;
+        letter-spacing: 0.5px;
+        line-height: 1.6;
+        animation: slideInLeft 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .hero-slide.active .hero-slide-subtitle {
+        animation: slideInLeft 0.8s 0.4s ease forwards;
+    }
+
+    .hero-slide-cta {
         display: inline-block;
-        padding: 16px 48px;
+        padding: 18px 48px;
         background: var(--white);
         color: var(--charcoal);
         text-decoration: none;
-        font-weight: 500;
-        letter-spacing: 1px;
+        font-weight: 600;
+        letter-spacing: 2px;
         text-transform: uppercase;
-        font-size: 14px;
+        font-size: 13px;
+        border-radius: 2px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: slideInLeft 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .hero-slide.active .hero-slide-cta {
+        animation: slideInLeft 0.8s 0.6s ease forwards;
+    }
+
+    .hero-slide-cta:hover {
+        background: var(--latte);
+        transform: translateY(-3px);
+        box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+    }
+
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-60px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    /* Slider Navigation */
+    .slider-nav {
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 12px;
+        z-index: 20;
+    }
+
+    .slider-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.4);
+        border: 2px solid var(--white);
+        cursor: pointer;
         transition: all 0.3s;
     }
 
-    .hero-btn:hover {
-        background: var(--latte);
-        transform: translateY(-2px);
+    .slider-dot.active {
+        background: var(--white);
+        width: 40px;
+        border-radius: 6px;
+    }
+
+    .slider-arrows {
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        transform: translateY(-50%);
+        display: flex;
+        justify-content: space-between;
+        padding: 0 40px;
+        z-index: 20;
+        pointer-events: none;
+    }
+
+    .slider-arrow {
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        pointer-events: all;
+        color: var(--white);
+        font-size: 24px;
+    }
+
+    .slider-arrow:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
     }
 
     /* SEO Section 1 - Brand Story (Top) */
