@@ -39,8 +39,21 @@ if (isset($pdo)) {
     echo "<p style='color: red;'>❌ PDO not initialized</p>";
 }
 
-// Test 4: SEO Helper
-echo "<h2>4. SEO Helper</h2>";
+// Test 4: Helpers file
+echo "<h2>4. Helpers File</h2>";
+if (file_exists(__DIR__ . '/includes/helpers.php')) {
+    try {
+        require_once __DIR__ . '/includes/helpers.php';
+        echo "<p style='color: green;'>✅ helpers.php loaded successfully</p>";
+    } catch (Exception $e) {
+        echo "<p style='color: red;'>❌ Helpers error: " . $e->getMessage() . "</p>";
+    }
+} else {
+    echo "<p style='color: orange;'>⚠️ helpers.php file not found</p>";
+}
+
+// Test 5: SEO Helper
+echo "<h2>5. SEO Helper</h2>";
 if (file_exists(__DIR__ . '/includes/seo-helper.php')) {
     try {
         require_once __DIR__ . '/includes/seo-helper.php';
@@ -59,8 +72,8 @@ if (file_exists(__DIR__ . '/includes/seo-helper.php')) {
     echo "<p style='color: red;'>❌ seo-helper.php file not found</p>";
 }
 
-// Test 5: Functions
-echo "<h2>5. Required Functions</h2>";
+// Test 6: Functions
+echo "<h2>6. Required Functions</h2>";
 $required_functions = ['getCartCount', 'getCanonicalUrl', 'formatPrice', 'isLoggedIn'];
 foreach ($required_functions as $func) {
     if (function_exists($func)) {
@@ -70,16 +83,16 @@ foreach ($required_functions as $func) {
     }
 }
 
-// Test 6: Session
-echo "<h2>6. Session</h2>";
+// Test 7: Session
+echo "<h2>7. Session</h2>";
 if (session_status() === PHP_SESSION_ACTIVE) {
     echo "<p style='color: green;'>✅ Session active</p>";
 } else {
     echo "<p style='color: orange;'>⚠️ Session not started</p>";
 }
 
-// Test 7: Header include
-echo "<h2>7. Header Include Test</h2>";
+// Test 8: Header include
+echo "<h2>8. Header Include Test</h2>";
 ob_start();
 try {
     include __DIR__ . '/includes/header.php';
