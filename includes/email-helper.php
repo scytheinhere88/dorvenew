@@ -68,7 +68,7 @@ function getEmailTemplate($title, $content) {
                                     Butuh bantuan? <a href="https://dorve.id/pages/contact.php" style="color: #1A1A1A; text-decoration: none; font-weight: 600;">Hubungi Kami</a>
                                 </p>
                                 <p style="margin: 0; font-size: 12px; color: #9CA3AF; text-align: center;">
-                                    © 2025 Dorve House. All rights reserved.<br>
+                                    © 2025 Dorve.id - Pusat Fashion Indonesia. All rights reserved.<br>
                                     Email ini dikirim otomatis, mohon jangan balas.
                                 </p>
                             </td>
