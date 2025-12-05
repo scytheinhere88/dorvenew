@@ -316,8 +316,8 @@ CREATE TABLE `order_vouchers` (
   PRIMARY KEY (`id`),
   KEY `idx_order` (`order_id`),
   KEY `idx_voucher` (`voucher_id`),
-  FOREIGN KEY (`order_id`) REFERENCES `orders`(`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`voucher_id`) REFERENCES `vouchers`(`id`) ON DELETE CASCADE
+  CONSTRAINT `fk_order_vouchers_order` FOREIGN KEY (`order_id`) REFERENCES `orders`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_order_vouchers_voucher` FOREIGN KEY (`voucher_id`) REFERENCES `vouchers`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =====================================================
