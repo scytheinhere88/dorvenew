@@ -19,7 +19,8 @@ function generateSEO($page_type = 'page', $data = []) {
     
     // Generate full title
     $full_title = $title;
-    if (!str_contains($title, 'Dorve')) {
+    // PHP 7.x compatible check
+    if (strpos($title, 'Dorve') === false) {
         $full_title .= ' | Dorve House';
     }
     
