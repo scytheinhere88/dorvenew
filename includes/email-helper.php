@@ -49,8 +49,8 @@ function getEmailTemplate($title, $content) {
                         <!-- Header -->
                         <tr>
                             <td style="background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%); padding: 40px 40px 30px; text-align: center;">
-                                <h1 style="margin: 0; color: #FFFFFF; font-size: 32px; font-weight: 700; letter-spacing: 2px;">DORVE HOUSE</h1>
-                                <p style="margin: 8px 0 0; color: rgba(255,255,255,0.8); font-size: 14px;">Fashion for Everyone</p>
+                                <h1 style="margin: 0; color: #FFFFFF; font-size: 32px; font-weight: 700; letter-spacing: 2px;">DORVE.ID</h1>
+                                <p style="margin: 8px 0 0; color: rgba(255,255,255,0.8); font-size: 14px;">Pusat Fashion Indonesia</p>
                             </td>
                         </tr>
                         
