@@ -1255,6 +1255,9 @@ document.addEventListener('keydown', function(e) {
 </script>
 <?php endif; ?>
 
+<!-- ========== INCLUDE LUXURY HOMEPAGE SECTIONS ========== -->
+<?php include __DIR__ . '/includes/homepage-sections.php'; ?>
+
 <!-- SEO Section 1: Brand Story (Top Section) -->
 <section class="brand-story-section">
     <div class="container">
