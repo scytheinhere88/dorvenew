@@ -2,8 +2,50 @@
 require_once __DIR__ . '/../../config.php';
 if (!isAdmin()) redirect('/admin/login.php');
 
-// Banners table doesn't exist - use empty array
-$banners = [];
+// Get banners
+try {
+    $stmt = $pdo->query("SELECT * FROM banners ORDER BY display_order ASC, created_at DESC");
+    $banners = $stmt->fetchAll();
+} catch (PDOException $e) {
+    // Table might not exist yet
+    $banners = [];
+}
+
+// Handle delete action
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['id'])) {
+    if ($_POST['action'] === 'delete') {
+        try {
+            // Get image path before deleting
+            $stmt = $pdo->prepare("SELECT image_url FROM banners WHERE id = ?");
+            $stmt->execute([$_POST['id']]);
+            $banner = $stmt->fetch();
+            
+            if ($banner && $banner['image_url']) {
+                $image_path = __DIR__ . '/../../' . $banner['image_url'];
+                if (file_exists($image_path)) {
+                    unlink($image_path);
+                }
+            }
+            
+            $stmt = $pdo->prepare("DELETE FROM banners WHERE id = ?");
+            $stmt->execute([$_POST['id']]);
+            
+            $_SESSION['success'] = 'Banner deleted successfully!';
+        } catch (Exception $e) {
+            $_SESSION['error'] = 'Failed to delete banner: ' . $e->getMessage();
+        }
+        redirect('/admin/promotion/index.php');
+    } elseif ($_POST['action'] === 'toggle_status') {
+        try {
+            $stmt = $pdo->prepare("UPDATE banners SET is_active = NOT is_active WHERE id = ?");
+            $stmt->execute([$_POST['id']]);
+            $_SESSION['success'] = 'Banner status updated!';
+        } catch (Exception $e) {
+            $_SESSION['error'] = 'Failed to update status';
+        }
+        redirect('/admin/promotion/index.php');
+    }
+}
 
 $page_title = 'Kelola Promosi & Banner - Admin';
 include __DIR__ . '/../includes/admin-header.php';
@@ -11,7 +53,18 @@ include __DIR__ . '/../includes/admin-header.php';
 
 <div class="header">
     <h1>Kelola Promosi & Banner</h1>
+    <?php if (!empty($banners) || empty($banners)): ?>
+        <a href="/admin/promotion/add.php" class="btn btn-primary">+ Add Banner</a>
+    <?php endif; ?>
 </div>
+
+<?php if (isset($_SESSION['success'])): ?>
+    <div class="alert alert-success"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></div>
+<?php endif; ?>
+
+<?php if (isset($_SESSION['error'])): ?>
+    <div class="alert alert-error"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></div>
+<?php endif; ?>
 
 <div class="content-container">
     <p style="margin-bottom: 20px; color: #6B7280;">Manage homepage banners and promotional content</p>
