@@ -55,27 +55,16 @@ include __DIR__ . '/../includes/admin-header.php';
 ?>
 
 <style>
-.settings-container { max-width: 900px; }
-.setting-section { background: white; padding: 25px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #E5E7EB; }
+.setting-section { background: #F9FAFB; padding: 25px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #E5E7EB; }
 .setting-section h3 { margin: 0 0 20px 0; color: #111827; font-size: 18px; border-bottom: 2px solid #E5E7EB; padding-bottom: 10px; }
-.form-group { margin-bottom: 20px; }
-.form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #374151; font-size: 14px; }
-.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 14px; }
-.form-group small { display: block; margin-top: 5px; color: #6B7280; font-size: 13px; }
-.radio-group { display: flex; gap: 20px; }
-.radio-option { display: flex; align-items: center; gap: 8px; }
-.radio-option input { width: auto; }
-.btn-primary { background: #3B82F6; color: white; padding: 12px 30px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; }
 .info-box { background: #DBEAFE; border-left: 4px solid #3B82F6; padding: 15px; margin-bottom: 20px; border-radius: 4px; }
-.alert { padding: 15px; border-radius: 8px; margin-bottom: 20px; }
-.alert-success { background: #D1FAE5; color: #065F46; }
 </style>
 
 <div class="header">
     <h1>⚙️ Referral System Settings</h1>
 </div>
 
-<div class="content-container settings-container">
+<div class="form-container" style="max-width: 900px;">
     <?php if (isset($_SESSION['success'])): ?>
         <div class="alert alert-success"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></div>
     <?php endif; ?>
