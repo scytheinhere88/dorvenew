@@ -38,7 +38,7 @@ header('Content-Type: text/html; charset=utf-8');
 if (isset($_GET['run'])) {
     echo "<h2>🚀 Executing Restoration...</h2>";
     
-    $sqlFile = __DIR__ . '/COMPLETE-DATABASE-RESTORE-V2.sql';
+    $sqlFile = __DIR__ . '/SIMPLE-RESTORE.sql';
     
     if (!file_exists($sqlFile)) {
         echo "<p class='error'>❌ SQL file not found: $sqlFile</p>";
