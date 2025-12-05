@@ -200,7 +200,7 @@ include __DIR__ . '/../includes/admin-header.php';
                     <td><strong><?php echo htmlspecialchars($cat['name']); ?></strong></td>
                     <td><code style="background: #F3F4F6; padding: 4px 8px; border-radius: 4px;"><?php echo htmlspecialchars($cat['slug']); ?></code></td>
                     <td>
-                        <button class="btn btn-secondary" onclick="editCategory(<?php echo $cat['id']; ?>, '<?php echo htmlspecialchars($cat['name']); ?>', '<?php echo htmlspecialchars($cat['slug']); ?>', '<?php echo htmlspecialchars($cat['image'] ?? ''); ?>')">Edit</button>
+                        <button class="btn btn-secondary" onclick="editCategory(<?php echo $cat['id']; ?>, '<?php echo htmlspecialchars($cat['name']); ?>', '<?php echo htmlspecialchars($cat['slug']); ?>', '<?php echo htmlspecialchars($cat['image'] ?? ''); ?>', '<?php echo htmlspecialchars($cat['size_guide'] ?? ''); ?>')">Edit</button>
                         <form method="POST" style="display: inline;" onsubmit="return confirm('Hapus kategori ini?');">
                             <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="id" value="<?php echo $cat['id']; ?>">
