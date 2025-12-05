@@ -24,12 +24,7 @@ function getPendingOrdersCount() {
     return (int)$stmt->fetchColumn();
 }
 
-/**
- * Format price to IDR
- */
-function formatPrice($amount) {
-    return 'Rp ' . number_format($amount, 0, ',', '.');
-}
+// formatPrice() already defined in config.php - removed duplicate
 
 /**
  * Get payment method badge HTML
