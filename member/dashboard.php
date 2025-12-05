@@ -234,10 +234,11 @@ include __DIR__ . '/../includes/header.php';
             <li><a href="/member/wallet.php">My Wallet</a></li>
             <li><a href="/member/orders.php">My Orders</a></li>
             <li><a href="/member/referral.php">🎁 My Referrals</a></li>
-            <li><a href="/member/reviews.php">My Reviews</a></li>
-            <li><a href="/member/profile.php">Edit Profile</a></li>
-            <li><a href="/member/address.php">Address Book</a></li>
-            <li><a href="/member/password.php">Change Password</a></li>
+            <li><a href="/member/address-book.php">📍 Address Book</a></li>
+            <li><a href="/member/vouchers/">🎫 My Vouchers</a></li>
+            <li><a href="/member/reviews.php">⭐ My Reviews</a></li>
+            <li><a href="/member/profile.php">👤 Edit Profile</a></li>
+            <li><a href="/member/password.php">🔒 Change Password</a></li>
         </ul>
 
         <a href="/auth/logout.php" class="logout-btn">Logout</a>
