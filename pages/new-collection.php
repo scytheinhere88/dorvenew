@@ -5,7 +5,6 @@ require_once __DIR__ . '/../config.php';
 $variant_tables_exist = false;
 try {
     $pdo->query("SELECT 1 FROM product_variants LIMIT 1");
-    $pdo->query("SELECT 1 FROM variant_stock LIMIT 1");
     $variant_tables_exist = true;
 } catch (PDOException $e) {
     // Tables don't exist yet
@@ -15,21 +14,21 @@ try {
 $stmt_women = $pdo->query("SELECT p.*, c.name as category_name
                      FROM products p
                      LEFT JOIN categories c ON p.category_id = c.id
-                     WHERE p.is_new_collection = 1 AND p.status = 'published' AND p.gender = 'women'
+                     WHERE p.is_new = 1 AND p.is_active = 1 AND p.gender = 'women'
                      ORDER BY p.created_at DESC LIMIT 8");
 $products_women = $stmt_women->fetchAll();
 
 $stmt_men = $pdo->query("SELECT p.*, c.name as category_name
                      FROM products p
                      LEFT JOIN categories c ON p.category_id = c.id
-                     WHERE p.is_new_collection = 1 AND p.status = 'published' AND p.gender = 'men'
+                     WHERE p.is_new = 1 AND p.is_active = 1 AND p.gender = 'men'
                      ORDER BY p.created_at DESC LIMIT 8");
 $products_men = $stmt_men->fetchAll();
 
 $stmt_unisex = $pdo->query("SELECT p.*, c.name as category_name
                      FROM products p
                      LEFT JOIN categories c ON p.category_id = c.id
-                     WHERE p.is_new_collection = 1 AND p.status = 'published' AND p.gender = 'unisex'
+                     WHERE p.is_new = 1 AND p.is_active = 1 AND p.gender = 'unisex'
                      ORDER BY p.created_at DESC LIMIT 8");
 $products_unisex = $stmt_unisex->fetchAll();
 
