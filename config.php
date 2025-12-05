@@ -193,3 +193,10 @@ function calculateDiscount($price, $discount_percent) {
 function generateOrderNumber() {
     return 'DRV-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
 }
+
+function getCanonicalUrl() {
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'] ?? 'dorve.id';
+    $uri = $_SERVER['REQUEST_URI'] ?? '/';
+    return $protocol . '://' . $host . $uri;
+}
