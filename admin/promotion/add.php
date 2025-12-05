@@ -97,9 +97,15 @@ include __DIR__ . '/../includes/admin-header.php';
     </div>
     
     <div class="form-group">
-        <label>Link URL</label>
-        <input type="url" name="link_url" placeholder="https://..." value="<?php echo htmlspecialchars($_POST['link_url'] ?? ''); ?>">
-        <small>Where should the banner link to? (Optional)</small>
+        <label>Link URL *</label>
+        <input type="text" name="link_url" placeholder="/pages/new-collection.php or /pages/all-products.php" value="<?php echo htmlspecialchars($_POST['link_url'] ?? '/pages/all-products.php'); ?>" required>
+        <small>Where banner leads to. Examples: /pages/new-collection.php, /pages/all-products.php</small>
+    </div>
+    
+    <div class="form-group">
+        <label>CTA Button Text</label>
+        <input type="text" name="cta_text" placeholder="Shop Now" value="<?php echo htmlspecialchars($_POST['cta_text'] ?? 'Shop Now'); ?>" maxlength="50">
+        <small>Button text on banner (e.g., "Shop Now", "New Collection", "Explore Now")</small>
     </div>
     
     <div class="form-row">
