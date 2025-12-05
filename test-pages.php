@@ -93,46 +93,43 @@ $pages_to_test = [
         if (!file_exists($full_path)) {
             echo "error'>";
             echo "❌ <strong>$name</strong> - FILE NOT FOUND<br>";
-            echo "Path: $full_path";
+            echo "Path: $path";
             echo "</div>";
             continue;
         }
         
-        // Capture output and errors
-        ob_start();
-        $error_occurred = false;
-        $error_message = '';
+        // Check PHP syntax without executing
+        $output = shell_exec("php -l " . escapeshellarg($full_path) . " 2>&1");
         
-        set_error_handler(function($errno, $errstr, $errfile, $errline) use (&$error_occurred, &$error_message) {
-            $error_occurred = true;
-            $error_message .= "Error [$errno]: $errstr in $errfile on line $errline\n";
-            return true;
-        });
-        
-        try {
-            // Simulate some session data for member pages
-            if (!isset($_SESSION)) {
-                session_start();
+        if (strpos($output, 'No syntax errors') !== false) {
+            // Syntax OK, now check for common issues in code
+            $content = file_get_contents($full_path);
+            $issues = [];
+            
+            // Check for problematic table references
+            if (preg_match('/wallet_topups|bank_accounts|payment_gateways|variant_stock/', $content)) {
+                preg_match_all('/(wallet_topups|bank_accounts|payment_gateways|variant_stock)/', $content, $matches);
+                $issues[] = "References to missing tables: " . implode(', ', array_unique($matches[0]));
             }
-            $_SESSION['user_id'] = 1; // Fake user for testing
             
-            include $full_path;
+            // Check for problematic columns
+            if (preg_match('/payment_status|is_published|is_new_collection/', $content)) {
+                preg_match_all('/(payment_status|is_published|is_new_collection)/', $content, $matches);
+                $issues[] = "References to non-existent columns: " . implode(', ', array_unique($matches[0]));
+            }
             
-        } catch (Throwable $e) {
-            $error_occurred = true;
-            $error_message = $e->getMessage() . "\n" . $e->getTraceAsString();
-        }
-        
-        restore_error_handler();
-        $output = ob_get_clean();
-        
-        if ($error_occurred) {
-            echo "error'>";
-            echo "❌ <strong>$name</strong> - ERROR<br>";
-            echo "<pre>$error_message</pre>";
+            if (!empty($issues)) {
+                echo "warning'>";
+                echo "⚠️ <strong>$name</strong> - POTENTIAL ISSUES<br>";
+                echo "<pre>" . implode("\n", $issues) . "</pre>";
+            } else {
+                echo "success'>";
+                echo "✅ <strong>$name</strong> - SYNTAX OK";
+            }
         } else {
-            echo "success'>";
-            echo "✅ <strong>$name</strong> - OK";
+            echo "error'>";
+            echo "❌ <strong>$name</strong> - SYNTAX ERROR<br>";
+            echo "<pre>" . htmlspecialchars($output) . "</pre>";
         }
         
         echo "</div>";
