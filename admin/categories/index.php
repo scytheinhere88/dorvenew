@@ -7,9 +7,79 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($_POST['action'] === 'add') {
             $name = $_POST['name'];
             $slug = $_POST['slug'] ?: strtolower(str_replace(' ', '-', $name));
-            $stmt = $pdo->prepare("INSERT INTO categories (name, slug) VALUES (?, ?)");
-            $stmt->execute([$name, $slug]);
+            $image = null;
+            
+            // Handle image upload
+            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $upload_dir = __DIR__ . '/../../uploads/categories/';
+                if (!is_dir($upload_dir)) {
+                    mkdir($upload_dir, 0777, true);
+                }
+                
+                $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+                $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+                
+                if (in_array($ext, $allowed)) {
+                    $filename = 'cat_' . time() . '.' . $ext;
+                    $filepath = $upload_dir . $filename;
+                    
+                    if (move_uploaded_file($_FILES['image']['tmp_name'], $filepath)) {
+                        $image = '/uploads/categories/' . $filename;
+                    }
+                }
+            }
+            
+            $stmt = $pdo->prepare("INSERT INTO categories (name, slug, image) VALUES (?, ?, ?)");
+            $stmt->execute([$name, $slug, $image]);
+        } elseif ($_POST['action'] === 'update') {
+            $id = $_POST['id'];
+            $name = $_POST['name'];
+            $slug = $_POST['slug'] ?: strtolower(str_replace(' ', '-', $name));
+            
+            // Get current category
+            $stmt = $pdo->prepare("SELECT image FROM categories WHERE id = ?");
+            $stmt->execute([$id]);
+            $current = $stmt->fetch();
+            $image = $current['image'];
+            
+            // Handle new image upload
+            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $upload_dir = __DIR__ . '/../../uploads/categories/';
+                if (!is_dir($upload_dir)) {
+                    mkdir($upload_dir, 0777, true);
+                }
+                
+                $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+                $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+                
+                if (in_array($ext, $allowed)) {
+                    // Delete old image if exists
+                    if ($image && file_exists(__DIR__ . '/../../' . $image)) {
+                        unlink(__DIR__ . '/../../' . $image);
+                    }
+                    
+                    $filename = 'cat_' . time() . '.' . $ext;
+                    $filepath = $upload_dir . $filename;
+                    
+                    if (move_uploaded_file($_FILES['image']['tmp_name'], $filepath)) {
+                        $image = '/uploads/categories/' . $filename;
+                    }
+                }
+            }
+            
+            $stmt = $pdo->prepare("UPDATE categories SET name = ?, slug = ?, image = ? WHERE id = ?");
+            $stmt->execute([$name, $slug, $image, $id]);
         } elseif ($_POST['action'] === 'delete') {
+            // Get image path before deleting
+            $stmt = $pdo->prepare("SELECT image FROM categories WHERE id = ?");
+            $stmt->execute([$_POST['id']]);
+            $cat = $stmt->fetch();
+            
+            // Delete image file if exists
+            if ($cat && $cat['image'] && file_exists(__DIR__ . '/../../' . $cat['image'])) {
+                unlink(__DIR__ . '/../../' . $cat['image']);
+            }
+            
             $stmt = $pdo->prepare("DELETE FROM categories WHERE id = ?");
             $stmt->execute([$_POST['id']]);
         }
