@@ -408,33 +408,65 @@ include __DIR__ . '/../includes/header.php';
 
             <div class="form-section">
                 <h3>💳 Payment Method</h3>
-                <div class="payment-method" style="background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%); color: var(--white); border-color: var(--charcoal);">
-                    <input type="radio" name="payment_method" value="wallet" required>
+                
+                <?php
+                // Get enabled payment methods
+                $stmt = $pdo->query("SELECT * FROM payment_methods WHERE is_active = 1 ORDER BY sort_order");
+                $paymentMethods = $stmt->fetchAll();
+                
+                // Get payment settings
+                $stmt = $pdo->query("SELECT setting_key, setting_value FROM payment_settings");
+                $settings = [];
+                while ($row = $stmt->fetch()) {
+                    $settings[$row['setting_key']] = $row['setting_value'];
+                }
+                
+                $walletBalance = $user['wallet_balance'] ?? 0;
+                $midtransEnabled = ($settings['midtrans_enabled'] ?? '0') == '1';
+                $bankTransferEnabled = ($settings['bank_transfer_enabled'] ?? '0') == '1';
+                ?>
+                
+                <!-- Dorve Wallet -->
+                <div class="payment-method" style="background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%); color: white; border-color: #1A1A1A;" data-method="wallet">
+                    <input type="radio" name="payment_method" value="wallet" id="pm_wallet" <?= $walletBalance > 0 ? '' : 'disabled' ?>>
                     <div style="flex: 1;">
-                        <strong>💰 Dorve House Wallet</strong>
-                        <div style="font-size: 13px; opacity: 0.9;">Balance: <?php echo formatPrice($user['wallet_balance'] ?? 0); ?></div>
+                        <strong>💰 Dorve Wallet</strong>
+                        <div style="font-size: 13px; opacity: 0.9;">
+                            Balance: <strong><?php echo formatPrice($walletBalance); ?></strong>
+                            <?php if ($walletBalance == 0): ?>
+                                <span style="color: #EF4444; display: block; margin-top: 4px;">⚠️ Insufficient balance. Please topup first.</span>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
-                <div class="payment-method">
-                    <input type="radio" name="payment_method" value="bank_transfer">
-                    <div><strong>🏦 Bank Transfer</strong></div>
+                
+                <!-- Midtrans Payment Gateway -->
+                <?php if ($midtransEnabled): ?>
+                <div class="payment-method" data-method="midtrans">
+                    <input type="radio" name="payment_method" value="midtrans" id="pm_midtrans">
+                    <div style="flex: 1;">
+                        <strong>🌐 Payment Gateway (Midtrans)</strong>
+                        <div style="font-size: 13px; color: #6B7280;">Bank Transfer, E-Wallet, Kartu Kredit/Debit</div>
+                    </div>
                 </div>
-                <div class="payment-method">
-                    <input type="radio" name="payment_method" value="credit_card">
-                    <div><strong>💳 Credit/Debit Card</strong></div>
+                <?php endif; ?>
+                
+                <!-- Direct Bank Transfer -->
+                <?php if ($bankTransferEnabled): ?>
+                <div class="payment-method" data-method="bank_transfer">
+                    <input type="radio" name="payment_method" value="bank_transfer" id="pm_bank">
+                    <div style="flex: 1;">
+                        <strong>🏦 Direct Bank Transfer</strong>
+                        <div style="font-size: 13px; color: #6B7280;">Transfer manual ke rekening bank (dengan kode unik)</div>
+                    </div>
                 </div>
-                <div class="payment-method">
-                    <input type="radio" name="payment_method" value="qris">
-                    <div><strong>📱 QRIS</strong></div>
+                <?php endif; ?>
+                
+                <?php if (!$midtransEnabled && !$bankTransferEnabled && $walletBalance == 0): ?>
+                <div style="padding: 20px; text-align: center; color: #EF4444;">
+                    <p>❌ No payment method available. Please contact admin.</p>
                 </div>
-                <div class="payment-method">
-                    <input type="radio" name="payment_method" value="paypal">
-                    <div><strong>🅿️ PayPal</strong></div>
-                </div>
-                <div class="payment-method">
-                    <input type="radio" name="payment_method" value="cod">
-                    <div><strong>💵 Cash on Delivery</strong></div>
-                </div>
+                <?php endif; ?>
             </div>
 
             <input type="hidden" name="voucher_discount" id="voucher_discount_input" value="">
