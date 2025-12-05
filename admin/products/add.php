@@ -457,6 +457,19 @@ include __DIR__ . '/../includes/admin-header.php';
     border-radius: 8px;
 }
 
+.image-preview-grid {
+    background: #F9FAFB;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #E5E7EB;
+}
+
+.image-preview {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 16px;
+}
+
 @media (max-width: 768px) {
     .form-row {
         grid-template-columns: 1fr;
