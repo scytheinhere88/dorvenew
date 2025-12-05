@@ -1567,6 +1567,7 @@ document.addEventListener('keydown', function(e) {
     </div>
 </section>
 <?php endif; ?>
+*/ ?>
 
 <!-- SEO Section 5: Final Content (Bottom Section) -->
 <section class="final-content-section">
