@@ -63,10 +63,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             $stmt = $pdo->prepare("
                 UPDATE banners 
-                SET title = ?, subtitle = ?, image_url = ?, link_url = ?, display_order = ?, is_active = ?
+                SET title = ?, subtitle = ?, banner_type = ?, image_url = ?, link_url = ?, cta_text = ?, display_order = ?, is_active = ?
                 WHERE id = ?
             ");
-            $stmt->execute([$title, $subtitle, $image_url, $link_url, $display_order, $is_active, $id]);
+            $stmt->execute([$title, $subtitle, $banner_type, $image_url, $link_url, $cta_text, $display_order, $is_active, $id]);
             
             $_SESSION['success'] = 'Banner updated successfully!';
             redirect('/admin/promotion/index.php');
