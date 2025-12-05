@@ -68,13 +68,14 @@ try {
     // Generate order number
     $orderNumber = 'ORD-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
     
-    // Create order
+    // Create order with expiry time (1 hour)
     $stmt = $pdo->prepare("
         INSERT INTO orders (
             user_id, order_number, subtotal, shipping_cost, voucher_discount, 
             voucher_free_shipping, voucher_codes, total_payable_amount, 
-            payment_method, payment_status, shipping_status, fulfillment_status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', 'pending', 'pending')
+            payment_method, payment_status, shipping_status, fulfillment_status,
+            expired_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', 'pending', 'pending', DATE_ADD(NOW(), INTERVAL 1 HOUR))
     ");
     $stmt->execute([
         $userId, $orderNumber, $subtotal, $shippingCost, $voucherDiscount,
