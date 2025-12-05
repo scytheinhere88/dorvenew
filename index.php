@@ -1635,22 +1635,4 @@ document.addEventListener('keydown', function(e) {
 
 <?php include __DIR__ . '/includes/footer.php'; ?>
 
-<script>
-// Hero Slider
-let currentSlide = 0;
-const slides = document.querySelectorAll('.hero-slide');
-const totalSlides = slides.length;
-
-function showSlide(index) {
-    slides.forEach(slide => slide.classList.remove('active'));
-    slides[index].classList.add('active');
-}
-
-function nextSlide() {
-    currentSlide = (currentSlide + 1) % totalSlides;
-    showSlide(currentSlide);
-}
-
-// Auto slide every 5 seconds
-setInterval(nextSlide, 5000);
-</script>
+<!-- Slider script moved to homepage-sections.php -->
