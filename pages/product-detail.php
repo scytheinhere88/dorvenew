@@ -504,7 +504,7 @@ include __DIR__ . '/../includes/header.php';
         <div class="product-description">
             <div class="description-tabs">
                 <button class="tab-btn active" onclick="switchTab('description')">Description</button>
-                <button class="tab-btn" onclick="switchTab('reviews')">Reviews (<?php echo count($reviews); ?>)</button>
+                <button class="tab-btn" onclick="switchTab('reviews')">Reviews (<?php echo $total_reviews; ?>)</button>
             </div>
 
             <div id="description" class="tab-content active">
@@ -747,5 +747,29 @@ include __DIR__ . '/../includes/header.php';
     </div>
 </div>
 <?php endif; ?>
+
+<!-- Image Modal for Review Photos -->
+<div id="imageModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; align-items: center; justify-content: center;">
+    <button onclick="closeImageModal()" style="position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 28px; line-height: 1; z-index: 10001; transition: all 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+        ×
+    </button>
+    <img id="modalImage" src="" alt="Review" style="max-width: 90%; max-height: 90%; object-fit: contain;">
+</div>
+
+<script>
+function openImageModal(src) {
+    document.getElementById('imageModal').style.display = 'flex';
+    document.getElementById('modalImage').src = src;
+}
+
+function closeImageModal() {
+    document.getElementById('imageModal').style.display = 'none';
+}
+
+// Close on click outside
+document.getElementById('imageModal')?.addEventListener('click', function(e) {
+    if (e.target.id === 'imageModal') closeImageModal();
+});
+</script>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>
