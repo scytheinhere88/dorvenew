@@ -111,7 +111,7 @@ function sendVerificationEmail($email, $name, $verification_link) {
     <div style="margin-top: 32px; padding: 20px; background-color: #FEF3C7; border-left: 4px solid #F59E0B; border-radius: 6px;">
         <p style="margin: 0; font-size: 14px; color: #92400E; line-height: 1.6;">
             ⚠️ <strong>Link verifikasi berlaku selama 24 jam.</strong><br>
-            Jika Anda tidak mendaftar di Dorve House, abaikan email ini.
+            Jika Anda tidak mendaftar di Dorve.id, abaikan email ini.
         </p>
     </div>
     ';
