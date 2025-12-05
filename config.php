@@ -28,6 +28,9 @@ require_once __DIR__ . '/includes/upload-handler.php';
 // Include Voucher Helper Functions
 require_once __DIR__ . '/includes/voucher-helper.php';
 
+// Include General Helper Functions
+require_once __DIR__ . '/includes/helpers.php';
+
 // Include SEO Helper Functions (DISABLED)
 // require_once __DIR__ . '/includes/seo-helper.php';
 
