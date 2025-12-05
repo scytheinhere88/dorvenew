@@ -18,7 +18,7 @@ $max_price = $_GET['max_price'] ?? '';
 $size_filter = $_GET['size'] ?? '';
 $color_filter = $_GET['color'] ?? '';
 
-$where_conditions = ["p.status = 'published'"];
+$where_conditions = ["p.is_active = 1"];
 $params = [];
 
 if ($category_filter) {
