@@ -1516,7 +1516,8 @@ document.addEventListener('keydown', function(e) {
     </div>
 </section>
 
-<!-- Featured Products -->
+<!-- Old Featured Products - REPLACED by luxury version in homepage-sections.php -->
+<?php /* COMMENTED OUT - Using new luxury sections 
 <?php if (count($featured_products) > 0): ?>
 <section class="featured-section" style="background: var(--white);">
     <div class="container">
