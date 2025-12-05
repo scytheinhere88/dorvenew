@@ -372,7 +372,7 @@ include __DIR__ . '/../includes/header.php';
 
         <form action="/pages/process-order.php" method="POST" id="checkoutForm">
             <div class="form-section">
-                <h3>Shipping Information</h3>
+                <h3>📦 Shipping Information</h3>
                 <div class="form-group">
                     <label>Full Name *</label>
                     <input type="text" name="name" value="<?php echo htmlspecialchars($user['name']); ?>" required>
