@@ -564,6 +564,53 @@ document.getElementById('productForm').addEventListener('submit', function(e) {
     }
 });
 
+// Image preview functionality
+document.getElementById('images').addEventListener('change', function(e) {
+    const files = Array.from(e.target.files);
+    const previewContainer = document.getElementById('imagePreviewContainer');
+    const previewDiv = document.getElementById('imagePreview');
+    
+    // Clear previous previews
+    previewDiv.innerHTML = '';
+    
+    if (files.length === 0) {
+        previewContainer.style.display = 'none';
+        return;
+    }
+    
+    // Limit to 5 images
+    const filesToShow = files.slice(0, 5);
+    
+    if (files.length > 5) {
+        alert('Maximum 5 images allowed. Only first 5 will be uploaded.');
+    }
+    
+    previewContainer.style.display = 'block';
+    
+    filesToShow.forEach((file, index) => {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            const imgDiv = document.createElement('div');
+            imgDiv.style.cssText = 'position: relative; border: 2px solid #E5E7EB; border-radius: 8px; overflow: hidden;';
+            
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.style.cssText = 'width: 100%; height: 150px; object-fit: cover;';
+            
+            const badge = document.createElement('div');
+            badge.textContent = index === 0 ? 'Main' : `#${index + 1}`;
+            badge.style.cssText = 'position: absolute; top: 8px; left: 8px; background: ' + (index === 0 ? '#10B981' : '#6B7280') + '; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;';
+            
+            imgDiv.appendChild(img);
+            imgDiv.appendChild(badge);
+            previewDiv.appendChild(imgDiv);
+        };
+        
+        reader.readAsDataURL(file);
+    });
+});
+
 // Auto-add one variant on page load for better UX
 window.addEventListener('DOMContentLoaded', function() {
     // Optionally auto-add first variant
