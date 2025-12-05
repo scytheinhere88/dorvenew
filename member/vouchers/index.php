@@ -93,14 +93,20 @@ $pageTitle = 'My Vouchers';
         }
         
         .voucher-card {
-            background: white; border-radius: 16px; overflow: hidden;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08); transition: all 0.3s;
-            border: 2px solid transparent; cursor: pointer;
+            background: white; border-radius: 20px; overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08); transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border: 2px solid transparent; cursor: pointer; position: relative;
         }
+        .voucher-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, rgba(102,126,234,0.05) 0%, rgba(118,75,162,0.05) 100%);
+            opacity: 0; transition: opacity 0.4s;
+        }
+        .voucher-card:hover::before { opacity: 1; }
         .voucher-card:hover { 
-            transform: translateY(-4px); 
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12); 
-            border-color: #3B82F6;
+            transform: translateY(-8px) scale(1.02); 
+            box-shadow: 0 16px 40px rgba(0,0,0,0.15); 
+            border-color: #667EEA;
         }
         
         .voucher-header {
