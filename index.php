@@ -1,6 +1,22 @@
 <?php
 require_once __DIR__ . '/config.php';
 
+// Get banners for homepage slider
+try {
+    $stmt = $pdo->query("SELECT * FROM banners WHERE banner_type = 'slider' AND is_active = 1 ORDER BY display_order ASC, created_at DESC LIMIT 10");
+    $slider_banners = $stmt->fetchAll();
+} catch (PDOException $e) {
+    $slider_banners = [];
+}
+
+// Get popup banner (only one, highest priority)
+try {
+    $stmt = $pdo->query("SELECT * FROM banners WHERE banner_type = 'popup' AND is_active = 1 ORDER BY display_order ASC, created_at DESC LIMIT 1");
+    $popup_banner = $stmt->fetch();
+} catch (PDOException $e) {
+    $popup_banner = null;
+}
+
 // Get featured products
 $stmt = $pdo->prepare("SELECT p.*, c.name as category_name
                       FROM products p
