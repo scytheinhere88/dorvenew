@@ -409,7 +409,18 @@ include __DIR__ . '/../includes/header.php';
             <a href="/pages/all-products.php?category=<?php echo $product['category_slug']; ?>"><?php echo htmlspecialchars($product['category_name']); ?></a>
         </div>
 
-        <h1 class="product-title"><?php echo htmlspecialchars($product['name']); ?></h1>
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
+            <h1 class="product-title" style="margin: 0;"><?php echo htmlspecialchars($product['name']); ?></h1>
+            <?php if ($product['is_new']): ?>
+                <span style="background: linear-gradient(135deg, #10B981 0%, #059669 100%); color: white; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;">NEW</span>
+            <?php endif; ?>
+            <?php if ($product['discount_percent'] > 0): ?>
+                <span style="background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%); color: white; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;">SALE</span>
+            <?php endif; ?>
+            <?php if ($product['is_best_seller']): ?>
+                <span style="background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); color: white; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;">★ BEST SELLER</span>
+            <?php endif; ?>
+        </div>
 
         <?php if (!empty($reviews)): ?>
         <div class="product-rating">
