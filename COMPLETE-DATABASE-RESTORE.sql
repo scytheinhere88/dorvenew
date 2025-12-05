@@ -397,9 +397,9 @@ CREATE TABLE `referral_rewards` (
   KEY `idx_referred` (`referred_id`),
   KEY `idx_topup` (`topup_id`),
   KEY `idx_status` (`status`),
-  FOREIGN KEY (`referrer_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`referred_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`topup_id`) REFERENCES `topups`(`id`) ON DELETE SET NULL
+  CONSTRAINT `fk_referral_rewards_referrer` FOREIGN KEY (`referrer_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_referral_rewards_referred` FOREIGN KEY (`referred_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_referral_rewards_topup` FOREIGN KEY (`topup_id`) REFERENCES `topups`(`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =====================================================
