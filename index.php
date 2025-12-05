@@ -32,7 +32,7 @@ $all_products = $stmt->fetchAll();
 
 // Get all categories for homepage
 try {
-    $stmt = $pdo->query("SELECT * FROM categories WHERE is_active = 1 ORDER BY sequence ASC");
+    $stmt = $pdo->query("SELECT * FROM categories WHERE is_active = 1 ORDER BY sort_order ASC");
     $categories = $stmt->fetchAll();
 } catch (PDOException $e) {
     try {
