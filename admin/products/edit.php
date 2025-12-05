@@ -55,10 +55,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     UPDATE products
                     SET name = ?, slug = ?, short_description = ?, long_description = ?,
                         price = ?, discount_percent = ?, category_id = ?, gender = ?,
-                        is_new = ?, is_best_seller = ?, status = ?
+                        is_new = ?, is_best_seller = ?
                     WHERE id = ?
                 ");
-                $stmt->execute([$name, $slug, $short_description, $long_description, $price, $discount_percent, $category_id, $gender, $is_new, $is_best_seller, $status, $id]);
+                $stmt->execute([$name, $slug, $short_description, $long_description, $price, $discount_percent, $category_id, $gender, $is_new, $is_best_seller, $id]);
 
                 $success = 'Produk berhasil diupdate!';
 
