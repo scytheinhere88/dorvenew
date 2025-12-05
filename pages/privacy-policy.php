@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../config.php';
 
-$stmt = $pdo->prepare("SELECT * FROM cms_pages WHERE slug = 'privacy-policy' AND is_published = 1 LIMIT 1");
+$stmt = $pdo->prepare("SELECT * FROM cms_pages WHERE slug = 'privacy-policy' AND is_active = 1 LIMIT 1");
 $stmt->execute();
 $page = $stmt->fetch();
 
