@@ -127,16 +127,16 @@ if ($category_filter) {
 
 // Auto-generate SEO (DISABLED)
 if ($category_data) {
-    $page_title = ($category_data['name'] ?? 'Produk') . ' Terbaru | Dorve House';
-    $page_description = 'Belanja ' . ($category_data['name'] ?? 'produk') . ' trendy di Dorve House. Harga terjangkau, kualitas premium.';
+    $page_title = ($category_data['name'] ?? 'Produk') . ' Terbaru | Dorve.id - Pusat Fashion Indonesia';
+    $page_description = 'Koleksi ' . ($category_data['name'] ?? 'produk') . ' terbaru dan terlengkap di Dorve.id. Fashion berkualitas dengan harga terjangkau, belanja aman dan terpercaya.';
+    $page_keywords = 'dorve.id, ' . strtolower($category_data['name'] ?? 'produk') . ', fashion ' . strtolower($category_data['name'] ?? '') . ', baju ' . strtolower($category_data['name'] ?? '') . ', toko fashion online, baju kekinian, outfit trendy';
     // $page_title = generateCategorySeoTitle($category_data);
     // $page_description = generateCategorySeoDescription($category_data);
-    $page_keywords = strtolower($category_data['name']) . " pria, {$category_data['name']} wanita, jual {$category_data['name']}, beli {$category_data['name']} online, {$category_data['name']} murah, {$category_data['name']} terbaru, {$category_data['name']} trendy, {$category_data['name']} kekinian, dorve house";
     $og_image = $category_data['image'] ?? null;
 } else {
-    $page_title = 'Baju Pria Wanita Online Trendy & Kekinian 2024 | Dorve House';
-    $page_description = 'Belanja baju pria wanita online trendy & kekinian di Dorve House. Koleksi lengkap untuk semua: fashion pria, fashion wanita, fashion unisex. Harga termurah mulai 50rb, gratis ongkir, COD, 100% original, kualitas premium terpercaya.';
-    $page_keywords = 'baju pria online, baju wanita online, fashion pria, fashion wanita, fashion unisex, baju trendy, baju kekinian, baju online, toko baju online, pusat fashion, dorve house';
+    $page_title = 'Semua Produk Fashion Pria & Wanita | Dorve.id - Baju Kekinian Terlengkap';
+    $page_description = 'Jelajahi koleksi lengkap fashion pria & wanita di Dorve.id. Baju kekinian, dress, kemeja, kaos, hoodie terbaru dengan harga terjangkau. Belanja fashion online aman & terpercaya.';
+    $page_keywords = 'dorve.id, semua produk, fashion pria, fashion wanita, baju kekinian, dress, kemeja, kaos, hoodie, outfit trendy, toko baju online, fashion indonesia';
 }
 
 // Add JSON-LD schemas (DISABLED)
