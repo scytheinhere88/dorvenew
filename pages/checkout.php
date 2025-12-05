@@ -659,7 +659,18 @@ function renderVouchers() {
 }
 
 function selectVoucher(type, voucher) {
-    selectedVouchers[type] = voucher;
+    // RULE: Max 1 Free Shipping + 1 Discount ONLY
+    // User can only select ONE voucher per type (free_shipping OR discount)
+    // Cannot use 2 discount vouchers at the same time
+    
+    if (selectedVouchers[type]?.id === voucher.id) {
+        // Deselect if clicking same voucher
+        selectedVouchers[type] = null;
+    } else {
+        // Select/Replace voucher for this type
+        selectedVouchers[type] = voucher;
+    }
+    
     renderVouchers();
     updateSelectedCount();
 }
