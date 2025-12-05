@@ -58,12 +58,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $slug = $_POST['slug'] ?: strtolower(str_replace(' ', '-', $name));
             
             // Get current category
-            $stmt = $pdo->prepare("SELECT image FROM categories WHERE id = ?");
+            $stmt = $pdo->prepare("SELECT image, size_guide FROM categories WHERE id = ?");
             $stmt->execute([$id]);
             $current = $stmt->fetch();
             $image = $current['image'];
+            $size_guide = $current['size_guide'];
             
-            // Handle new image upload
+            // Handle new category image upload
             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                 $upload_dir = __DIR__ . '/../../uploads/categories/';
                 if (!is_dir($upload_dir)) {
@@ -88,8 +89,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
             
-            $stmt = $pdo->prepare("UPDATE categories SET name = ?, slug = ?, image = ? WHERE id = ?");
-            $stmt->execute([$name, $slug, $image, $id]);
+            // Handle new size guide upload
+            if (isset($_FILES['size_guide']) && $_FILES['size_guide']['error'] === UPLOAD_ERR_OK) {
+                $upload_dir = __DIR__ . '/../../uploads/size-guides/';
+                if (!is_dir($upload_dir)) {
+                    mkdir($upload_dir, 0777, true);
+                }
+                
+                $ext = strtolower(pathinfo($_FILES['size_guide']['name'], PATHINFO_EXTENSION));
+                $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+                
+                if (in_array($ext, $allowed)) {
+                    // Delete old size guide if exists
+                    if ($size_guide && file_exists(__DIR__ . '/../../' . $size_guide)) {
+                        unlink(__DIR__ . '/../../' . $size_guide);
+                    }
+                    
+                    $filename = 'size_guide_' . time() . '.' . $ext;
+                    $filepath = $upload_dir . $filename;
+                    
+                    if (move_uploaded_file($_FILES['size_guide']['tmp_name'], $filepath)) {
+                        $size_guide = '/uploads/size-guides/' . $filename;
+                    }
+                }
+            }
+            
+            $stmt = $pdo->prepare("UPDATE categories SET name = ?, slug = ?, image = ?, size_guide = ? WHERE id = ?");
+            $stmt->execute([$name, $slug, $image, $size_guide, $id]);
         } elseif ($_POST['action'] === 'delete') {
             // Get image path before deleting
             $stmt = $pdo->prepare("SELECT image FROM categories WHERE id = ?");
