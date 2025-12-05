@@ -181,21 +181,49 @@ if (file_exists($responsive_file)) {
 // SECTION 8: Products & Reviews Stats
 echo "<h2>📊 Content Statistics</h2>";
 try {
-    $stmt = $pdo->query("SELECT COUNT(*) FROM products WHERE is_active = 1");
+    // Check if products table has is_active column
+    $stmt = $pdo->query("DESCRIBE products");
+    $product_columns = array_column($stmt->fetchAll(), 'Field');
+    $has_is_active = in_array('is_active', $product_columns);
+    
+    if ($has_is_active) {
+        $stmt = $pdo->query("SELECT COUNT(*) FROM products WHERE is_active = 1");
+    } else {
+        $stmt = $pdo->query("SELECT COUNT(*) FROM products");
+    }
     $total_products = $stmt->fetchColumn();
-    echo "<p>Total Active Products: <strong>$total_products</strong></p>";
+    echo "<p>Total Products: <strong>$total_products</strong></p>";
     
-    $stmt = $pdo->query("SELECT COUNT(*) FROM product_reviews WHERE status = 'published'");
-    $total_reviews = $stmt->fetchColumn();
-    echo "<p>Total Published Reviews: <strong>$total_reviews</strong></p>";
+    // Reviews
+    if (in_array('product_reviews', $tables)) {
+        $stmt = $pdo->query("SELECT COUNT(*) FROM product_reviews WHERE status = 'published'");
+        $total_reviews = $stmt->fetchColumn();
+        echo "<p>Total Published Reviews: <strong>$total_reviews</strong></p>";
+    } else {
+        echo "<p>Total Published Reviews: <strong>0</strong> (table not exists)</p>";
+    }
     
-    $stmt = $pdo->query("SELECT COUNT(*) FROM orders WHERE payment_status = 'paid'");
-    $total_orders = $stmt->fetchColumn();
-    echo "<p>Total Paid Orders: <strong>$total_orders</strong></p>";
+    // Orders
+    if (in_array('orders', $tables)) {
+        $stmt = $pdo->query("SELECT COUNT(*) FROM orders WHERE payment_status = 'paid'");
+        $total_orders = $stmt->fetchColumn();
+        echo "<p>Total Paid Orders: <strong>$total_orders</strong></p>";
+    } else {
+        echo "<p>Total Paid Orders: <strong>0</strong> (table not exists)</p>";
+    }
     
-    $stmt = $pdo->query("SELECT COUNT(*) FROM users WHERE is_active = 1");
+    // Users
+    $stmt = $pdo->query("DESCRIBE users");
+    $user_columns = array_column($stmt->fetchAll(), 'Field');
+    $user_has_is_active = in_array('is_active', $user_columns);
+    
+    if ($user_has_is_active) {
+        $stmt = $pdo->query("SELECT COUNT(*) FROM users WHERE is_active = 1");
+    } else {
+        $stmt = $pdo->query("SELECT COUNT(*) FROM users");
+    }
     $total_users = $stmt->fetchColumn();
-    echo "<p>Total Active Users: <strong>$total_users</strong></p>";
+    echo "<p>Total Users: <strong>$total_users</strong></p>";
     
     if ($total_products == 0) {
         $warnings[] = 'No products in database';

@@ -8,7 +8,7 @@ function generateSEO($page_type = 'page', $data = []) {
     // Default meta
     $site_name = 'Dorve House';
     $site_url = 'https://dorve.id';
-    $default_image = $site_url . '/public/images/og-image.jpg';
+    $default_image = $site_url . '/public/images/logo.png';
     
     // Extract data
     $title = $data['title'] ?? 'Dorve House - Fashion Online Terpercaya';
