@@ -10,7 +10,7 @@ define('SMTP_PORT', 587);
 define('SMTP_USERNAME', 'your-email@gmail.com'); // Change this
 define('SMTP_PASSWORD', 'your-app-password'); // Change this
 define('FROM_EMAIL', 'noreply@dorve.id');
-define('FROM_NAME', 'Dorve House');
+define('FROM_NAME', 'Dorve.id - Pusat Fashion Indonesia');
 define('SITE_URL', 'https://dorve.id/');
 
 /**
