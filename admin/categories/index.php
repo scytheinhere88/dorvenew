@@ -254,16 +254,25 @@ include __DIR__ . '/../includes/admin-header.php';
 </div>
 
 <script>
-function editCategory(id, name, slug, image) {
+function editCategory(id, name, slug, image, size_guide) {
     document.getElementById('edit_id').value = id;
     document.getElementById('edit_name').value = name;
     document.getElementById('edit_slug').value = slug;
     
+    // Category image preview
     const previewDiv = document.getElementById('current_image_preview');
     if (image) {
         previewDiv.innerHTML = '<img src="' + image + '" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; border: 1px solid #E5E7EB;">';
     } else {
         previewDiv.innerHTML = '<p style="color: #9CA3AF; font-size: 14px;">No image uploaded</p>';
+    }
+    
+    // Size guide preview
+    const sizeGuideDiv = document.getElementById('current_size_guide_preview');
+    if (size_guide) {
+        sizeGuideDiv.innerHTML = '<img src="' + size_guide + '" style="width: 200px; height: auto; border-radius: 8px; border: 1px solid #E5E7EB;">';
+    } else {
+        sizeGuideDiv.innerHTML = '<p style="color: #9CA3AF; font-size: 14px;">No size guide uploaded</p>';
     }
     
     const modal = document.getElementById('editModal');
