@@ -21,12 +21,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['dep
     redirect('/admin/deposits/');
 }
 
-$stmt = $pdo->query("SELECT wt.*, u.name as user_name, u.email as user_email FROM wallet_topups wt JOIN users u ON wt.user_id = u.id ORDER BY wt.created_at DESC");
+$stmt = $pdo->query("SELECT t.*, u.name as user_name, u.email as user_email FROM topups t JOIN users u ON t.user_id = u.id ORDER BY t.created_at DESC");
 $deposits = $stmt->fetchAll();
 
-$pending = array_filter($deposits, fn($d) => $d['payment_status'] === 'pending');
-$approved = array_filter($deposits, fn($d) => $d['payment_status'] === 'success');
-$rejected = array_filter($deposits, fn($d) => $d['payment_status'] === 'failed');
+$pending = array_filter($deposits, fn($d) => $d['status'] === 'pending');
+$approved = array_filter($deposits, fn($d) => $d['status'] === 'completed');
+$rejected = array_filter($deposits, fn($d) => $d['status'] === 'failed');
 
 $page_title = 'Kelola Deposit Wallet - Admin';
 include __DIR__ . '/../includes/admin-header.php';
