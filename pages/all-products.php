@@ -42,7 +42,7 @@ if ($max_price) {
 }
 
 if ($size_filter && $variant_tables_exist) {
-    $where_conditions[] = "EXISTS (SELECT 1 FROM product_variants pv JOIN variant_stock vs ON pv.id = vs.variant_id WHERE pv.product_id = p.id AND vs.size = ?)";
+    $where_conditions[] = "EXISTS (SELECT 1 FROM product_variants pv WHERE pv.product_id = p.id AND pv.size = ?)";
     $params[] = $size_filter;
 }
 
