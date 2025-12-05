@@ -83,12 +83,12 @@ include __DIR__ . '/../includes/admin-header.php';
                     </td>
                     <td>
                         <?php
-                        $badge_class = $deposit['payment_status'] === 'success' ? '#ECFDF5;color:#059669' : ($deposit['payment_status'] === 'failed' ? '#FEF2F2;color:#DC2626' : '#FEF3C7;color:#92400E');
-                        echo '<span style="padding: 6px 12px; background: ' . $badge_class . '; border-radius: 6px; font-size: 12px; font-weight: 600;">' . ucfirst($deposit['payment_status']) . '</span>';
+                        $badge_class = $deposit['status'] === 'completed' ? '#ECFDF5;color:#059669' : ($deposit['status'] === 'failed' ? '#FEF2F2;color:#DC2626' : '#FEF3C7;color:#92400E');
+                        echo '<span style="padding: 6px 12px; background: ' . $badge_class . '; border-radius: 6px; font-size: 12px; font-weight: 600;">' . ucfirst($deposit['status']) . '</span>';
                         ?>
                     </td>
                     <td>
-                        <?php if ($deposit['payment_status'] === 'pending'): ?>
+                        <?php if ($deposit['status'] === 'pending'): ?>
                             <form method="POST" style="display: inline;">
                                 <input type="hidden" name="deposit_id" value="<?php echo $deposit['id']; ?>">
                                 <input type="hidden" name="action" value="approve">
