@@ -11,9 +11,11 @@ $user = getCurrentUser();
 $step = $_GET['step'] ?? 'list';
 $txn_id = $_GET['txn_id'] ?? null;
 
-// Get active bank accounts
-$stmt = $pdo->query("SELECT * FROM bank_accounts ORDER BY display_order ASC");
-$all_banks = $stmt->fetchAll();
+// Bank accounts (hardcoded for now - no bank_accounts table)
+$all_banks = [
+    ['id' => 1, 'bank_name' => 'BCA', 'account_number' => '1234567890', 'account_name' => 'Dorve House'],
+    ['id' => 2, 'bank_name' => 'Mandiri', 'account_number' => '0987654321', 'account_name' => 'Dorve House'],
+];
 
 // Get wallet transactions
 $stmt = $pdo->prepare("SELECT * FROM wallet_transactions WHERE user_id = ? ORDER BY created_at DESC LIMIT 20");
