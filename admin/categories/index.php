@@ -8,8 +8,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = $_POST['name'];
             $slug = $_POST['slug'] ?: strtolower(str_replace(' ', '-', $name));
             $image = null;
+            $size_guide = null;
             
-            // Handle image upload
+            // Handle category image upload
             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                 $upload_dir = __DIR__ . '/../../uploads/categories/';
                 if (!is_dir($upload_dir)) {
@@ -29,8 +30,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
             
-            $stmt = $pdo->prepare("INSERT INTO categories (name, slug, image) VALUES (?, ?, ?)");
-            $stmt->execute([$name, $slug, $image]);
+            // Handle size guide upload
+            if (isset($_FILES['size_guide']) && $_FILES['size_guide']['error'] === UPLOAD_ERR_OK) {
+                $upload_dir = __DIR__ . '/../../uploads/size-guides/';
+                if (!is_dir($upload_dir)) {
+                    mkdir($upload_dir, 0777, true);
+                }
+                
+                $ext = strtolower(pathinfo($_FILES['size_guide']['name'], PATHINFO_EXTENSION));
+                $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+                
+                if (in_array($ext, $allowed)) {
+                    $filename = 'size_guide_' . time() . '.' . $ext;
+                    $filepath = $upload_dir . $filename;
+                    
+                    if (move_uploaded_file($_FILES['size_guide']['tmp_name'], $filepath)) {
+                        $size_guide = '/uploads/size-guides/' . $filename;
+                    }
+                }
+            }
+            
+            $stmt = $pdo->prepare("INSERT INTO categories (name, slug, image, size_guide) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$name, $slug, $image, $size_guide]);
         } elseif ($_POST['action'] === 'update') {
             $id = $_POST['id'];
             $name = $_POST['name'];
