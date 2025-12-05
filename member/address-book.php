@@ -304,12 +304,9 @@ $addresses = $stmt->fetchAll();
         </div>
     </div>
 
-    <!-- Google Maps API - PLACEHOLDER -->
-    <!-- TODO: Replace YOUR_GOOGLE_MAPS_API_KEY with actual API key from user -->
+    <!-- Google Maps API -->
     <script>
-    // NOTE: Google Maps API Key belum diatur
-    // User perlu mendapatkan API Key dari: https://console.cloud.google.com/google/maps-apis/
-    const GOOGLE_MAPS_API_KEY = 'YOUR_GOOGLE_MAPS_API_KEY'; // GANTI INI!
+    const GOOGLE_MAPS_API_KEY = 'AIzaSyDesxpkeo8st5QzR8M7IdcczB3EpOoT9xY';
     
     function openModal() {
         document.getElementById('addressModal').style.display = 'block';
