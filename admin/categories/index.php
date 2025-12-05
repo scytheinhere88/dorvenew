@@ -162,7 +162,12 @@ include __DIR__ . '/../includes/admin-header.php';
         <div class="form-group">
             <label>Category Image</label>
             <input type="file" name="image" accept="image/*">
-            <small>Upload an image for this category. Recommended size: 400x400px</small>
+            <small>Upload an image for this category. Recommended size: 400x400px, Max: 128MB</small>
+        </div>
+        <div class="form-group">
+            <label>Size Guide Image</label>
+            <input type="file" name="size_guide" accept="image/*">
+            <small>Upload size guide chart for this category. Max: 128MB</small>
         </div>
         <button type="submit" class="btn btn-primary">Tambah Kategori</button>
     </form>
