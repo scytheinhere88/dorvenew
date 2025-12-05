@@ -427,6 +427,13 @@ include __DIR__ . '/../includes/header.php';
 
 <?php include __DIR__ . '/../includes/tracking-modal.php'; ?>
 
+<!-- Load Midtrans Snap.js -->
+<?php
+require_once __DIR__ . '/../includes/MidtransHelper.php';
+$midtrans = new MidtransHelper($pdo);
+?>
+<script src="<?= $midtrans->getSnapJsUrl() ?>" data-client-key="<?= $midtrans->getClientKey() ?>"></script>
+
 <script>
 function copyOrderId(orderNumber) {
     navigator.clipboard.writeText(orderNumber).then(() => {
@@ -434,6 +441,173 @@ function copyOrderId(orderNumber) {
     }).catch(err => {
         alert('❌ Gagal copy: ' + err.message);
     });
+}
+
+// Countdown Timer for Pending Orders
+const countdownTimers = document.querySelectorAll('.countdown-timer');
+countdownTimers.forEach(timer => {
+    const expiresAt = parseInt(timer.dataset.expires);
+    
+    const interval = setInterval(() => {
+        const now = Math.floor(Date.now() / 1000);
+        const timeLeft = expiresAt - now;
+        
+        if (timeLeft <= 0) {
+            clearInterval(interval);
+            timer.textContent = '❌ EXPIRED';
+            timer.style.background = '#991B1B';
+            // Auto reload to update status
+            setTimeout(() => location.reload(), 2000);
+            return;
+        }
+        
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        timer.textContent = `⏰ ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        
+        // Change color when less than 5 minutes
+        if (timeLeft < 300) {
+            timer.style.background = '#DC2626';
+        }
+    }, 1000);
+});
+
+// Resume Payment Function
+function resumePayment(orderId, paymentMethod) {
+    const btn = event.target;
+    btn.disabled = true;
+    btn.textContent = '⏳ Loading...';
+    
+    const formData = new FormData();
+    formData.append('order_id', orderId);
+    
+    fetch('/api/orders/resume-payment.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (!data.success) {
+            throw new Error(data.error || 'Failed to resume payment');
+        }
+        
+        if (data.paid) {
+            alert('✅ ' + data.message);
+            location.reload();
+            return;
+        }
+        
+        if (paymentMethod === 'wallet') {
+            alert('✅ Payment successful!');
+            location.reload();
+            
+        } else if (paymentMethod === 'midtrans') {
+            // Open Snap popup
+            window.snap.pay(data.snap_token, {
+                onSuccess: function(result) {
+                    alert('✅ Payment successful!');
+                    location.reload();
+                },
+                onPending: function(result) {
+                    alert('⏳ Payment pending. Please complete your payment.');
+                    location.reload();
+                },
+                onError: function(result) {
+                    alert('❌ Payment failed. Please try again.');
+                    btn.disabled = false;
+                    btn.textContent = '💳 Bayar Sekarang';
+                },
+                onClose: function() {
+                    btn.disabled = false;
+                    btn.textContent = '💳 Bayar Sekarang';
+                }
+            });
+            
+        } else if (paymentMethod === 'bank_transfer') {
+            // Show bank transfer modal
+            showBankTransferModal(data);
+            btn.disabled = false;
+            btn.textContent = '💳 Bayar Sekarang';
+        }
+    })
+    .catch(error => {
+        alert('Error: ' + error.message);
+        btn.disabled = false;
+        btn.textContent = '💳 Bayar Sekarang';
+    });
+}
+
+// Cancel Order
+function cancelOrder(orderId) {
+    fetch('/api/orders/cancel.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `order_id=${orderId}`
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            alert('✅ Order cancelled');
+            location.reload();
+        } else {
+            alert('❌ ' + (data.error || 'Failed to cancel order'));
+        }
+    })
+    .catch(e => alert('Error: ' + e.message));
+}
+
+// Bank Transfer Modal (same as checkout)
+function showBankTransferModal(data) {
+    const modal = document.createElement('div');
+    modal.className = 'bank-modal';
+    modal.style.cssText = 'display: flex; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center;';
+    modal.innerHTML = `
+        <div style="background: white; border-radius: 20px; max-width: 600px; width: 90%; padding: 40px;">
+            <h2 style="font-size: 28px; font-weight: 700; margin-bottom: 24px; text-align: center;">🏦 Transfer Instructions</h2>
+            
+            <div style="background: #F3F4F6; padding: 24px; border-radius: 12px; text-align: center; margin-bottom: 24px;">
+                <div style="font-size: 16px; color: #6B7280; margin-bottom: 8px;">Please transfer</div>
+                <div style="font-size: 36px; color: #667EEA; font-weight: 700; margin: 12px 0;">
+                    Rp ${formatNumber(data.total_with_code)}
+                </div>
+                <div style="font-size: 14px; color: #6B7280;">Including unique code: <strong>${data.unique_code}</strong></div>
+            </div>
+
+            <div id="bankListModal">Loading banks...</div>
+
+            <div style="margin-top: 24px; text-align: center;">
+                <a href="https://wa.me/6281377378859?text=Halo%20Admin,%20saya%20sudah%20transfer%20untuk%20order%20${data.order_number}" 
+                   target="_blank" style="display: inline-block; padding: 14px 28px; background: #25D366; color: white; text-decoration: none; border-radius: 10px; font-weight: 600;">
+                    📱 Contact Admin via WhatsApp
+                </a>
+            </div>
+
+            <button onclick="this.parentElement.parentElement.remove()" style="width: 100%; padding: 14px; margin-top: 16px; background: #1A1A1A; color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer;">
+                Got It
+            </button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    
+    // Load banks
+    fetch('/api/payment/get-banks.php')
+        .then(r => r.json())
+        .then(banks => {
+            const bankList = modal.querySelector('#bankListModal');
+            bankList.innerHTML = banks.map(bank => `
+                <div style="padding: 16px; border: 2px solid #E5E7EB; border-radius: 12px; margin-bottom: 12px;">
+                    <div style="font-weight: 700; font-size: 16px;">${bank.bank_name}</div>
+                    <div style="font-family: 'Courier New', monospace; font-size: 18px; color: #667EEA; font-weight: 700; margin: 8px 0;">
+                        ${bank.account_number}
+                    </div>
+                    <div style="color: #6B7280; font-size: 14px;">${bank.account_name}</div>
+                </div>
+            `).join('');
+        });
+}
+
+function formatNumber(num) {
+    return new Intl.NumberFormat('id-ID').format(num);
 }
 </script>
 
