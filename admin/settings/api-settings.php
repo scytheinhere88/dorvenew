@@ -106,12 +106,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Get current settings
 $settings = [];
 try {
-    $stmt = $pdo->query("SELECT setting_key, setting_value FROM settings");
+    // Check which column name is used
+    $checkStmt = $pdo->query("DESCRIBE settings");
+    $columns = array_column($checkStmt->fetchAll(), 'Field');
+    $valueColumn = in_array('setting_value', $columns) ? 'setting_value' : 'value';
+    
+    $stmt = $pdo->query("SELECT setting_key, $valueColumn as setting_value FROM settings");
     while ($row = $stmt->fetch()) {
         $settings[$row['setting_key']] = $row['setting_value'];
     }
 } catch (PDOException $e) {
     // Settings table might not exist
+    $valueColumn = 'value'; // default
 }
 
 // Default values
