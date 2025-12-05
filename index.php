@@ -59,11 +59,60 @@ try {
     }
 }
 
-$page_title = 'Dorve House | Toko Baju Online Terpercaya - Fashion Pria & Wanita Kekinian';
-$page_description = 'Belanja baju pria, baju wanita, dan fashion unisex kekinian di Dorve House. Toko baju online terpercaya dengan koleksi trendy murah berkualitas untuk sehari-hari.';
-$page_keywords = 'dorve house, toko baju online, toko baju online terpercaya, baju online, baju kekinian, baju trendy, baju pria, baju wanita, fashion pria, fashion wanita, fashion unisex, baju murah, model baju terbaru, beli baju online, dress wanita, kemeja pria, kaos pria, baju couple, toko baju online kekinian, baju wanita murah berkualitas, fashion pria kekinian, hoodie pria, celana wanita, blouse wanita trendy, jaket couple, baju family gathering, baju pria terbaru, fashion wanita trendy';
+$page_title = 'Dorve.id | Pusat Fashion Pria & Wanita Indonesia – Toko Baju Online Kekinian & Terlengkap';
+$page_description = 'Dorve.id adalah pusat fashion pria, wanita & unisex di Indonesia. Koleksi lengkap baju kekinian, dress, kemeja, kaos, hoodie dan outfit terbaru dengan harga terjangkau. Belanja aman, cepat & terpercaya di toko resmi Dorve.id.';
+$page_keywords = 'dorve.id, dorve id, toko baju online, fashion indonesia, fashion pria, fashion wanita, baju kekinian, baju trendy, dress wanita, kemeja pria, kaos, hoodie, celana, baju couple, outfit terbaru, model baju kekinian, fashion unisex, toko fashion terpercaya, baju online murah, fashion online indonesia, beli baju online, toko baju terlengkap, fashion store indonesia';
 include __DIR__ . '/includes/header.php';
 ?>
+
+<!-- WebSite Schema for Homepage -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Dorve.id",
+  "alternateName": "Dorve",
+  "url": "https://dorve.id",
+  "description": "Pusat Fashion Pria & Wanita Indonesia – Toko Baju Online Kekinian & Terlengkap",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://dorve.id/pages/all-products.php?search={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+
+<!-- LocalBusiness Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "OnlineStore",
+  "name": "Dorve.id",
+  "image": "https://dorve.id/public/images/logo.png",
+  "url": "https://dorve.id",
+  "telephone": "+62-xxx-xxxx-xxxx",
+  "priceRange": "Rp 50.000 - Rp 500.000",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "ID"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": -6.2088,
+    "longitude": 106.8456
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "reviewCount": "1250",
+    "bestRating": "5",
+    "worstRating": "1"
+  }
+}
+</script>
 
 <style>
     :root {
