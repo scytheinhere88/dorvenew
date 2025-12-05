@@ -5,26 +5,33 @@ if (!isLoggedIn() || !isAdmin()) {
     redirect('/admin/login.php');
 }
 
-// Handle form submissions
+// Handle form submissions - using settings table
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         if (isset($_POST['action'])) {
             switch ($_POST['action']) {
                 case 'update_payment_method':
-                    $stmt = $pdo->prepare("UPDATE payment_methods SET is_active = ? WHERE id = ?");
-                    $stmt->execute([
-                        isset($_POST['is_active']) ? 1 : 0,
-                        $_POST['method_id']
-                    ]);
+                    // Store in settings table
+                    $key = 'payment_' . $_POST['method_name'];
+                    $value = isset($_POST['is_active']) ? '1' : '0';
+                    
+                    $stmt = $pdo->prepare("INSERT INTO settings (setting_key, value, type) VALUES (?, ?, 'boolean') 
+                                          ON DUPLICATE KEY UPDATE value = ?");
+                    $stmt->execute([$key, $value, $value]);
                     $_SESSION['success'] = 'Payment method updated!';
                     break;
 
                 case 'update_gateway_settings':
                     $gateway = $_POST['gateway_name'];
 
-                    // Check if exists
-                    $stmt = $pdo->prepare("SELECT id FROM payment_gateway_settings WHERE gateway_name = ?");
-                    $stmt->execute([$gateway]);
+                    // Store in settings table
+                    foreach ($_POST as $key => $value) {
+                        if (strpos($key, $gateway . '_') === 0) {
+                            $stmt = $pdo->prepare("INSERT INTO settings (setting_key, value, type) VALUES (?, ?, 'text') 
+                                                  ON DUPLICATE KEY UPDATE value = ?");
+                            $stmt->execute([$key, $value, $value]);
+                        }
+                    }
 
                     if ($stmt->rowCount() > 0) {
                         // Update
