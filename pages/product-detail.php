@@ -512,27 +512,115 @@ include __DIR__ . '/../includes/header.php';
             </div>
 
             <div id="reviews" class="tab-content">
+                <!-- Review Stats Summary -->
+                <?php if ($total_reviews > 0): ?>
+                <div style="background: linear-gradient(135deg, #F9FAFB 0%, #FFFFFF 100%); padding: 32px; border-radius: 16px; margin-bottom: 32px; border: 1px solid #E5E7EB;">
+                    <div style="display: grid; grid-template-columns: 200px 1fr; gap: 32px; align-items: center;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 64px; font-weight: 700; color: #1F2937; margin-bottom: 8px;">
+                                <?php echo number_format($avg_rating, 1); ?>
+                            </div>
+                            <div style="font-size: 28px; color: #FBBF24; margin-bottom: 8px;">
+                                <?php 
+                                for ($i = 0; $i < floor($avg_rating); $i++) echo '★';
+                                if ($avg_rating - floor($avg_rating) >= 0.5) echo '★';
+                                for ($i = ceil($avg_rating); $i < 5; $i++) echo '☆';
+                                ?>
+                            </div>
+                            <div style="font-size: 14px; color: #6B7280;">
+                                Based on <?php echo $total_reviews; ?> review<?php echo $total_reviews > 1 ? 's' : ''; ?>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <?php
+                            $ratingPercentages = [
+                                5 => $reviewStats['total'] > 0 ? round(($reviewStats['five_star'] / $reviewStats['total']) * 100) : 0,
+                                4 => $reviewStats['total'] > 0 ? round(($reviewStats['four_star'] / $reviewStats['total']) * 100) : 0,
+                                3 => $reviewStats['total'] > 0 ? round(($reviewStats['three_star'] / $reviewStats['total']) * 100) : 0,
+                                2 => $reviewStats['total'] > 0 ? round(($reviewStats['two_star'] / $reviewStats['total']) * 100) : 0,
+                                1 => $reviewStats['total'] > 0 ? round(($reviewStats['one_star'] / $reviewStats['total']) * 100) : 0,
+                            ];
+                            
+                            foreach ($ratingPercentages as $stars => $percentage):
+                            ?>
+                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                                    <span style="font-size: 14px; font-weight: 600; width: 60px;"><?php echo $stars; ?> ★</span>
+                                    <div style="flex: 1; height: 8px; background: #E5E7EB; border-radius: 4px; overflow: hidden;">
+                                        <div style="height: 100%; background: linear-gradient(90deg, #FBBF24 0%, #F59E0B 100%); width: <?php echo $percentage; ?>%;"></div>
+                                    </div>
+                                    <span style="font-size: 13px; color: #6B7280; width: 40px; text-align: right;"><?php echo $percentage; ?>%</span>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+                <?php endif; ?>
+                
+                <!-- Reviews List -->
                 <?php if (empty($reviews)): ?>
-                    <p style="color: var(--grey);">No reviews yet. Be the first to review this product!</p>
+                    <div style="text-align: center; padding: 60px 20px; background: #F9FAFB; border-radius: 12px;">
+                        <div style="font-size: 64px; margin-bottom: 16px;">⭐</div>
+                        <h3 style="font-size: 20px; margin-bottom: 8px;">Belum Ada Review</h3>
+                        <p style="color: #6B7280; font-size: 15px;">Jadilah yang pertama memberikan review untuk produk ini!</p>
+                    </div>
                 <?php else: ?>
                     <?php foreach ($reviews as $review): ?>
-                        <div class="review-item">
-                            <div class="review-header">
+                        <div style="padding: 24px; border: 1px solid #E5E7EB; border-radius: 12px; margin-bottom: 16px; background: white;">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
                                 <div>
-                                    <div class="reviewer-name"><?php echo htmlspecialchars($review['user_name']); ?></div>
-                                    <div class="stars" style="color: var(--latte); font-size: 14px;">
-                                        <?php
-                                        for ($i = 0; $i < $review['rating']; $i++) echo '★';
-                                        for ($i = $review['rating']; $i < 5; $i++) echo '☆';
-                                        ?>
+                                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                                        <span style="font-weight: 600; font-size: 15px; color: #1F2937;">
+                                            <?php echo htmlspecialchars($review['reviewer_name']); ?>
+                                        </span>
+                                        <?php if ($review['is_verified_purchase']): ?>
+                                            <span style="background: #D1FAE5; color: #065F46; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">
+                                                ✓ Verified
+                                            </span>
+                                        <?php endif; ?>
+                                        <?php if ($review['created_by_admin']): ?>
+                                            <span style="background: #DBEAFE; color: #1E40AF; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">
+                                                Admin
+                                            </span>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <div style="color: #FBBF24; font-size: 16px;">
+                                            <?php 
+                                            for ($i = 0; $i < $review['rating']; $i++) echo '★';
+                                            for ($i = $review['rating']; $i < 5; $i++) echo '☆';
+                                            ?>
+                                        </div>
+                                        <span style="font-size: 13px; color: #6B7280;">
+                                            <?php echo date('d M Y', strtotime($review['created_at'])); ?>
+                                        </span>
                                     </div>
                                 </div>
-                                <div class="review-date"><?php echo date('M d, Y', strtotime($review['created_at'])); ?></div>
                             </div>
-                            <?php if ($review['title']): ?>
-                                <h4 style="margin-bottom: 8px; font-weight: 600;"><?php echo htmlspecialchars($review['title']); ?></h4>
+                            
+                            <div style="color: #374151; line-height: 1.7; margin-bottom: 16px;">
+                                <?php echo nl2br(htmlspecialchars($review['review_text'])); ?>
+                            </div>
+                            
+                            <?php if (!empty($review['media'])): ?>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; margin-top: 16px;">
+                                    <?php foreach ($review['media'] as $media): ?>
+                                        <?php if ($media['media_type'] === 'image'): ?>
+                                            <img src="<?php echo htmlspecialchars($media['file_path']); ?>" 
+                                                 alt="Review" 
+                                                 onclick="openImageModal(this.src)"
+                                                 style="width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; cursor: pointer; transition: transform 0.2s;"
+                                                 onmouseover="this.style.transform='scale(1.05)'"
+                                                 onmouseout="this.style.transform='scale(1)'">
+                                        <?php else: ?>
+                                            <video src="<?php echo htmlspecialchars($media['file_path']); ?>" 
+                                                   controls 
+                                                   style="width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px;">
+                                            </video>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </div>
                             <?php endif; ?>
-                            <div class="review-body"><?php echo nl2br(htmlspecialchars($review['body'])); ?></div>
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
