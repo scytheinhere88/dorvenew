@@ -407,7 +407,7 @@ include __DIR__ . '/../includes/header.php';
             </div>
 
             <div class="form-section">
-                <h3>Payment Method</h3>
+                <h3>💳 Payment Method</h3>
                 <div class="payment-method" style="background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%); color: var(--white); border-color: var(--charcoal);">
                     <input type="radio" name="payment_method" value="wallet" required>
                     <div style="flex: 1;">
