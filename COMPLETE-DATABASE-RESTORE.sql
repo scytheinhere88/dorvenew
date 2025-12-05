@@ -181,13 +181,12 @@ CREATE TABLE `orders` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
+  KEY `idx_user` (`user_id`),
   KEY `idx_status` (`status`),
   KEY `idx_courier` (`courier`),
   KEY `idx_tracking` (`tracking_number`),
   KEY `idx_created` (`created_at`),
-  KEY `idx_user_status` (`user_id`, `status`),
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+  CONSTRAINT `fk_orders_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =====================================================
