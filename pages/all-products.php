@@ -5,7 +5,6 @@ require_once __DIR__ . '/../config.php';
 $variant_tables_exist = false;
 try {
     $pdo->query("SELECT 1 FROM product_variants LIMIT 1");
-    $pdo->query("SELECT 1 FROM variant_stock LIMIT 1");
     $variant_tables_exist = true;
 } catch (PDOException $e) {
     // Tables don't exist yet
