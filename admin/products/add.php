@@ -246,8 +246,8 @@ include __DIR__ . '/../includes/admin-header.php';
 
         <div class="form-group">
             <label for="images">Upload Product Images *</label>
-            <input type="file" id="images" name="images[]" accept="image/*" multiple>
-            <small>Upload 1-5 images. First image will be the main product image. Recommended size: 800x800px, Max 128MB per image</small>
+            <input type="file" id="images" name="images[]" accept="image/jpeg,image/jpg,image/png,image/webp" multiple required>
+            <small>Upload 1-5 images. First image will be the main product image. Recommended size: 800x800px, Max 2MB per image</small>
         </div>
         
         <div id="imagePreviewContainer" class="image-preview-grid" style="margin-top: 20px; display: none;">
