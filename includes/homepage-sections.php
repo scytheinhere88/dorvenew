@@ -160,7 +160,49 @@ document.addEventListener('keydown', function(e) {
 </section>
 <?php endif; ?>
 
-<!-- CATEGORY MARQUEE REMOVED - Already in main index.php at "Jelajahi Koleksi Kami" section -->
+<!-- ========== JELAJAHI KATEGORI - CATEGORY MARQUEE ========== -->
+<?php if (!empty($categories)): ?>
+<section class="category-marquee-section">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-pretitle">Temukan Style Anda</div>
+            <h2 class="section-title">Jelajahi Kategori</h2>
+            <p class="section-description">Dari klasik abadi hingga tren kontemporer, temukan produk sempurna untuk setiap kesempatan</p>
+        </div>
+    </div>
+    
+    <div class="category-marquee-wrapper">
+        <div class="category-marquee-track">
+            <?php 
+            // Duplicate categories for seamless loop
+            $marquee_categories = array_merge($categories, $categories);
+            foreach ($marquee_categories as $category): 
+            ?>
+                <a href="/pages/all-products.php?category=<?php echo $category['id']; ?>" class="category-marquee-item">
+                    <div class="category-icon-wrapper">
+                        <?php if (!empty($category['icon'])): ?>
+                            <?php if (filter_var($category['icon'], FILTER_VALIDATE_URL)): ?>
+                                <!-- Icon uploaded dari admin (URL image) -->
+                                <img src="<?php echo htmlspecialchars($category['icon']); ?>" 
+                                     alt="<?php echo htmlspecialchars($category['name']); ?>" 
+                                     class="category-icon">
+                            <?php else: ?>
+                                <!-- Icon emoji dari admin -->
+                                <span class="category-icon-emoji"><?php echo htmlspecialchars($category['icon']); ?></span>
+                            <?php endif; ?>
+                        <?php else: ?>
+                            <!-- Default icon jika belum di-set di admin -->
+                            <span class="category-icon-emoji">🛍️</span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="category-marquee-name"><?php echo htmlspecialchars($category['name']); ?></div>
+                    <div class="category-marquee-count">Belanja Sekarang →</div>
+                </a>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
 
 <!-- ========== FEATURED PRODUCTS SECTION ========== -->
 <?php if (!empty($featured_products)): ?>
