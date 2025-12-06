@@ -69,12 +69,6 @@ $addresses = $stmt->fetchAll();
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #F8F9FA; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
-        .back-btn {
-            display: inline-flex; align-items: center; gap: 8px;
-            color: #6B7280; text-decoration: none; margin-bottom: 20px;
-            font-weight: 500;
-        }
         .header { margin-bottom: 32px; }
         .header h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
         
