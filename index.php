@@ -17,6 +17,14 @@ try {
     $popup_banner = null;
 }
 
+// Get marquee text banner (running text below navbar)
+try {
+    $stmt = $pdo->query("SELECT * FROM banners WHERE banner_type = 'marquee' AND is_active = 1 ORDER BY display_order ASC LIMIT 1");
+    $marquee_banner = $stmt->fetch();
+} catch (PDOException $e) {
+    $marquee_banner = null;
+}
+
 // Get featured products
 $stmt = $pdo->prepare("SELECT p.*, c.name as category_name
                       FROM products p
