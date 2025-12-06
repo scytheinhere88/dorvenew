@@ -254,7 +254,8 @@ include __DIR__ . '/includes/header.php';
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(135deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 100%);
+        background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.15) 100%);
+        pointer-events: none;
     }
 
     .hero-slide-content {
@@ -267,6 +268,11 @@ include __DIR__ . '/includes/header.php';
         width: 90%;
         color: var(--white);
         z-index: 10;
+        pointer-events: none;
+    }
+    
+    .hero-slide-content a {
+        pointer-events: all;
     }
 
     .hero-slide-title {
