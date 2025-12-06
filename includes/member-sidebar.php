@@ -129,50 +129,62 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <ul class="sidebar-nav">
         <li>
             <a href="/member/dashboard.php" class="<?= $current_page === 'dashboard.php' ? 'active' : '' ?>">
-                📊 Dashboard
+                <span class="sidebar-icon">🏠</span>
+                Dashboard
             </a>
         </li>
         <li>
             <a href="/member/wallet.php" class="<?= $current_page === 'wallet.php' ? 'active' : '' ?>">
-                💰 My Wallet
+                <span class="sidebar-icon">💰</span>
+                My Wallet
             </a>
         </li>
         <li>
             <a href="/member/orders.php" class="<?= $current_page === 'orders.php' ? 'active' : '' ?>">
-                📦 My Orders
+                <span class="sidebar-icon">📦</span>
+                My Orders
             </a>
         </li>
         <li>
             <a href="/member/referral.php" class="<?= $current_page === 'referral.php' ? 'active' : '' ?>">
-                🎁 My Referrals
+                <span class="sidebar-icon">🎁</span>
+                My Referrals
             </a>
         </li>
         <li>
             <a href="/member/address-book.php" class="<?= $current_page === 'address-book.php' ? 'active' : '' ?>">
-                📍 Address Book
+                <span class="sidebar-icon">📍</span>
+                Address Book
             </a>
         </li>
         <li>
             <a href="/member/vouchers/" class="<?= strpos($_SERVER['REQUEST_URI'], '/vouchers/') !== false ? 'active' : '' ?>">
-                🎫 My Vouchers
+                <span class="sidebar-icon">🎫</span>
+                My Vouchers
             </a>
         </li>
         <li>
             <a href="/member/reviews.php" class="<?= $current_page === 'reviews.php' ? 'active' : '' ?>">
-                ⭐ My Reviews
+                <span class="sidebar-icon">⭐</span>
+                My Reviews
             </a>
         </li>
         <li>
             <a href="/member/profile.php" class="<?= $current_page === 'profile.php' ? 'active' : '' ?>">
-                👤 Edit Profile
+                <span class="sidebar-icon">👤</span>
+                Edit Profile
             </a>
         </li>
         <li>
             <a href="/member/password.php" class="<?= $current_page === 'password.php' ? 'active' : '' ?>">
-                🔒 Change Password
+                <span class="sidebar-icon">🔒</span>
+                Change Password
             </a>
         </li>
     </ul>
 
-    <a href="/auth/logout.php" class="logout-btn">Logout</a>
+    <a href="/auth/logout.php" class="logout-btn">
+        <span style="font-size: 16px;">🚪</span>
+        Logout
+    </a>
 </aside>
