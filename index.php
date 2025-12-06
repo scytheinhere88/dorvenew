@@ -637,10 +637,10 @@ include __DIR__ . '/includes/header.php';
         opacity: 0.9;
     }
 
-    /* SEO Section 2 - Product Categories Info (Middle) */
+    /* SEO Section 2 - Product Categories Info (Middle) - IMPROVED */
     .category-info-section {
         padding: 100px 0;
-        background: linear-gradient(135deg, #F5F5F5 0%, #FFFFFF 100%);
+        background: linear-gradient(135deg, #F8F9FA 0%, #FFFFFF 100%);
     }
 
     .info-grid {
@@ -652,76 +652,91 @@ include __DIR__ . '/includes/header.php';
 
     .info-image {
         position: relative;
-        border-radius: 8px;
+        border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.12);
     }
 
     .info-image img {
         width: 100%;
-        height: 600px;
+        height: 550px;
         object-fit: cover;
+        transition: transform 0.6s ease;
+    }
+
+    .info-image:hover img {
+        transform: scale(1.05);
     }
 
     .info-content h3 {
         font-family: 'Playfair Display', serif;
-        font-size: 38px;
+        font-size: 36px;
         color: var(--charcoal);
         margin-bottom: 24px;
         line-height: 1.3;
+        font-weight: 700;
     }
 
     .info-content p {
-        font-size: 16px;
-        color: var(--grey);
+        font-size: 17px;
+        color: #4B5563;
         line-height: 1.9;
         margin-bottom: 24px;
+        text-align: justify;
+    }
+
+    .info-content p strong {
+        color: var(--charcoal);
+        font-weight: 600;
     }
 
     .info-features {
-        margin-top: 32px;
+        margin-top: 40px;
     }
 
     .feature-item {
         display: flex;
         align-items: flex-start;
-        margin-bottom: 24px;
-        padding: 20px;
+        margin-bottom: 20px;
+        padding: 24px;
         background: var(--white);
-        border-radius: 6px;
-        transition: transform 0.3s ease;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0,0,0,0.06);
     }
 
     .feature-item:hover {
         transform: translateX(8px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        border-color: var(--latte);
     }
 
     .feature-icon-box {
-        width: 48px;
-        height: 48px;
-        background: var(--charcoal);
+        width: 52px;
+        height: 52px;
+        background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%);
         color: var(--white);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 20px;
+        font-size: 22px;
         margin-right: 20px;
         flex-shrink: 0;
     }
 
     .feature-text h4 {
-        font-size: 16px;
+        font-size: 17px;
         font-weight: 700;
         color: var(--charcoal);
-        margin-bottom: 6px;
+        margin-bottom: 8px;
     }
 
     .feature-text p {
-        font-size: 14px;
-        color: var(--grey);
+        font-size: 15px;
+        color: #6B7280;
         margin: 0;
-        line-height: 1.6;
+        line-height: 1.7;
     }
 
     .featured-section {
