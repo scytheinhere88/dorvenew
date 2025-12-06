@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         switch ($_FILES['images']['error'][$key]) {
                             case UPLOAD_ERR_INI_SIZE:
                             case UPLOAD_ERR_FORM_SIZE:
-                                $error_msg = 'File size exceeds limit (max 2MB)';
+                                $error_msg = 'File size exceeds limit (max 8MB)';
                                 break;
                             case UPLOAD_ERR_PARTIAL:
                                 $error_msg = 'File was only partially uploaded';
