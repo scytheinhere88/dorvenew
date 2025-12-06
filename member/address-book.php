@@ -334,8 +334,19 @@ $addresses = $stmt->fetchAll();
         // Load Google Maps script if not loaded yet
         if (!window.google || !window.google.maps) {
             const script = document.createElement('script');
-            script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places`;
-            script.onload = () => setTimeout(initMap, 100);
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&callback=initMap`;
+            script.onerror = () => {
+                console.error('Failed to load Google Maps');
+                document.getElementById('map').innerHTML = `
+                    <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: #FEE2E2; flex-direction: column; padding: 20px; text-align: center;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">❌</div>
+                        <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px; color: #991B1B;">Google Maps Error</div>
+                        <div style="font-size: 13px; color: #991B1B;">
+                            Failed to load Google Maps. Please check your API key or try again later.
+                        </div>
+                    </div>
+                `;
+            };
             document.head.appendChild(script);
         } else {
             setTimeout(initMap, 100);
@@ -346,47 +357,95 @@ $addresses = $stmt->fetchAll();
         document.getElementById('addressModal').style.display = 'none';
     }
 
-    let map, marker, geocoder;
+    let map, marker, geocoder, autocomplete;
 
     function initMap() {
-        // Default to Jakarta
-        const defaultPos = { lat: -6.2088, lng: 106.8456 };
-        
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: defaultPos,
-            zoom: 15
-        });
-        
-        geocoder = new google.maps.Geocoder();
-        
-        marker = new google.maps.Marker({
-            position: defaultPos,
-            map: map,
-            draggable: true,
-            animation: google.maps.Animation.DROP
-        });
-        
-        // Click map to set location
-        map.addListener('click', (e) => {
-            placeMarker(e.latLng);
-        });
-        
-        // Drag marker
-        marker.addListener('dragend', () => {
-            updateAddress(marker.getPosition());
-        });
-        
-        // Try to get user's current location
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((position) => {
-                const pos = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                };
-                map.setCenter(pos);
-                marker.setPosition(pos);
-                updateAddress(pos);
+        try {
+            // Default to Jakarta
+            const defaultPos = { lat: -6.2088, lng: 106.8456 };
+            
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: defaultPos,
+                zoom: 15,
+                mapTypeControl: true,
+                streetViewControl: false,
+                fullscreenControl: true
             });
+            
+            geocoder = new google.maps.Geocoder();
+            
+            marker = new google.maps.Marker({
+                position: defaultPos,
+                map: map,
+                draggable: true,
+                animation: google.maps.Animation.DROP
+            });
+            
+            // Setup autocomplete
+            const input = document.getElementById('autocomplete');
+            autocomplete = new google.maps.places.Autocomplete(input, {
+                componentRestrictions: { country: 'id' }, // Restrict to Indonesia
+                fields: ['formatted_address', 'geometry', 'name']
+            });
+            
+            // When user selects from autocomplete
+            autocomplete.addListener('place_changed', () => {
+                const place = autocomplete.getPlace();
+                
+                if (!place.geometry || !place.geometry.location) {
+                    alert('Lokasi tidak ditemukan. Silakan coba lagi.');
+                    return;
+                }
+                
+                // Move map and marker to selected place
+                map.setCenter(place.geometry.location);
+                map.setZoom(17);
+                marker.setPosition(place.geometry.location);
+                
+                // Update form fields
+                document.getElementById('latitude').value = place.geometry.location.lat();
+                document.getElementById('longitude').value = place.geometry.location.lng();
+                document.getElementById('addressField').value = place.formatted_address;
+            });
+            
+            // Click map to set location
+            map.addListener('click', (e) => {
+                placeMarker(e.latLng);
+            });
+            
+            // Drag marker
+            marker.addListener('dragend', () => {
+                updateAddress(marker.getPosition());
+            });
+            
+            // Try to get user's current location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const pos = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        map.setCenter(pos);
+                        marker.setPosition(pos);
+                        updateAddress(pos);
+                    },
+                    (error) => {
+                        console.warn('Geolocation error:', error);
+                    }
+                );
+            }
+        } catch (error) {
+            console.error('Map initialization error:', error);
+            document.getElementById('map').innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: #FEE2E2; flex-direction: column; padding: 20px; text-align: center;">
+                    <div style="font-size: 48px; margin-bottom: 16px;">⚠️</div>
+                    <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px; color: #991B1B;">Map Initialization Failed</div>
+                    <div style="font-size: 13px; color: #991B1B;">
+                        ${error.message || 'Unknown error'}
+                    </div>
+                </div>
+            `;
         }
     }
 
@@ -404,6 +463,8 @@ $addresses = $stmt->fetchAll();
         geocoder.geocode({ location: location }, (results, status) => {
             if (status === 'OK' && results[0]) {
                 document.getElementById('addressField').value = results[0].formatted_address;
+            } else {
+                console.error('Geocoding failed:', status);
             }
         });
     }
