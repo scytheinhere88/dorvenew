@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Setup Guide - Dorve.id</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 32px;
+            font-size: 16px;
+        }
+        .step {
+            background: #f8f9fa;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            border-left: 4px solid #3b82f6;
+        }
+        .step h2 {
+            font-size: 20px;
+            color: #1e40af;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: #3b82f6;
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        .sql-box {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 16px 0;
+            position: relative;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 8px 16px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .copy-btn:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+        }
+        .copy-btn.copied {
+            background: #10b981;
+        }
+        .warning-box {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 24px 0;
+        }
+        .warning-box h3 {
+            color: #92400e;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+        .warning-box p {
+            color: #78350f;
+            line-height: 1.6;
+        }
+        .info-box {
+            background: #dbeafe;
+            border: 2px solid #3b82f6;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 24px 0;
+        }
+        .info-box h3 {
+            color: #1e40af;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+        .info-box ul {
+            list-style: none;
+            padding: 0;
+        }
+        .info-box li {
+            padding: 8px 0;
+            color: #1e3a8a;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .info-box li:before {
+            content: "✓";
+            color: #10b981;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 2px solid #e5e7eb;
+            text-align: center;
+            color: #6b7280;
+        }
+        code {
+            background: #f3f4f6;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #dc2626;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗄️ Database Setup Guide</h1>
+        <p class="subtitle">Setup tables and fields untuk fitur baru di Dorve.id</p>
+
+        <div class="warning-box">
+            <h3>⚠️ PENTING!</h3>
+            <p>Jalankan SQL ini di <strong>phpMyAdmin</strong> atau MySQL client. Copy SQL dari box di bawah, paste di SQL tab phpMyAdmin, lalu klik Execute/Go.</p>
+        </div>
+
+        <!-- STEP 1 -->
+        <div class="step">
+            <h2><span class="step-num">1</span> Create Banners Table</h2>
+            <p style="margin-bottom: 16px; color: #6b7280;">Table untuk hero slider, popup banner, dan marquee text</p>
+            
+            <div class="sql-box">
+                <button class="copy-btn" onclick="copySql(this, 'sql1')">Copy SQL</button>
+                <pre id="sql1">CREATE TABLE IF NOT EXISTS `banners` (
+  `id` INT(11) PRIMARY KEY AUTO_INCREMENT,
+  `banner_type` VARCHAR(50) NOT NULL COMMENT 'slider, popup, marquee',
+  `title` VARCHAR(255) DEFAULT NULL,
+  `subtitle` TEXT DEFAULT NULL,
+  `image_url` VARCHAR(500) DEFAULT NULL,
+  `link_url` VARCHAR(500) DEFAULT NULL,
+  `cta_text` VARCHAR(100) DEFAULT NULL,
+  `is_active` TINYINT(1) DEFAULT 1,
+  `display_order` INT(11) DEFAULT 0,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY `idx_banner_type` (`banner_type`),
+  KEY `idx_is_active` (`is_active`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</pre>
+            </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="step">
+            <h2><span class="step-num">2</span> Add Icon Field to Categories</h2>
+            <p style="margin-bottom: 16px; color: #6b7280;">Field untuk icon di category marquee (emoji atau URL image)</p>
+            
+            <div class="sql-box">
+                <button class="copy-btn" onclick="copySql(this, 'sql2')">Copy SQL</button>
+                <pre id="sql2">ALTER TABLE `categories` 
+ADD COLUMN IF NOT EXISTS `icon` VARCHAR(500) DEFAULT NULL AFTER `name`;</pre>
+            </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="step">
+            <h2><span class="step-num">3</span> Add Featured Fields to Products</h2>
+            <p style="margin-bottom: 16px; color: #6b7280;">Fields untuk featured products dan new collection di homepage</p>
+            
+            <div class="sql-box">
+                <button class="copy-btn" onclick="copySql(this, 'sql3')">Copy SQL</button>
+                <pre id="sql3">ALTER TABLE `products` 
+ADD COLUMN IF NOT EXISTS `is_featured` TINYINT(1) DEFAULT 0 AFTER `is_active`,
+ADD COLUMN IF NOT EXISTS `is_best_seller` TINYINT(1) DEFAULT 0 AFTER `is_featured`,
+ADD COLUMN IF NOT EXISTS `is_new` TINYINT(1) DEFAULT 0 AFTER `is_best_seller`;
+
+ALTER TABLE `products` 
+ADD INDEX IF NOT EXISTS `idx_is_featured` (`is_featured`),
+ADD INDEX IF NOT EXISTS `idx_is_best_seller` (`is_best_seller`),
+ADD INDEX IF NOT EXISTS `idx_is_new` (`is_new`);</pre>
+            </div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="step">
+            <h2><span class="step-num">4</span> Create Product Images Table</h2>
+            <p style="margin-bottom: 16px; color: #6b7280;">Table untuk multiple product images (1-5 images per product)</p>
+            
+            <div class="sql-box">
+                <button class="copy-btn" onclick="copySql(this, 'sql4')">Copy SQL</button>
+                <pre id="sql4">CREATE TABLE IF NOT EXISTS `product_images` (
+  `id` INT(11) PRIMARY KEY AUTO_INCREMENT,
+  `product_id` INT(11) NOT NULL,
+  `image_path` VARCHAR(500) NOT NULL,
+  `is_primary` TINYINT(1) DEFAULT 0,
+  `sort_order` INT(11) DEFAULT 0,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE CASCADE,
+  KEY `idx_product_id` (`product_id`),
+  KEY `idx_is_primary` (`is_primary`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</pre>
+            </div>
+        </div>
+
+        <!-- INFO BOX -->
+        <div class="info-box">
+            <h3>✅ Setelah Run SQL</h3>
+            <ul>
+                <li>Login ke admin panel</li>
+                <li>Go to: Promosi & Banner → Marquee Text</li>
+                <li>Edit & save marquee text</li>
+                <li>Add slider banners (8-10 banners)</li>
+                <li>Edit categories, add icons (emoji atau image URL)</li>
+                <li>Add products, check "Featured Product" checkbox</li>
+            </ul>
+        </div>
+
+        <!-- WARNING BOX -->
+        <div class="warning-box">
+            <h3>⚠️ Jika Error "Table already exists"</h3>
+            <p>Abaikan error ini - artinya table sudah ada. Lanjut ke SQL berikutnya.</p>
+        </div>
+
+        <div class="footer">
+            <p><strong>Need Help?</strong> Contact your developer or check documentation</p>
+            <p style="margin-top: 12px;">Generated for Dorve.id - <?php echo date('Y'); ?></p>
+        </div>
+    </div>
+
+    <script>
+        function copySql(btn, sqlId) {
+            const sqlText = document.getElementById(sqlId).textContent;
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(sqlText).then(() => {
+                btn.textContent = '✓ Copied!';
+                btn.classList.add('copied');
+                
+                setTimeout(() => {
+                    btn.textContent = 'Copy SQL';
+                    btn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                alert('Failed to copy. Please select and copy manually.');
+            });
+        }
+    </script>
+</body>
+</html>
