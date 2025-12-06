@@ -1705,6 +1705,216 @@ document.addEventListener('keydown', function(e) {
     </div>
 </section>
 
+<!-- ========== POPUP BANNER (FROM ADMIN PANEL) ========== -->
+<?php if ($popup_banner): ?>
+<div id="popupBanner" class="popup-banner-overlay">
+    <div class="popup-banner-container">
+        <button onclick="closePopupBanner()" class="popup-banner-close" aria-label="Close popup">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+        
+        <div class="popup-banner-content">
+            <?php if (!empty($popup_banner['link_url'])): ?>
+                <a href="<?= htmlspecialchars($popup_banner['link_url']) ?>" onclick="closePopupBanner()">
+            <?php endif; ?>
+            
+            <img src="<?= htmlspecialchars($popup_banner['image_url']) ?>" 
+                 alt="<?= htmlspecialchars($popup_banner['title'] ?? 'Promo Dorve.id') ?>" 
+                 class="popup-banner-image">
+            
+            <?php if (!empty($popup_banner['link_url'])): ?>
+                </a>
+            <?php endif; ?>
+            
+            <?php if (!empty($popup_banner['cta_text']) && !empty($popup_banner['link_url'])): ?>
+                <a href="<?= htmlspecialchars($popup_banner['link_url']) ?>" 
+                   class="popup-banner-cta" 
+                   onclick="closePopupBanner()">
+                    <?= htmlspecialchars($popup_banner['cta_text']) ?>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 8px;">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<style>
+.popup-banner-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 99999;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeInPopup 0.4s ease;
+}
+
+.popup-banner-overlay.show {
+    display: flex;
+}
+
+@keyframes fadeInPopup {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.popup-banner-container {
+    position: relative;
+    max-width: 700px;
+    width: 100%;
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+    animation: slideUpPopup 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideUpPopup {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.popup-banner-content {
+    position: relative;
+}
+
+.popup-banner-image {
+    width: 100%;
+    height: auto;
+    max-height: 80vh;
+    object-fit: contain;
+    display: block;
+}
+
+.popup-banner-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    border: none;
+    border-radius: 50%;
+    color: var(--white);
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup-banner-close:hover {
+    background: rgba(0, 0, 0, 0.9);
+    transform: rotate(90deg);
+}
+
+.popup-banner-cta {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 18px 48px;
+    background: var(--charcoal);
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-size: 14px;
+    border-radius: 50px;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.popup-banner-cta:hover {
+    background: var(--latte);
+    color: var(--charcoal);
+    transform: translateX(-50%) translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+}
+
+.popup-banner-cta svg {
+    transition: transform 0.3s;
+}
+
+.popup-banner-cta:hover svg {
+    transform: translateX(5px);
+}
+
+@media (max-width: 768px) {
+    .popup-banner-container {
+        max-width: 95%;
+        border-radius: 16px;
+    }
+    
+    .popup-banner-close {
+        width: 40px;
+        height: 40px;
+        top: 16px;
+        right: 16px;
+    }
+    
+    .popup-banner-cta {
+        padding: 16px 36px;
+        font-size: 13px;
+        bottom: 24px;
+    }
+}
+</style>
+
+<script>
+// Show popup after 3 seconds (only once per session)
+setTimeout(function() {
+    if (!sessionStorage.getItem('popupShown_<?= $popup_banner['id'] ?>')) {
+        document.getElementById('popupBanner').classList.add('show');
+        document.body.style.overflow = 'hidden';
+        sessionStorage.setItem('popupShown_<?= $popup_banner['id'] ?>', 'true');
+    }
+}, 3000);
+
+function closePopupBanner() {
+    document.getElementById('popupBanner').classList.remove('show');
+    document.body.style.overflow = 'auto';
+}
+
+// Close on outside click
+document.getElementById('popupBanner')?.addEventListener('click', function(e) {
+    if (e.target === this) {
+        closePopupBanner();
+    }
+});
+
+// Close on ESC key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closePopupBanner();
+    }
+});
+</script>
+<?php endif; ?>
+
 <?php include __DIR__ . '/includes/footer.php'; ?>
 
 <!-- Slider script moved to homepage-sections.php -->
