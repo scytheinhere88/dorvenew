@@ -274,8 +274,13 @@ $addresses = $stmt->fetchAll();
                     </div>
                 </div>
                 
+                <div class="form-group">
+                    <label>🔍 Search Location</label>
+                    <input type="text" id="autocomplete" placeholder="Type address to search..." style="width: 100%; padding: 12px 16px; border: 2px solid #E5E7EB; border-radius: 10px; font-size: 15px;">
+                </div>
+                
                 <div class="map-hint">
-                    📍 <strong>Click on the map</strong> to select your exact location. Drag the marker to adjust.
+                    📍 <strong>Search or click on the map</strong> to select your exact location. Drag the marker to adjust.
                 </div>
                 
                 <div id="map"></div>
