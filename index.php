@@ -25,15 +25,19 @@ try {
     $marquee_banner = null;
 }
 
-// Get featured products
-$stmt = $pdo->prepare("SELECT p.*, c.name as category_name
-                      FROM products p
-                      LEFT JOIN categories c ON p.category_id = c.id
-                      WHERE p.is_featured = 1 AND p.is_active = 1
-                      ORDER BY p.created_at DESC
-                      LIMIT 8");
-$stmt->execute();
-$featured_products = $stmt->fetchAll();
+// Get featured products (from "Featured Product" checkbox in admin)
+try {
+    $stmt = $pdo->prepare("SELECT p.*, c.name as category_name
+                          FROM products p
+                          LEFT JOIN categories c ON p.category_id = c.id
+                          WHERE (p.is_featured = 1 OR p.is_best_seller = 1) AND p.is_active = 1
+                          ORDER BY p.created_at DESC
+                          LIMIT 8");
+    $stmt->execute();
+    $featured_products = $stmt->fetchAll();
+} catch (PDOException $e) {
+    $featured_products = [];
+}
 
 // Get new arrivals
 $stmt = $pdo->prepare("SELECT p.*, c.name as category_name
