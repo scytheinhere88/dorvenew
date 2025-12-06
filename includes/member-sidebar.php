@@ -23,15 +23,18 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
     .sidebar-header {
         padding: 30px;
-        background: var(--cream);
+        background: linear-gradient(135deg, #F8F9FA 0%, #E9ECEF 100%);
         margin-bottom: 24px;
-        border-radius: 8px;
+        border-radius: 12px;
+        border: 1px solid rgba(0,0,0,0.08);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
 
     .sidebar-header h3 {
         font-family: 'Playfair Display', serif;
         font-size: 24px;
         margin-bottom: 8px;
+        color: var(--charcoal);
     }
 
     .sidebar-header p {
@@ -48,39 +51,66 @@ $current_page = basename($_SERVER['PHP_SELF']);
     }
 
     .sidebar-nav a {
-        display: block;
+        display: flex;
+        align-items: center;
+        gap: 12px;
         padding: 14px 20px;
         color: var(--charcoal);
         text-decoration: none;
-        transition: all 0.3s;
-        border-radius: 4px;
+        transition: all 0.3s ease;
+        border-radius: 8px;
         font-size: 14px;
+        font-weight: 500;
     }
 
-    .sidebar-nav a:hover,
-    .sidebar-nav a.active {
+    .sidebar-nav a:hover {
         background: var(--cream);
-        padding-left: 28px;
+        padding-left: 24px;
+        transform: translateX(4px);
+    }
+
+    .sidebar-nav a.active {
+        background: linear-gradient(135deg, var(--charcoal) 0%, #2D2D2D 100%);
+        color: var(--white);
+        font-weight: 600;
+    }
+
+    .sidebar-nav a.active:hover {
+        padding-left: 20px;
+        transform: none;
+    }
+
+    .sidebar-icon {
+        font-size: 18px;
+        width: 24px;
+        text-align: center;
     }
 
     .logout-btn {
         margin-top: 24px;
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
         width: 100%;
         padding: 14px 20px;
         background: var(--white);
-        border: 1px solid rgba(0,0,0,0.15);
+        border: 2px solid rgba(200, 30, 58, 0.3);
         color: #C41E3A;
         text-decoration: none;
         text-align: center;
-        border-radius: 4px;
+        border-radius: 8px;
         font-size: 14px;
-        transition: all 0.3s;
+        font-weight: 600;
+        transition: all 0.3s ease;
     }
 
     .logout-btn:hover {
         background: #C41E3A;
         color: var(--white);
+        border-color: #C41E3A;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3);
     }
 
     @media (max-width: 968px) {
