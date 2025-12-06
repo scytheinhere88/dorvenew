@@ -54,6 +54,9 @@
                 <a href="/admin/promotion/index.php" class="nav-item <?php echo strpos($_SERVER['PHP_SELF'], '/promotion/') !== false ? 'active' : ''; ?>">
                     📢 Promosi & Banner
                 </a>
+                <a href="/admin/settings/marquee-text.php" class="nav-item <?php echo strpos($_SERVER['PHP_SELF'], '/settings/marquee-text.php') !== false ? 'active' : ''; ?>" style="padding-left: 50px;">
+                    🎭 Marquee Text
+                </a>
                 <a href="/admin/business-growth/index.php" class="nav-item <?php echo strpos($_SERVER['PHP_SELF'], '/business-growth/') !== false ? 'active' : ''; ?>">
                     📊 Business Growth
                 </a>
