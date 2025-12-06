@@ -10,13 +10,13 @@
 // 3. Enhanced Featured Products
 ?>
 
-<!-- ========== HERO SLIDER SECTION ========== -->
+<!-- ========== HERO BANNER SLIDER (8-10 BANNERS FROM ADMIN) ========== -->
 <?php if (!empty($slider_banners)): ?>
 <section class="hero-slider-container">
     <?php foreach ($slider_banners as $index => $banner): ?>
         <div class="hero-slide <?= $index === 0 ? 'active' : '' ?>" data-slide="<?= $index ?>">
             <img src="<?= htmlspecialchars($banner['image_url']) ?>" 
-                 alt="<?= htmlspecialchars($banner['title'] ?? 'Banner') ?>" 
+                 alt="<?= htmlspecialchars($banner['title'] ?? 'Banner Promosi Dorve.id') ?>" 
                  class="hero-slide-image">
             <div class="hero-slide-overlay"></div>
             <div class="hero-slide-content">
@@ -29,6 +29,10 @@
                 <?php if (!empty($banner['cta_text']) && !empty($banner['link_url'])): ?>
                     <a href="<?= htmlspecialchars($banner['link_url']) ?>" class="hero-slide-cta">
                         <?= htmlspecialchars($banner['cta_text']) ?>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 8px;">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
                     </a>
                 <?php endif; ?>
             </div>
@@ -39,14 +43,30 @@
     <?php if (count($slider_banners) > 1): ?>
         <div class="slider-nav">
             <?php foreach ($slider_banners as $index => $banner): ?>
-                <span class="slider-dot <?= $index === 0 ? 'active' : '' ?>" data-slide="<?= $index ?>" onclick="goToSlide(<?= $index ?>)"></span>
+                <span class="slider-dot <?= $index === 0 ? 'active' : '' ?>" 
+                      data-slide="<?= $index ?>" 
+                      onclick="goToSlide(<?= $index ?>)"
+                      aria-label="Go to slide <?= $index + 1 ?>"></span>
             <?php endforeach; ?>
         </div>
         
         <!-- Slider Arrows -->
         <div class="slider-arrows">
-            <div class="slider-arrow" onclick="prevSlide()">❮</div>
-            <div class="slider-arrow" onclick="nextSlide()">❯</div>
+            <button class="slider-arrow slider-arrow-left" onclick="prevSlide()" aria-label="Previous slide">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+            <button class="slider-arrow slider-arrow-right" onclick="nextSlide()" aria-label="Next slide">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Progress Bar -->
+        <div class="slider-progress">
+            <div class="slider-progress-bar"></div>
         </div>
     <?php endif; ?>
 </section>
@@ -56,15 +76,25 @@ let currentSlide = 0;
 const totalSlides = <?= count($slider_banners) ?>;
 const slides = document.querySelectorAll('.hero-slide');
 const dots = document.querySelectorAll('.slider-dot');
+const progressBar = document.querySelector('.slider-progress-bar');
 let sliderInterval;
+const slideDuration = 6000; // 6 seconds per slide
 
 function showSlide(index) {
     slides.forEach(slide => slide.classList.remove('active'));
     dots.forEach(dot => dot.classList.remove('active'));
     
     slides[index].classList.add('active');
-    dots[index].classList.add('active');
+    if (dots[index]) dots[index].classList.add('active');
     currentSlide = index;
+    
+    // Reset progress bar
+    if (progressBar) {
+        progressBar.style.animation = 'none';
+        setTimeout(() => {
+            progressBar.style.animation = `slideProgress ${slideDuration}ms linear`;
+        }, 10);
+    }
 }
 
 function nextSlide() {
@@ -85,15 +115,49 @@ function goToSlide(index) {
 }
 
 function resetInterval() {
-    clearInterval(sliderInterval);
-    sliderInterval = setInterval(nextSlide, 5000);
+    if (sliderInterval) clearInterval(sliderInterval);
+    if (totalSlides > 1) {
+        sliderInterval = setInterval(nextSlide, slideDuration);
+    }
 }
 
-// Auto-play slider every 5 seconds
+// Auto-play slider
 if (totalSlides > 1) {
-    sliderInterval = setInterval(nextSlide, 5000);
+    resetInterval();
 }
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowLeft') prevSlide();
+    if (e.key === 'ArrowRight') nextSlide();
+});
 </script>
+
+<style>
+@keyframes slideProgress {
+    0% { width: 0; }
+    100% { width: 100%; }
+}
+</style>
+<?php else: ?>
+<!-- Default Hero Banner (if no banners in admin) -->
+<section class="hero-slider-container">
+    <div class="hero-slide active">
+        <img src="/public/images/Dorve1.png" alt="Dorve.id - Fashion Online Terpercaya" class="hero-slide-image">
+        <div class="hero-slide-overlay"></div>
+        <div class="hero-slide-content">
+            <h1 class="hero-slide-title">Dorve.id - Fashion Online Terpercaya</h1>
+            <p class="hero-slide-subtitle">Koleksi Fashion Pria, Wanita & Couple Terlengkap di Indonesia</p>
+            <a href="/pages/all-products.php" class="hero-slide-cta">
+                Belanja Sekarang
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 8px;">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </a>
+        </div>
+    </div>
+</section>
 <?php endif; ?>
 
 <!-- CATEGORY MARQUEE REMOVED - Already in main index.php at "Jelajahi Koleksi Kami" section -->
