@@ -16,7 +16,10 @@ CREATE TABLE IF NOT EXISTS `settings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 2. TABLE: payment_methods (untuk payment settings page)
-CREATE TABLE IF NOT EXISTS `payment_methods` (
+-- Drop and recreate untuk memastikan struktur yang benar
+DROP TABLE IF EXISTS `payment_methods`;
+
+CREATE TABLE `payment_methods` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   `method_name` varchar(50) NOT NULL,
@@ -28,8 +31,8 @@ CREATE TABLE IF NOT EXISTS `payment_methods` (
   UNIQUE KEY `method_name` (`method_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Insert default payment methods jika belum ada
-INSERT IGNORE INTO `payment_methods` (`id`, `name`, `method_name`, `type`, `is_active`, `display_order`) VALUES
+-- Insert default payment methods
+INSERT INTO `payment_methods` (`id`, `name`, `method_name`, `type`, `is_active`, `display_order`) VALUES
 (1, 'Transfer Bank Manual', 'bank_transfer', 'bank_transfer', 1, 1),
 (2, 'QRIS (via Midtrans)', 'qris', 'qris', 1, 2),
 (3, 'E-Wallet (via Midtrans)', 'e_wallet', 'e_wallet', 1, 3),
