@@ -26,14 +26,14 @@ $canonical_url = function_exists('getCanonicalUrl') ? getCanonicalUrl() : ($_SER
     <meta property="og:title" content="<?php echo $page_title ?? 'Dorve.id | Pusat Fashion Pria & Wanita Indonesia – Toko Baju Online Kekinian & Terlengkap'; ?>">
     <meta property="og:description" content="<?php echo $page_description ?? 'Dorve.id adalah pusat fashion pria, wanita & unisex di Indonesia. Koleksi lengkap baju kekinian, dress, kemeja, kaos, hoodie dan outfit terbaru dengan harga terjangkau. Belanja aman, cepat & terpercaya di toko resmi Dorve.id.'; ?>">
     <meta property="og:url" content="<?php echo $canonical_url; ?>">
-    <meta property="og:image" content="<?php echo getOgImage($og_image ?? null); ?>">
+    <meta property="og:image" content="<?php echo $og_image ?? 'https://dorve.id/public/images/logo.png'; ?>">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@dorve.id">
     <meta name="twitter:title" content="<?php echo $page_title ?? 'Dorve.id | Pusat Fashion Pria & Wanita Indonesia'; ?>">
     <meta name="twitter:description" content="<?php echo $page_description ?? 'Dorve.id pusat fashion pria wanita & unisex Indonesia. Baju kekinian, dress, kemeja, kaos trendy dengan harga terjangkau.'; ?>">
-    <meta name="twitter:image" content="<?php echo getOgImage($og_image ?? null); ?>">
+    <meta name="twitter:image" content="<?php echo $og_image ?? 'https://dorve.id/public/images/logo.png'; ?>">
     <link rel="canonical" href="<?php echo $canonical_url; ?>">
     <?php // generateAlternativeLanguageTags(); ?>
     <?php // generateAdvancedMetaTags($page_type ?? 'website'); ?>
