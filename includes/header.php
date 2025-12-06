@@ -580,10 +580,14 @@ $canonical_url = function_exists('getCanonicalUrl') ? getCanonicalUrl() : ($_SER
         $stmt = $pdo->query("SELECT title, subtitle FROM banners WHERE banner_type = 'marquee' AND is_active = 1 ORDER BY display_order ASC LIMIT 1");
         $result = $stmt->fetch();
         if ($result) {
-            $announcement_text = $result['value'];
+            // Combine title and subtitle
+            $marquee_text = trim($result['title']);
+            if (!empty($result['subtitle'])) {
+                $marquee_text .= ' | ' . trim($result['subtitle']);
+            }
         }
     } catch (PDOException $e) {
-        // Use default if table doesn't exist
+        // Use default if query fails
     }
 
     // Get promotion banner settings
