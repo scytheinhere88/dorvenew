@@ -88,23 +88,9 @@ $stmt = $pdo->query("
 ");
 $vouchers = $stmt->fetchAll();
 ?>
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voucher Management - Admin Dorve</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #F8F9FA; color: #1A1A1A; }
-        .admin-layout { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
-        .admin-sidebar { background: #1A1A1A; color: white; padding: 30px 0; position: fixed; width: 260px; height: 100vh; overflow-y: auto; }
-        .admin-logo { font-size: 24px; font-weight: 700; letter-spacing: 3px; padding: 0 30px 30px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .admin-nav { padding: 20px 0; }
-        .nav-item { padding: 12px 30px; color: rgba(255,255,255,0.7); text-decoration: none; display: block; transition: all 0.3s; }
-        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: white; }
-        .admin-content { margin-left: 260px; padding: 40px; }
+
+<style>
+        /* Additional voucher-specific styles */
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
         .header h1 { font-size: 32px; font-weight: 600; }
         .voucher-card {
