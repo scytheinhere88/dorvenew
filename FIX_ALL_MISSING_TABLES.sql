@@ -64,7 +64,10 @@ INSERT INTO `payment_gateway_settings` (`id`, `gateway_name`, `is_production`, `
 (2, 'paypal', 0, 0);
 
 -- 4. TABLE: system_settings (untuk payment settings additional config)
-CREATE TABLE IF NOT EXISTS `system_settings` (
+-- Drop and recreate untuk memastikan struktur yang benar
+DROP TABLE IF EXISTS `system_settings`;
+
+CREATE TABLE `system_settings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `setting_key` varchar(100) NOT NULL,
   `setting_value` text DEFAULT NULL,
@@ -76,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `system_settings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Insert default system settings
-INSERT IGNORE INTO `system_settings` (`setting_key`, `setting_value`, `description`) VALUES
+INSERT INTO `system_settings` (`setting_key`, `setting_value`, `description`) VALUES
 ('whatsapp_admin', '628123456789', 'WhatsApp admin number for payment confirmations'),
 ('min_topup_amount', '10000', 'Minimum topup amount in IDR'),
 ('unique_code_min', '100', 'Minimum unique code for bank transfers'),
