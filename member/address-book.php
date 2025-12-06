@@ -478,5 +478,7 @@ $addresses = $stmt->fetchAll();
         if (e.target.id === 'addressModal') closeModal();
     });
     </script>
+
+<?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>
 </html>
