@@ -175,11 +175,14 @@ $addresses = $stmt->fetchAll();
     </style>
 </head>
 <body>
-    <div class="container">
-        <a href="/member/dashboard.php" class="back-btn">← Back to Dashboard</a>
-        
+<?php $page_title = 'Address Book - Dorve.id'; include __DIR__ . '/../includes/header.php'; ?>
+
+<div class="member-layout">
+    <?php include __DIR__ . '/../includes/member-sidebar.php'; ?>
+    
+    <div class="member-content">
         <div class="header">
-            <h1>📍 Address Book</h1>
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 36px; margin-bottom: 8px;">📍 Address Book</h1>
             <p style="color: #6B7280;">Manage your shipping addresses</p>
         </div>
 
