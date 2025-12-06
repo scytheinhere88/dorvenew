@@ -13,6 +13,8 @@ if (!isAdmin()) {
 $pageTitle = 'Voucher Management';
 $currentPage = 'vouchers';
 
+include __DIR__ . '/../includes/admin-header.php';
+
 // Handle actions
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     header('Content-Type: application/json');
