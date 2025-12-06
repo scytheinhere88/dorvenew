@@ -449,10 +449,8 @@ $vouchers = $stmt->fetchAll();
                 </div>
                 <?php endforeach; ?>
             <?php endif; ?>
-        </main>
-    </div>
 
-    <script>
+<script>
     function deleteVoucher(id) {
         if (!confirm('Are you sure you want to delete this voucher?')) return;
         
