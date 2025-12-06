@@ -96,9 +96,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         break;
                     }
                     
-                    // Check file size (2MB max)
-                    if ($_FILES['images']['size'][$key] > 2097152) {
-                        throw new Exception('File size exceeds 2MB limit: ' . $filename);
+                    // Check file size (8MB max)
+                    if ($_FILES['images']['size'][$key] > 8388608) {
+                        throw new Exception('File size exceeds 8MB limit: ' . $filename);
                     }
 
                     $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
@@ -279,7 +279,7 @@ include __DIR__ . '/../includes/admin-header.php';
         <div class="form-group">
             <label for="images">Upload Product Images *</label>
             <input type="file" id="images" name="images[]" accept="image/jpeg,image/jpg,image/png,image/webp" multiple required>
-            <small>Upload 1-5 images. First image will be the main product image. Recommended size: 800x800px, Max 2MB per image</small>
+            <small>Upload 1-5 images. First image will be the main product image. Recommended size: 800x800px, Max 8MB per image</small>
         </div>
         
         <div id="imagePreviewContainer" class="image-preview-grid" style="margin-top: 20px; display: none;">
