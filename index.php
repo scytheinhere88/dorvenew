@@ -874,88 +874,103 @@ include __DIR__ . '/includes/header.php';
         box-shadow: 0 12px 32px rgba(0,0,0,0.2);
     }
 
-    /* SEO Section 3 - Shopping Benefits (Middle-Bottom) */
+    /* SEO Section 3 - Shopping Benefits (Middle-Bottom) - IMPROVED */
     .benefits-section {
-        padding: 100px 0;
-        background: var(--charcoal);
+        padding: 120px 0;
+        background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%);
         color: var(--white);
     }
 
     .benefits-header {
         text-align: center;
-        margin-bottom: 64px;
+        margin-bottom: 72px;
     }
 
     .benefits-header .section-pretitle {
         color: var(--latte);
+        font-weight: 600;
     }
 
     .benefits-header .section-title {
         color: var(--white);
+        font-size: 44px;
     }
 
     .benefits-header .section-description {
-        color: rgba(255,255,255,0.8);
+        color: rgba(255,255,255,0.85);
+        font-size: 17px;
     }
 
     .benefits-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 48px;
+        gap: 40px;
     }
 
     .benefit-card {
-        background: rgba(255,255,255,0.08);
-        padding: 40px 32px;
-        border-radius: 8px;
+        background: rgba(255,255,255,0.05);
+        padding: 48px 36px;
+        border-radius: 12px;
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255,255,255,0.1);
-        transition: all 0.3s ease;
+        transition: all 0.4s ease;
     }
 
     .benefit-card:hover {
-        background: rgba(255,255,255,0.12);
-        transform: translateY(-8px);
+        background: rgba(255,255,255,0.1);
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        border-color: var(--latte);
     }
 
     .benefit-icon {
-        font-size: 42px;
+        font-size: 48px;
         margin-bottom: 24px;
+        display: block;
     }
 
     .benefit-title {
-        font-size: 22px;
+        font-size: 24px;
         font-weight: 700;
         margin-bottom: 16px;
         color: var(--white);
+        font-family: 'Playfair Display', serif;
     }
 
     .benefit-description {
-        font-size: 15px;
+        font-size: 16px;
         line-height: 1.8;
-        color: rgba(255,255,255,0.85);
+        color: rgba(255,255,255,0.9);
+        margin-bottom: 20px;
+    }
+
+    .benefit-description strong {
+        color: var(--latte);
+        font-weight: 600;
     }
 
     .benefit-list {
         list-style: none;
         padding: 0;
-        margin-top: 20px;
+        margin-top: 24px;
     }
 
     .benefit-list li {
-        padding: 8px 0;
-        padding-left: 28px;
+        padding: 10px 0 10px 32px;
         position: relative;
-        font-size: 14px;
-        color: rgba(255,255,255,0.8);
+        font-size: 15px;
+        color: rgba(255,255,255,0.85);
+        line-height: 1.6;
     }
 
     .benefit-list li:before {
         content: "✓";
         position: absolute;
         left: 0;
+        top: 10px;
         color: var(--latte);
         font-weight: 700;
+        font-size: 16px;
     }
 
     .features-section {
