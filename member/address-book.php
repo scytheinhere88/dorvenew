@@ -249,6 +249,7 @@ $addresses = $stmt->fetchAll();
             <?php endif; ?>
         </div>
     </div>
+</div>
 
     <!-- Add Address Modal -->
     <div class="modal" id="addressModal">
