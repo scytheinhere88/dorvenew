@@ -116,6 +116,8 @@ $canonical_url = function_exists('getCanonicalUrl') ? getCanonicalUrl() : ($_SER
             padding: 8px 0;
             font-size: 12px;
             text-align: center;
+            position: relative;
+            z-index: 1001;
         }
 
         .main-header {
@@ -351,6 +353,7 @@ $canonical_url = function_exists('getCanonicalUrl') ? getCanonicalUrl() : ($_SER
             padding: 12px 0;
             overflow: hidden;
             position: relative;
+            z-index: 999;
         }
 
         .announcement-content {
