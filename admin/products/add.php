@@ -66,14 +66,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // Loop through each uploaded file
                 foreach ($_FILES['images']['name'] as $key => $filename) {
-                    // Skip if no file or error
-                    if (empty($filename) || $_FILES['images']['error'][$key] !== UPLOAD_ERR_OK) {
+                    // Skip if no file
+                    if (empty($filename)) {
                         continue;
+                    }
+                    
+                    // Check for upload errors
+                    if ($_FILES['images']['error'][$key] !== UPLOAD_ERR_OK) {
+                        $error_msg = '';
+                        switch ($_FILES['images']['error'][$key]) {
+                            case UPLOAD_ERR_INI_SIZE:
+                            case UPLOAD_ERR_FORM_SIZE:
+                                $error_msg = 'File size exceeds limit (max 2MB)';
+                                break;
+                            case UPLOAD_ERR_PARTIAL:
+                                $error_msg = 'File was only partially uploaded';
+                                break;
+                            case UPLOAD_ERR_NO_FILE:
+                                $error_msg = 'No file was uploaded';
+                                break;
+                            default:
+                                $error_msg = 'Upload error occurred';
+                        }
+                        throw new Exception($error_msg . ' for file: ' . $filename);
                     }
 
                     // Limit to 5 images
                     if ($uploaded_count >= 5) {
                         break;
+                    }
+                    
+                    // Check file size (2MB max)
+                    if ($_FILES['images']['size'][$key] > 2097152) {
+                        throw new Exception('File size exceeds 2MB limit: ' . $filename);
                     }
 
                     $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
@@ -83,6 +108,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $filepath = $upload_dir . $new_filename;
 
                         if (move_uploaded_file($_FILES['images']['tmp_name'][$key], $filepath)) {
+                            // Resize image to max 800x800 (optional, improves performance)
+                            // This would require GD library
+                            
                             $image_path = '/uploads/products/' . $new_filename;
                             
                             // First image becomes primary
@@ -100,7 +128,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             }
                             
                             $uploaded_count++;
+                        } else {
+                            throw new Exception('Failed to move uploaded file: ' . $filename);
                         }
+                    } else {
+                        throw new Exception('Invalid file type for: ' . $filename . ' (allowed: jpg, jpeg, png, webp)');
                     }
                 }
 
