@@ -606,10 +606,10 @@ $canonical_url = function_exists('getCanonicalUrl') ? getCanonicalUrl() : ($_SER
     }
     ?>
 
-    <!-- Marquee Announcement Bar -->
+    <!-- Marquee Text Banner (Running Text from Admin Panel: Promosi dan Banner) -->
     <div class="announcement-bar">
         <div class="announcement-content">
-            <?php echo htmlspecialchars($announcement_text); ?>
+            <?php echo htmlspecialchars($marquee_text); ?> &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; <?php echo htmlspecialchars($marquee_text); ?> &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; <?php echo htmlspecialchars($marquee_text); ?>
         </div>
     </div>
 
