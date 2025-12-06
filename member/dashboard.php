@@ -365,23 +365,188 @@ include __DIR__ . '/../includes/header.php';
         </div>
 
         <!-- All Tiers Info -->
-        <div style="background: #F8F8F8; padding: 48px; border-radius: 12px; margin-bottom: 48px;">
-            <h2 style="font-family: 'Playfair Display', serif; font-size: 32px; text-align: center; margin-bottom: 16px;">Membership Tiers</h2>
-            <p style="text-align: center; color: #6B6B6B; margin-bottom: 48px;">Semakin banyak topup, semakin besar benefit yang Anda dapatkan</p>
+        <style>
+            .tier-card {
+                padding: 32px;
+                border-radius: 16px;
+                position: relative;
+                overflow: hidden;
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                cursor: pointer;
+            }
+            
+            .tier-card::before {
+                content: '';
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+                opacity: 0;
+                transition: opacity 0.4s ease;
+            }
+            
+            .tier-card:hover::before {
+                opacity: 1;
+                animation: shimmer 2s infinite;
+            }
+            
+            .tier-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            }
+            
+            @keyframes shimmer {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            
+            .tier-bronze {
+                background: linear-gradient(135deg, #CD7F32 0%, #E89F60 50%, #CD7F32 100%);
+                border: 2px solid rgba(205, 127, 50, 0.5);
+                box-shadow: 0 8px 24px rgba(205, 127, 50, 0.3);
+            }
+            
+            .tier-silver {
+                background: linear-gradient(135deg, #C0C0C0 0%, #E8E8E8 50%, #A8A8A8 100%);
+                border: 2px solid rgba(192, 192, 192, 0.6);
+                box-shadow: 0 8px 24px rgba(192, 192, 192, 0.4);
+            }
+            
+            .tier-gold {
+                background: linear-gradient(135deg, #FFD700 0%, #FFED4E 50%, #FFAA00 100%);
+                border: 2px solid rgba(255, 215, 0, 0.6);
+                box-shadow: 0 8px 24px rgba(255, 215, 0, 0.5);
+            }
+            
+            .tier-platinum {
+                background: linear-gradient(135deg, #E5E4E2 0%, #FFFFFF 25%, #B0C4DE 50%, #FFFFFF 75%, #E5E4E2 100%);
+                border: 2px solid rgba(176, 196, 222, 0.8);
+                box-shadow: 0 8px 32px rgba(176, 196, 222, 0.6);
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .tier-platinum::after {
+                content: '';
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: linear-gradient(
+                    45deg,
+                    transparent 30%,
+                    rgba(255, 255, 255, 0.5) 50%,
+                    transparent 70%
+                );
+                animation: shine 3s infinite;
+            }
+            
+            @keyframes shine {
+                0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+                100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+            }
+            
+            .tier-active {
+                border: 3px solid #1A1A1A !important;
+                box-shadow: 0 12px 48px rgba(0,0,0,0.3), inset 0 0 0 2px rgba(255,255,255,0.2) !important;
+            }
+            
+            .tier-badge {
+                position: absolute;
+                top: -12px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%);
+                color: white;
+                padding: 6px 20px;
+                border-radius: 20px;
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 1.5px;
+                z-index: 2;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            }
+            
+            .tier-icon-wrapper {
+                font-size: 56px;
+                margin-bottom: 16px;
+                filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+                animation: float 3s ease-in-out infinite;
+            }
+            
+            @keyframes float {
+                0%, 100% { transform: translateY(0px); }
+                50% { transform: translateY(-10px); }
+            }
+            
+            .tier-discount-badge {
+                text-align: center;
+                padding: 20px;
+                background: rgba(255, 255, 255, 0.3);
+                backdrop-filter: blur(10px);
+                border-radius: 12px;
+                margin-bottom: 20px;
+                border: 1px solid rgba(255, 255, 255, 0.5);
+            }
+            
+            .tier-benefit-item {
+                padding: 10px 0;
+                padding-left: 28px;
+                position: relative;
+                font-size: 13px;
+                line-height: 1.6;
+                color: #1A1A1A;
+                font-weight: 500;
+            }
+            
+            .tier-benefit-item::before {
+                content: '✓';
+                position: absolute;
+                left: 0;
+                top: 10px;
+                width: 20px;
+                height: 20px;
+                background: rgba(255, 255, 255, 0.4);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 700;
+                font-size: 12px;
+            }
+            
+            @media (max-width: 1200px) {
+                .tier-cards-grid { grid-template-columns: repeat(2, 1fr) !important; }
+            }
+            
+            @media (max-width: 768px) {
+                .tier-cards-grid { grid-template-columns: 1fr !important; }
+            }
+        </style>
+        
+        <div style="background: linear-gradient(135deg, #F8F9FA 0%, #E9ECEF 100%); padding: 48px; border-radius: 20px; margin-bottom: 48px; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
+            <h2 style="font-family: 'Playfair Display', serif; font-size: 36px; text-align: center; margin-bottom: 16px; color: #1A1A1A;">💎 Membership Tiers</h2>
+            <p style="text-align: center; color: #6B6B6B; margin-bottom: 48px; font-size: 16px;">Semakin banyak topup, semakin besar benefit yang Anda dapatkan</p>
 
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;">
+            <div class="tier-cards-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px;">
                 <?php foreach ($tiers as $tier_key => $tier_data): ?>
-                    <div style="background: white; padding: 32px; border-radius: 8px; border: 2px solid <?php echo $tier_key === $current_tier ? '#1A1A1A' : 'transparent'; ?>; position: relative;">
+                    <div class="tier-card tier-<?php echo $tier_key; ?> <?php echo $tier_key === $current_tier ? 'tier-active' : ''; ?>">
                         <?php if ($tier_key === $current_tier): ?>
-                            <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #1A1A1A; color: white; padding: 4px 16px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Your Tier</div>
+                            <div class="tier-badge">⭐ Your Tier</div>
                         <?php endif; ?>
 
-                        <div style="text-align: center; margin-bottom: 20px;">
-                            <div style="font-size: 48px; margin-bottom: 12px;">
+                        <div style="text-align: center; margin-bottom: 24px; position: relative; z-index: 1;">
+                            <div class="tier-icon-wrapper">
                                 <?php echo $tier_icons[$tier_key]; ?>
                             </div>
-                            <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 8px; text-transform: capitalize;"><?php echo $tier_data['name']; ?></h3>
-                            <p style="font-size: 13px; color: #6B6B6B;">
+                            <h3 style="font-size: 26px; font-weight: 800; margin-bottom: 8px; text-transform: uppercase; color: #1A1A1A; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                <?php echo $tier_data['name']; ?>
+                            </h3>
+                            <p style="font-size: 13px; color: #2D2D2D; font-weight: 600; background: rgba(255,255,255,0.3); padding: 4px 12px; border-radius: 20px; display: inline-block;">
                                 <?php if ($tier_key === 'platinum'): ?>
                                     ≥ Rp 10,000,000
                                 <?php else: ?>
@@ -391,16 +556,19 @@ include __DIR__ . '/../includes/header.php';
                         </div>
 
                         <?php if ($tier_data['discount'] != '0%'): ?>
-                            <div style="text-align: center; padding: 16px; background: #F5F5F5; border-radius: 6px; margin-bottom: 20px;">
-                                <div style="font-size: 28px; font-weight: 700; color: #1A1A1A;"><?php echo $tier_data['discount']; ?></div>
-                                <div style="font-size: 11px; color: #6B6B6B; text-transform: uppercase; letter-spacing: 1px;">Discount</div>
+                            <div class="tier-discount-badge">
+                                <div style="font-size: 32px; font-weight: 800; color: #1A1A1A; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                    <?php echo $tier_data['discount']; ?>
+                                </div>
+                                <div style="font-size: 11px; color: #1A1A1A; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;">
+                                    Auto Discount
+                                </div>
                             </div>
                         <?php endif; ?>
 
-                        <ul style="list-style: none; padding: 0; margin: 0;">
+                        <ul style="list-style: none; padding: 0; margin: 0; position: relative; z-index: 1;">
                             <?php foreach ($tier_data['benefits'] as $benefit): ?>
-                                <li style="padding: 8px 0; padding-left: 24px; position: relative; font-size: 12px; color: #4A4A4A; line-height: 1.4;">
-                                    <span style="position: absolute; left: 0; top: 8px; color: #1A1A1A;">✓</span>
+                                <li class="tier-benefit-item">
                                     <?php echo htmlspecialchars($benefit); ?>
                                 </li>
                             <?php endforeach; ?>
