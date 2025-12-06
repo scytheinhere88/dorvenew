@@ -39,7 +39,10 @@ INSERT INTO `payment_methods` (`id`, `name`, `method_name`, `type`, `is_active`,
 (4, 'Bayar di Tempat (COD)', 'cod', 'cod', 0, 4);
 
 -- 3. TABLE: payment_gateway_settings (untuk gateway config)
-CREATE TABLE IF NOT EXISTS `payment_gateway_settings` (
+-- Drop and recreate untuk memastikan struktur yang benar
+DROP TABLE IF EXISTS `payment_gateway_settings`;
+
+CREATE TABLE `payment_gateway_settings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `gateway_name` varchar(50) NOT NULL,
   `api_key` varchar(255) DEFAULT NULL,
@@ -55,8 +58,8 @@ CREATE TABLE IF NOT EXISTS `payment_gateway_settings` (
   UNIQUE KEY `gateway_name` (`gateway_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Insert default gateways jika belum ada
-INSERT IGNORE INTO `payment_gateway_settings` (`id`, `gateway_name`, `is_production`, `is_active`) VALUES
+-- Insert default gateways
+INSERT INTO `payment_gateway_settings` (`id`, `gateway_name`, `is_production`, `is_active`) VALUES
 (1, 'midtrans', 0, 0),
 (2, 'paypal', 0, 0);
 
