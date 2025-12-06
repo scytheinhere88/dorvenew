@@ -1292,31 +1292,38 @@ document.addEventListener('keydown', function(e) {
     </div>
 </section>
 
-<!-- Categories Showcase -->
+<!-- Jelajahi Koleksi Kami - Category Marquee -->
 <?php if (count($categories) > 0): ?>
-<section class="categories-showcase">
+<section class="category-marquee-section">
     <div class="container">
         <div class="section-header">
             <div class="section-pretitle">Belanja Berdasarkan Kategori</div>
             <h2 class="section-title">Jelajahi Koleksi Kami</h2>
             <p class="section-description">Dari klasik abadi hingga tren kontemporer, temukan produk sempurna untuk setiap kesempatan</p>
         </div>
-
-        <div class="categories-grid">
-            <?php
-            $display_categories = array_slice($categories, 0, 6);
-            foreach ($display_categories as $category):
+    </div>
+    
+    <div class="category-marquee-wrapper">
+        <div class="category-marquee-track">
+            <?php 
+            // Duplicate categories for seamless loop
+            $marquee_categories = array_merge($categories, $categories);
+            foreach ($marquee_categories as $category): 
             ?>
-                <a href="/pages/all-products.php?category=<?php echo $category['id']; ?>" class="category-card">
-                    <?php if (!empty($category['image'])): ?>
-                        <img src="<?php echo htmlspecialchars($category['image']); ?>" alt="<?php echo htmlspecialchars($category['name']); ?>" class="category-image">
-                    <?php else: ?>
-                        <img src="/public/images/logo.png" alt="<?php echo htmlspecialchars($category['name']); ?>" class="category-image">
-                    <?php endif; ?>
-                    <div class="category-overlay">
-                        <div class="category-name"><?php echo htmlspecialchars($category['name']); ?></div>
-                        <div class="category-count">Belanja Sekarang</div>
+                <a href="/pages/all-products.php?category=<?php echo $category['id']; ?>" class="category-marquee-item">
+                    <div class="category-icon-wrapper">
+                        <?php if (!empty($category['icon'])): ?>
+                            <?php if (filter_var($category['icon'], FILTER_VALIDATE_URL)): ?>
+                                <img src="<?php echo htmlspecialchars($category['icon']); ?>" alt="<?php echo htmlspecialchars($category['name']); ?>" class="category-icon">
+                            <?php else: ?>
+                                <span class="category-icon-emoji"><?php echo htmlspecialchars($category['icon']); ?></span>
+                            <?php endif; ?>
+                        <?php else: ?>
+                            <span class="category-icon-emoji">🛍️</span>
+                        <?php endif; ?>
                     </div>
+                    <div class="category-marquee-name"><?php echo htmlspecialchars($category['name']); ?></div>
+                    <div class="category-marquee-count">Belanja Sekarang</div>
                 </a>
             <?php endforeach; ?>
         </div>
