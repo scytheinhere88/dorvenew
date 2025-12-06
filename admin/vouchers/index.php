@@ -88,85 +88,249 @@ $vouchers = $stmt->fetchAll();
 ?>
 
 <style>
-        /* Additional voucher-specific styles */
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-        .header h1 { font-size: 32px; font-weight: 600; }
-        .voucher-card {
-            background: white; border-radius: 12px; padding: 24px; margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08); display: flex; gap: 20px; align-items: start;
-            border: 2px solid #E5E7EB; transition: all 0.3s;
-        }
-        .voucher-card:hover { border-color: #3B82F6; box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15); }
-        .voucher-icon { width: 80px; height: 80px; border-radius: 12px; object-fit: cover; background: #F3F4F6; flex-shrink: 0; }
-        .voucher-icon-placeholder {
-            width: 80px; height: 80px; border-radius: 12px;
-            background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
-            display: flex; align-items: center; justify-content: center; font-size: 32px; flex-shrink: 0;
-        }
-        .voucher-content { flex: 1; }
-        .voucher-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px; }
-        .voucher-code { font-size: 24px; font-weight: 700; color: #1F2937; font-family: 'Courier New', monospace; }
-        .voucher-type { display: inline-block; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; text-transform: uppercase; }
-        .type-discount { background: #DBEAFE; color: #1E40AF; }
-        .type-free_shipping { background: #D1FAE5; color: #065F46; }
-        .voucher-value { font-size: 20px; font-weight: 700; color: #3B82F6; margin: 8px 0; }
-        .voucher-conditions { display: flex; gap: 20px; margin: 12px 0; font-size: 14px; color: #6B7280; }
-        .voucher-stats { display: flex; gap: 24px; margin: 16px 0; padding: 12px 0; border-top: 1px solid #E5E7EB; font-size: 14px; }
-        .stat-item { display: flex; align-items: center; gap: 6px; }
-        .stat-label { color: #6B7280; }
-        .stat-value { font-weight: 600; color: #1F2937; }
-        .voucher-actions { display: flex; gap: 8px; flex-shrink: 0; }
-        .btn-action { padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; border: 1px solid; cursor: pointer; transition: all 0.2s; }
-        .btn-edit { background: white; border-color: #3B82F6; color: #3B82F6; text-decoration: none; }
-        .btn-edit:hover { background: #3B82F6; color: white; }
-        .btn-delete { background: white; border-color: #EF4444; color: #EF4444; }
-        .btn-delete:hover { background: #EF4444; color: white; }
-        .btn-toggle { background: white; border-color: #F59E0B; color: #F59E0B; }
-        .btn-toggle:hover { background: #F59E0B; color: white; }
-        .btn-assign { background: #10B981; border-color: #10B981; color: white; }
-        .btn-assign:hover { background: #059669; }
-        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; }
-        .status-active { background: #D1FAE5; color: #065F46; }
-        .status-inactive { background: #FEE2E2; color: #991B1B; }
-        .status-expired { background: #F3F4F6; color: #6B7280; }
-        .btn-create {
-            display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px;
-            background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
-            color: white; border-radius: 8px; font-weight: 600; text-decoration: none; transition: transform 0.2s;
-        }
-        .btn-create:hover { transform: translateY(-2px); }
-        .empty-state { text-align: center; padding: 80px 20px; background: white; border-radius: 12px; }
-        .empty-state-icon { font-size: 64px; margin-bottom: 20px; }
-    </style>
-</head>
-<body>
-    <div class="admin-layout">
-        <aside class="admin-sidebar">
-            <div class="admin-logo">DORVE</div>
-            <nav class="admin-nav">
-                <a href="/admin/index.php" class="nav-item">Dashboard</a>
-                <a href="/admin/products/index.php" class="nav-item">Produk</a>
-                <a href="/admin/categories/index.php" class="nav-item">Kategori</a>
-                <a href="/admin/orders/index.php" class="nav-item">Pesanan</a>
-                <a href="/admin/users/index.php" class="nav-item">Pengguna</a>
-                <a href="/admin/vouchers/index.php" class="nav-item active">Voucher</a>
-                <a href="/admin/shipping/index.php" class="nav-item">Pengiriman</a>
-                <a href="/admin/pages/index.php" class="nav-item">Halaman CMS</a>
-                <a href="/admin/settings/index.php" class="nav-item">Pengaturan</a>
-                <a href="/auth/logout.php" class="nav-item">Logout</a>
-            </nav>
-        </aside>
+/* Voucher-specific styles menggunakan global admin CSS structure */
+.voucher-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
 
-        <main class="admin-content">
-            <div class="header">
-                <div>
-                    <h1>🎟️ Voucher Management</h1>
-                    <p style="color: #6B7280; margin-top: 4px;">Manage discount & free shipping vouchers</p>
-                </div>
-                <a href="/admin/vouchers/create.php" class="btn-create">
-                    <span>➕</span> Create New Voucher
-                </a>
-            </div>
+.voucher-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    display: flex;
+    gap: 20px;
+    align-items: start;
+    border: 2px solid #E5E7EB;
+    transition: all 0.3s;
+}
+
+.voucher-card:hover {
+    border-color: #3B82F6;
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15);
+}
+
+.voucher-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
+    object-fit: cover;
+    background: #F3F4F6;
+    flex-shrink: 0;
+}
+
+.voucher-icon-placeholder {
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    flex-shrink: 0;
+}
+
+.voucher-content {
+    flex: 1;
+}
+
+.voucher-card .voucher-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 12px;
+}
+
+.voucher-code {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1F2937;
+    font-family: 'Courier New', monospace;
+}
+
+.voucher-type {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.type-discount {
+    background: #DBEAFE;
+    color: #1E40AF;
+}
+
+.type-free_shipping {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.voucher-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #3B82F6;
+    margin: 8px 0;
+}
+
+.voucher-conditions {
+    display: flex;
+    gap: 20px;
+    margin: 12px 0;
+    font-size: 14px;
+    color: #6B7280;
+}
+
+.voucher-stats {
+    display: flex;
+    gap: 24px;
+    margin: 16px 0;
+    padding: 12px 0;
+    border-top: 1px solid #E5E7EB;
+    font-size: 14px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.stat-label {
+    color: #6B7280;
+}
+
+.stat-value {
+    font-weight: 600;
+    color: #1F2937;
+}
+
+.voucher-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.btn-action {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+}
+
+.btn-edit {
+    border-color: #3B82F6;
+    color: #3B82F6;
+    text-decoration: none;
+}
+
+.btn-edit:hover {
+    background: #3B82F6;
+    color: white;
+}
+
+.btn-delete {
+    border-color: #EF4444;
+    color: #EF4444;
+}
+
+.btn-delete:hover {
+    background: #EF4444;
+    color: white;
+}
+
+.btn-toggle {
+    border-color: #F59E0B;
+    color: #F59E0B;
+}
+
+.btn-toggle:hover {
+    background: #F59E0B;
+    color: white;
+}
+
+.btn-assign {
+    background: #10B981;
+    border-color: #10B981;
+    color: white;
+}
+
+.btn-assign:hover {
+    background: #059669;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-active {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.status-inactive {
+    background: #FEE2E2;
+    color: #991B1B;
+}
+
+.status-expired {
+    background: #F3F4F6;
+    color: #6B7280;
+}
+
+.btn-create {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.2s;
+}
+
+.btn-create:hover {
+    transform: translateY(-2px);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    background: white;
+    border-radius: 12px;
+}
+
+.empty-state-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+</style>
+
+<div class="voucher-header">
+    <div>
+        <h1>🎟️ Voucher Management</h1>
+        <p style="color: #6B7280; margin-top: 4px;">Manage discount & free shipping vouchers</p>
+    </div>
+    <a href="/admin/vouchers/create.php" class="btn-create">
+        <span>➕</span> Create New Voucher
+    </a>
+</div>
 
             <?php if (empty($vouchers)): ?>
                 <div class="empty-state">
