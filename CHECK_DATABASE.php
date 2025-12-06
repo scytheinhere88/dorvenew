@@ -5,7 +5,18 @@
  * Access: http://dorve.id/CHECK_DATABASE.php
  */
 
-require_once __DIR__ . '/config.php';
+// Direct database connection (bypass config.php to avoid redirects)
+$db_host = 'localhost';
+$db_name = 'dorve_db'; // Change this to your database name
+$db_user = 'root';     // Change this to your database user
+$db_pass = '';         // Change this to your database password
+
+try {
+    $pdo = new PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8mb4", $db_user, $db_pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Database connection failed: " . $e->getMessage());
+}
 
 $checks = [];
 $missing = [];
