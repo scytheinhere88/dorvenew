@@ -1245,35 +1245,7 @@ include __DIR__ . '/includes/header.php';
     }
 </style>
 
-<!-- Hero Slider -->
-<div class="hero-slider">
-    <?php if (!empty($slider_banners)): ?>
-        <?php foreach ($slider_banners as $index => $banner): ?>
-            <div class="hero-slide <?php echo $index === 0 ? 'active' : ''; ?>" style="background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('<?php echo htmlspecialchars($banner['image_url']); ?>') center/cover;">
-                <div class="hero-content">
-                    <?php if ($banner['title']): ?>
-                        <h1 class="hero-title"><?php echo htmlspecialchars($banner['title']); ?></h1>
-                    <?php endif; ?>
-                    <?php if ($banner['subtitle']): ?>
-                        <p class="hero-subtitle"><?php echo htmlspecialchars($banner['subtitle']); ?></p>
-                    <?php endif; ?>
-                    <?php if ($banner['link_url'] && $banner['cta_text']): ?>
-                        <a href="<?php echo htmlspecialchars($banner['link_url']); ?>" class="hero-btn"><?php echo htmlspecialchars($banner['cta_text']); ?></a>
-                    <?php endif; ?>
-                </div>
-            </div>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <!-- Default Banner if no banners in database -->
-        <div class="hero-slide active" style="background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/public/images/Dorve1.png') center/cover;">
-            <div class="hero-content">
-                <h1 class="hero-title">Welcome to Dorve House</h1>
-                <p class="hero-subtitle">Discover Latest Fashion Collection</p>
-                <a href="/pages/all-products.php" class="hero-btn">Shop Now</a>
-            </div>
-        </div>
-    <?php endif; ?>
-</div>
+<!-- Hero Slider: Now loaded from includes/homepage-sections.php to avoid duplication -->
 
 <!-- Popup Banner Modal -->
 <?php if ($popup_banner): ?>
