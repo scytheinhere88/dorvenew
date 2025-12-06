@@ -10,9 +10,7 @@ if (!isAdmin()) {
     exit;
 }
 
-$pageTitle = 'Voucher Management';
-$currentPage = 'vouchers';
-
+$page_title = 'Voucher Management';
 include __DIR__ . '/../includes/admin-header.php';
 
 // Handle actions
