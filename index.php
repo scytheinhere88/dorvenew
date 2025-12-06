@@ -206,12 +206,10 @@ include __DIR__ . '/includes/header.php';
     /* ===== HERO SLIDER - PROFESSIONAL (8-10 BANNERS) ===== */
     .hero-slider-container {
         position: relative;
-        height: 90vh;
-        min-height: 600px;
-        max-height: 1000px;
+        width: 100%;
         overflow: hidden;
         margin-bottom: 0;
-        background: #000;
+        background: #F8F9FA;
     }
 
     .hero-slide {
@@ -223,24 +221,31 @@ include __DIR__ . '/includes/header.php';
         opacity: 0;
         visibility: hidden;
         transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .hero-slide.active {
         opacity: 1;
         visibility: visible;
+        position: relative;
     }
 
     .hero-slide-image {
         width: 100%;
-        height: 100%;
-        object-fit: cover;
+        height: auto;
+        max-width: 100%;
+        display: block;
+        object-fit: contain;
         object-position: center;
-        transform: scale(1);
-        transition: transform 8s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .hero-slide.active .hero-slide-image {
-        transform: scale(1.08);
+    /* Responsive: maintain aspect ratio */
+    @media (max-width: 768px) {
+        .hero-slide-image {
+            object-fit: contain;
+        }
     }
 
     .hero-slide-overlay {
