@@ -348,5 +348,5 @@ $vouchers = $stmt->fetchAll();
         .catch(e => alert('Error: ' + e.message));
     }
     </script>
-</body>
-</html>
+
+<?php include __DIR__ . '/../includes/admin-footer.php'; ?>
