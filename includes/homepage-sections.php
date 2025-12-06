@@ -96,43 +96,7 @@ if (totalSlides > 1) {
 </script>
 <?php endif; ?>
 
-<!-- ========== CATEGORY MARQUEE SECTION ========== -->
-<?php if (!empty($categories)): ?>
-<section class="category-marquee-section">
-    <div class="category-marquee-header">
-        <h2 class="category-marquee-title">Jelajahi Kategori</h2>
-        <p class="category-marquee-subtitle">Temukan Koleksi Terbaik Kami</p>
-    </div>
-    
-    <div class="category-marquee-wrapper">
-        <div class="category-marquee-track">
-            <?php 
-            // Duplicate categories for seamless loop
-            $marquee_categories = array_merge($categories, $categories);
-            foreach ($marquee_categories as $category): 
-            ?>
-                <a href="/pages/all-products.php?category=<?= $category['id'] ?>" class="category-marquee-item">
-                    <div class="category-icon-wrapper">
-                        <?php if (!empty($category['icon'])): ?>
-                            <!-- Icon from admin CMS -->
-                            <?php if (filter_var($category['icon'], FILTER_VALIDATE_URL)): ?>
-                                <img src="<?= htmlspecialchars($category['icon']) ?>" alt="<?= htmlspecialchars($category['name']) ?>" class="category-icon">
-                            <?php else: ?>
-                                <span class="category-icon-emoji"><?= htmlspecialchars($category['icon']) ?></span>
-                            <?php endif; ?>
-                        <?php else: ?>
-                            <!-- Default emoji if no icon -->
-                            <span class="category-icon-emoji">🛍️</span>
-                        <?php endif; ?>
-                    </div>
-                    <div class="category-marquee-name"><?= htmlspecialchars($category['name']) ?></div>
-                    <div class="category-marquee-count">Belanja Sekarang</div>
-                </a>
-            <?php endforeach; ?>
-        </div>
-    </div>
-</section>
-<?php endif; ?>
+<!-- CATEGORY MARQUEE REMOVED - Already in main index.php at "Jelajahi Koleksi Kami" section -->
 
 <!-- ========== FEATURED PRODUCTS SECTION ========== -->
 <?php if (!empty($featured_products)): ?>
