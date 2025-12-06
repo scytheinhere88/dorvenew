@@ -191,14 +191,15 @@ include __DIR__ . '/includes/header.php';
         box-shadow: 0 12px 32px rgba(0,0,0,0.2);
     }
 
-    /* ===== HERO SLIDER - PROFESSIONAL ===== */
+    /* ===== HERO SLIDER - PROFESSIONAL (8-10 BANNERS) ===== */
     .hero-slider-container {
         position: relative;
-        height: 85vh;
-        min-height: 650px;
-        max-height: 900px;
+        height: 90vh;
+        min-height: 600px;
+        max-height: 1000px;
         overflow: hidden;
-        margin-bottom: 120px;
+        margin-bottom: 0;
+        background: #000;
     }
 
     .hero-slide {
@@ -209,13 +210,12 @@ include __DIR__ . '/includes/header.php';
         height: 100%;
         opacity: 0;
         visibility: hidden;
-        transition: opacity 1.2s ease, visibility 0s 1.2s;
+        transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .hero-slide.active {
         opacity: 1;
         visibility: visible;
-        transition: opacity 1.2s ease, visibility 0s;
     }
 
     .hero-slide-image {
@@ -223,6 +223,12 @@ include __DIR__ . '/includes/header.php';
         height: 100%;
         object-fit: cover;
         object-position: center;
+        transform: scale(1);
+        transition: transform 8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .hero-slide.active .hero-slide-image {
+        transform: scale(1.08);
     }
 
     .hero-slide-overlay {
@@ -231,83 +237,70 @@ include __DIR__ . '/includes/header.php';
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.1) 100%);
+        background: linear-gradient(135deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 100%);
     }
 
     .hero-slide-content {
         position: absolute;
         top: 50%;
-        left: 10%;
-        transform: translateY(-50%);
-        max-width: 600px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        max-width: 900px;
+        width: 90%;
         color: var(--white);
         z-index: 10;
-        text-shadow: 0 4px 20px rgba(0,0,0,0.4);
     }
 
     .hero-slide-title {
         font-family: 'Playfair Display', serif;
-        font-size: 72px;
+        font-size: clamp(42px, 6vw, 82px);
         font-weight: 700;
         margin-bottom: 24px;
         line-height: 1.1;
         letter-spacing: -1px;
-        animation: slideInLeft 0.8s ease forwards;
-        opacity: 0;
-    }
-
-    .hero-slide.active .hero-slide-title {
-        animation: slideInLeft 0.8s 0.2s ease forwards;
+        text-shadow: 0 6px 24px rgba(0,0,0,0.5);
     }
 
     .hero-slide-subtitle {
-        font-size: 20px;
-        margin-bottom: 36px;
+        font-size: clamp(18px, 2.5vw, 24px);
+        margin-bottom: 40px;
         letter-spacing: 0.5px;
         line-height: 1.6;
-        animation: slideInLeft 0.8s ease forwards;
-        opacity: 0;
-    }
-
-    .hero-slide.active .hero-slide-subtitle {
-        animation: slideInLeft 0.8s 0.4s ease forwards;
+        text-shadow: 0 4px 16px rgba(0,0,0,0.5);
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .hero-slide-cta {
-        display: inline-block;
-        padding: 18px 48px;
+        display: inline-flex;
+        align-items: center;
+        padding: 20px 52px;
         background: var(--white);
         color: var(--charcoal);
         text-decoration: none;
         font-weight: 600;
         letter-spacing: 2px;
         text-transform: uppercase;
-        font-size: 13px;
-        border-radius: 2px;
+        font-size: 14px;
+        border-radius: 4px;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        animation: slideInLeft 0.8s ease forwards;
-        opacity: 0;
-    }
-
-    .hero-slide.active .hero-slide-cta {
-        animation: slideInLeft 0.8s 0.6s ease forwards;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
     }
 
     .hero-slide-cta:hover {
         background: var(--latte);
-        transform: translateY(-3px);
-        box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+        transform: translateY(-4px);
+        box-shadow: 0 16px 48px rgba(0,0,0,0.4);
     }
 
-    @keyframes slideInLeft {
-        from {
-            opacity: 0;
-            transform: translateX(-60px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
+    .hero-slide-cta svg {
+        transition: transform 0.3s;
+    }
+
+    .hero-slide-cta:hover svg {
+        transform: translateX(5px);
     }
 
     /* Slider Navigation */
@@ -325,18 +318,23 @@ include __DIR__ . '/includes/header.php';
         width: 12px;
         height: 12px;
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.4);
-        border: 2px solid var(--white);
+        background: rgba(255, 255, 255, 0.3);
+        border: 2px solid rgba(255, 255, 255, 0.5);
         cursor: pointer;
-        transition: all 0.3s;
+        transition: all 0.4s;
+    }
+
+    .slider-dot:hover {
+        background: rgba(255, 255, 255, 0.6);
     }
 
     .slider-dot.active {
         background: var(--white);
-        width: 40px;
-        border-radius: 6px;
+        width: 48px;
+        border-radius: 8px;
     }
 
+    /* Slider Arrows */
     .slider-arrows {
         position: absolute;
         top: 50%;
@@ -350,11 +348,11 @@ include __DIR__ . '/includes/header.php';
     }
 
     .slider-arrow {
-        width: 60px;
-        height: 60px;
-        background: rgba(255, 255, 255, 0.15);
+        width: 64px;
+        height: 64px;
+        background: rgba(255, 255, 255, 0.1);
         backdrop-filter: blur(10px);
-        border: 2px solid rgba(255, 255, 255, 0.3);
+        border: 2px solid rgba(255, 255, 255, 0.2);
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -363,12 +361,29 @@ include __DIR__ . '/includes/header.php';
         transition: all 0.3s;
         pointer-events: all;
         color: var(--white);
-        font-size: 24px;
     }
 
     .slider-arrow:hover {
-        background: rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.25);
         transform: scale(1.1);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    /* Progress Bar */
+    .slider-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.2);
+        z-index: 20;
+    }
+
+    .slider-progress-bar {
+        height: 100%;
+        width: 0;
+        background: var(--white);
     }
 
     /* SEO Section 1 - Brand Story (Top) */
