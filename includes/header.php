@@ -574,10 +574,10 @@ $canonical_url = function_exists('getCanonicalUrl') ? getCanonicalUrl() : ($_SER
     </header>
 
     <?php
-    // Get announcement text from database
-    $announcement_text = "🎉 Welcome to Dorve House! New Collection 2024 Available Now! FREE Shipping for orders above Rp 500.000 🎉";
+    // Get marquee text banner from database (from Promosi dan Banner admin page)
+    $marquee_text = "🎉 Welcome to Dorve.id! New Collection 2024 Available Now! FREE Shipping for orders above Rp 500.000 🎉";
     try {
-        $stmt = $pdo->query("SELECT value FROM settings WHERE setting_key = 'announcement_text' LIMIT 1");
+        $stmt = $pdo->query("SELECT title, subtitle FROM banners WHERE banner_type = 'marquee' AND is_active = 1 ORDER BY display_order ASC LIMIT 1");
         $result = $stmt->fetch();
         if ($result) {
             $announcement_text = $result['value'];
