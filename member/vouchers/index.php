@@ -1,23 +1,12 @@
 <?php
-/**
- * MEMBER - MY VOUCHERS PAGE
- * View all available vouchers (dari tier, referral, sistem)
- */
 require_once __DIR__ . '/../../config.php';
 
 if (!isLoggedIn()) {
-    header('Location: /login.php');
-    exit;
+    redirect('/login.php');
 }
 
 $userId = $_SESSION['user_id'];
-
-// Get user info for tier checking
-$stmt = $pdo->prepare("SELECT tier, referral_code FROM users WHERE id = ?");
-$stmt->execute([$userId]);
-$user = $stmt->fetch();
-$userTier = $user['tier'] ?? 'bronze';
-$hasReferral = !empty($user['referral_code']);
+$user = getCurrentUser();
 
 // Get all available vouchers for this user
 $stmt = $pdo->prepare("
@@ -26,372 +15,376 @@ $stmt = $pdo->prepare("
            CASE 
                WHEN v.total_usage_limit IS NOT NULL AND v.total_used >= v.total_usage_limit THEN 1
                ELSE 0
-           END as is_limit_reached,
-           CASE
-               WHEN v.target_type = 'all' THEN 1
-               WHEN v.target_type = 'tier' AND v.target_tier = ? THEN 1
-               WHEN v.target_type = 'referral' AND ? = 1 THEN 1
-               ELSE 0
-           END as is_eligible
+           END as is_limit_reached
     FROM vouchers v
     LEFT JOIN user_vouchers uv ON v.id = uv.voucher_id AND uv.user_id = ?
     WHERE v.is_active = 1
       AND v.valid_from <= NOW()
       AND v.valid_until >= NOW()
-    HAVING is_eligible = 1
-    ORDER BY v.type DESC, v.min_purchase ASC
+    ORDER BY v.type DESC, v.discount_value DESC
 ");
-$stmt->execute([$userTier, $hasReferral ? 1 : 0, $userId]);
-$vouchers = $stmt->fetchAll();
+$stmt->execute([$userId]);
+$allVouchers = $stmt->fetchAll();
 
-$freeShipping = [];
-$discount = [];
+// Categorize vouchers
+$discountVouchers = [];
+$shippingVouchers = [];
 
-foreach ($vouchers as $voucher) {
+foreach ($allVouchers as $voucher) {
     if ($voucher['type'] === 'free_shipping') {
-        $freeShipping[] = $voucher;
+        $shippingVouchers[] = $voucher;
     } else {
-        $discount[] = $voucher;
+        $discountVouchers[] = $voucher;
     }
 }
 
-$pageTitle = 'My Vouchers';
+$page_title = 'My Vouchers - Dorve.id';
+include __DIR__ . '/../../includes/header.php';
 ?>
-<!DOCTYPE html>
-<html lang=\"id\">
-<head>
-    <meta charset=\"UTF-8\">
-    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
-    <title>My Vouchers - Dorve.id</title>
-    <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap\" rel=\"stylesheet\">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #F8F9FA; color: #1A1A1A; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
-        .header { margin-bottom: 40px; }
-        .header h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
-        .header .subtitle { color: #6B7280; font-size: 16px; }
-        .tier-badge { 
-            display: inline-block; padding: 8px 16px; border-radius: 20px; 
-            font-size: 14px; font-weight: 600; margin-top: 12px;
-        }
-        .tier-bronze { background: #FEF3C7; color: #92400E; }
-        .tier-silver { background: #E5E7EB; color: #374151; }
-        .tier-gold { background: #FEF3C7; color: #92400E; }
-        .tier-platinum { background: #DBEAFE; color: #1E40AF; }
-        .tier-vvip { background: #FCE7F3; color: #9F1239; }
-        
-        .section-title { 
-            font-size: 24px; font-weight: 700; margin: 40px 0 24px; 
-            display: flex; align-items: center; gap: 12px;
-        }
-        .section-subtitle { color: #6B7280; font-size: 14px; margin-top: 4px; }
-        
-        .voucher-grid { 
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); 
-            gap: 24px; margin-bottom: 40px;
-        }
-        
-        .voucher-card {
-            background: white; border-radius: 20px; overflow: hidden;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.08); transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            border: 2px solid transparent; cursor: pointer; position: relative;
-        }
-        .voucher-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(135deg, rgba(102,126,234,0.05) 0%, rgba(118,75,162,0.05) 100%);
-            opacity: 0; transition: opacity 0.4s;
-        }
-        .voucher-card:hover::before { opacity: 1; }
-        .voucher-card:hover { 
-            transform: translateY(-8px) scale(1.02); 
-            box-shadow: 0 16px 40px rgba(0,0,0,0.15); 
-            border-color: #667EEA;
-        }
-        
-        .voucher-header {
-            padding: 24px; background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
-            color: white; position: relative;
-        }
-        .voucher-header.free-shipping {
-            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-        }
-        
-        .voucher-icon {
-            width: 60px; height: 60px; border-radius: 12px; 
-            object-fit: cover; margin-bottom: 16px; background: white;
-        }
-        .voucher-code {
-            font-size: 28px; font-weight: 700; font-family: 'Courier New', monospace;
-            letter-spacing: 2px; margin-bottom: 8px;
-        }
-        .voucher-name {
-            font-size: 16px; opacity: 0.95; font-weight: 500;
-        }
-        
-        .voucher-body { padding: 24px; }
-        .voucher-value {
-            font-size: 32px; font-weight: 700; color: #1F2937; margin-bottom: 12px;
-        }
-        .voucher-description {
-            color: #6B7280; font-size: 14px; line-height: 1.6; margin-bottom: 16px;
-        }
-        
-        .voucher-conditions {
-            background: #F9FAFB; padding: 16px; border-radius: 8px; margin-bottom: 16px;
-        }
-        .condition-item {
-            display: flex; align-items: center; gap: 8px; 
-            font-size: 13px; color: #374151; margin-bottom: 8px;
-        }
-        .condition-item:last-child { margin-bottom: 0; }
-        .condition-icon { font-size: 16px; }
-        
-        .voucher-footer {
-            padding: 0 24px 24px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .usage-info {
-            font-size: 13px; color: #6B7280;
-        }
-        .usage-count {
-            font-weight: 600; color: #3B82F6;
-        }
-        .valid-until {
-            font-size: 12px; color: #6B7280;
-        }
-        
-        .btn-use {
-            padding: 12px 24px; 
-            background: linear-gradient(135deg, #10B981 0%, #059669 100%); 
-            color: white; border-radius: 10px; font-weight: 700; border: none;
-            cursor: pointer; transition: all 0.3s; font-size: 14px;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-            position: relative; overflow: hidden;
-        }
-        .btn-use::before {
-            content: ''; position: absolute; top: 50%; left: 50%;
-            width: 0; height: 0; border-radius: 50%;
-            background: rgba(255,255,255,0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-        .btn-use:hover::before {
-            width: 200px; height: 200px;
-        }
-        .btn-use:hover { 
-            transform: translateY(-3px); 
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.5);
-        }
-        
-        .empty-state {
-            text-align: center; padding: 80px 20px; background: white;
-            border-radius: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-        }
-        .empty-icon { font-size: 64px; margin-bottom: 16px; }
-        
-        .back-btn {
-            display: inline-flex; align-items: center; gap: 8px;
-            color: #6B7280; text-decoration: none; margin-bottom: 20px;
-            font-weight: 500; transition: color 0.3s;
-        }
-        .back-btn:hover { color: #1A1A1A; }
-        
-        .terms-toggle {
-            color: #3B82F6; font-size: 13px; cursor: pointer;
-            text-decoration: underline; margin-top: 8px; display: inline-block;
-        }
-        .terms-content {
-            display: none; margin-top: 12px; padding: 12px;
-            background: #F3F4F6; border-radius: 6px; font-size: 12px;
-            color: #374151; line-height: 1.6;
-        }
-        .terms-content.show { display: block; }
-        
-        @media (max-width: 768px) {
-            .voucher-grid { grid-template-columns: 1fr; }
-            .container { padding: 20px; }
-            .header h1 { font-size: 24px; }
-        }
-    </style>
-</head>
-<body>
-    <div class=\"container\">
-        <a href=\"/member/index.php\" class=\"back-btn\">
-            <span>←</span> Back to Dashboard
-        </a>
-        
-        <div class=\"header\">
-            <h1>🎟️ My Vouchers</h1>
-            <p class=\"subtitle\">Voucher yang tersedia untuk Anda</p>
-            <div class=\"tier-badge tier-<?= strtolower($userTier) ?>\">
-                <?php
-                $tierEmojis = [
-                    'bronze' => '🥉',
-                    'silver' => '🥈',
-                    'gold' => '🥇',
-                    'platinum' => '💎',
-                    'vvip' => '👑'
-                ];
-                echo ($tierEmojis[$userTier] ?? '⭐') . ' ' . strtoupper($userTier) . ' Member';
-                ?>
-            </div>
-        </div>
 
-        <?php if (empty($vouchers)): ?>
-            <div class=\"empty-state\">
-                <div class=\"empty-icon\">🎟️</div>
-                <h3>No Vouchers Available</h3>
-                <p style=\"color: #6B7280; margin-top: 8px;\">Belum ada voucher yang tersedia untuk tier Anda saat ini</p>
+<style>
+    .member-content h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 36px;
+        margin-bottom: 8px;
+    }
+    
+    .page-description {
+        color: #6B7280;
+        margin-bottom: 32px;
+    }
+    
+    .voucher-section {
+        margin-bottom: 48px;
+    }
+    
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 24px;
+        padding-bottom: 16px;
+        border-bottom: 2px solid #E5E7EB;
+    }
+    
+    .section-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 28px;
+        font-weight: 700;
+    }
+    
+    .section-count {
+        background: #667EEA;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+    
+    .voucher-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+        gap: 24px;
+    }
+    
+    .voucher-card {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        border: 2px solid transparent;
+        transition: all 0.3s;
+        position: relative;
+    }
+    
+    .voucher-card:hover {
+        border-color: #667EEA;
+        box-shadow: 0 8px 32px rgba(102, 126, 234, 0.2);
+        transform: translateY(-4px);
+    }
+    
+    .voucher-card.discount {
+        border-left: 4px solid #F59E0B;
+    }
+    
+    .voucher-card.shipping {
+        border-left: 4px solid #10B981;
+    }
+    
+    .voucher-header {
+        padding: 24px;
+        background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+        color: white;
+        position: relative;
+    }
+    
+    .voucher-header.discount-header {
+        background: linear-gradient(135deg, #F59E0B 0%, #EF4444 100%);
+    }
+    
+    .voucher-header.shipping-header {
+        background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    }
+    
+    .voucher-type {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        opacity: 0.9;
+        margin-bottom: 8px;
+    }
+    
+    .voucher-code {
+        font-size: 24px;
+        font-weight: 700;
+        font-family: 'Courier New', monospace;
+        margin-bottom: 8px;
+        letter-spacing: 2px;
+    }
+    
+    .voucher-name {
+        font-size: 16px;
+        opacity: 0.95;
+    }
+    
+    .voucher-body {
+        padding: 24px;
+    }
+    
+    .voucher-value {
+        font-size: 36px;
+        font-weight: 700;
+        color: #667EEA;
+        margin-bottom: 16px;
+    }
+    
+    .voucher-value.discount-value {
+        color: #F59E0B;
+    }
+    
+    .voucher-value.shipping-value {
+        color: #10B981;
+    }
+    
+    .voucher-details {
+        font-size: 14px;
+        color: #6B7280;
+        line-height: 1.6;
+    }
+    
+    .voucher-detail-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+    
+    .voucher-footer {
+        padding: 16px 24px;
+        background: #F9FAFB;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .voucher-expiry {
+        font-size: 12px;
+        color: #6B7280;
+    }
+    
+    .btn-copy {
+        padding: 8px 20px;
+        background: #667EEA;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .btn-copy:hover {
+        background: #5568D3;
+        transform: scale(1.05);
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+        border-radius: 16px;
+        border: 2px dashed #E5E7EB;
+    }
+    
+    .empty-icon {
+        font-size: 64px;
+        margin-bottom: 16px;
+    }
+    
+    @media (max-width: 768px) {
+        .voucher-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="member-layout">
+    <?php include __DIR__ . '/../../includes/member-sidebar.php'; ?>
+    
+    <div class="member-content">
+        <h1>🎫 My Vouchers</h1>
+        <p class="page-description">Save money with exclusive vouchers and deals</p>
+        
+        <!-- Discount Vouchers Section -->
+        <div class="voucher-section">
+            <div class="section-header">
+                <span style="font-size: 32px;">💰</span>
+                <h2 class="section-title">Discount Vouchers</h2>
+                <span class="section-count"><?= count($discountVouchers) ?></span>
             </div>
-        <?php else: ?>
             
-            <?php if (!empty($freeShipping)): ?>
-                <div class=\"section-title\">
-                    <span>🚚</span> Free Shipping Vouchers
-                    <div class=\"section-subtitle\"><?= count($freeShipping) ?> tersedia</div>
+            <?php if (empty($discountVouchers)): ?>
+                <div class="empty-state">
+                    <div class="empty-icon">💸</div>
+                    <h3>No Discount Vouchers Available</h3>
+                    <p style="color: #6B7280; margin-top: 8px;">Check back later for exclusive deals!</p>
                 </div>
-                <div class=\"voucher-grid\">
-                    <?php foreach ($freeShipping as $v): ?>
-                        <div class=\"voucher-card\" onclick=\"copyVoucherCode('<?= htmlspecialchars($v['code']) ?>')\">\n                            <div class=\"voucher-header free-shipping\">
-                                <?php if ($v['image']): ?>
-                                    <img src=\"/uploads/vouchers/<?= htmlspecialchars($v['image']) ?>\" class=\"voucher-icon\" alt=\"Icon\">
-                                <?php endif; ?>
-                                <div class=\"voucher-code\"><?= htmlspecialchars($v['code']) ?></div>
-                                <div class=\"voucher-name\"><?= htmlspecialchars($v['name']) ?></div>
+            <?php else: ?>
+                <div class="voucher-grid">
+                    <?php foreach ($discountVouchers as $voucher): ?>
+                        <div class="voucher-card discount">
+                            <div class="voucher-header discount-header">
+                                <div class="voucher-type">💰 Discount Voucher</div>
+                                <div class="voucher-code"><?= htmlspecialchars($voucher['code']) ?></div>
+                                <div class="voucher-name"><?= htmlspecialchars($voucher['name']) ?></div>
                             </div>
                             
-                            <div class=\"voucher-body\">
-                                <div class=\"voucher-value\">
-                                    FREE SHIPPING
-                                    <?php if ($v['discount_value']): ?>
-                                        <span style=\"font-size: 16px; color: #6B7280;\">(Max: Rp <?= number_format($v['discount_value'], 0, ',', '.') ?>)</span>
-                                    <?php endif; ?>
-                                </div>
-                                
-                                <?php if ($v['description']): ?>
-                                    <div class=\"voucher-description\"><?= nl2br(htmlspecialchars($v['description'])) ?></div>
-                                <?php endif; ?>
-                                
-                                <div class=\"voucher-conditions\">
-                                    <?php if ($v['min_purchase']): ?>
-                                        <div class=\"condition-item\">
-                                            <span class=\"condition-icon\">📦</span>
-                                            Min. belanja <strong>Rp <?= number_format($v['min_purchase'], 0, ',', '.') ?></strong>
-                                        </div>
-                                    <?php endif; ?>
-                                    <div class=\"condition-item\">
-                                        <span class=\"condition-icon\">🔢</span>
-                                        Bisa dipakai <strong><?= $v['max_usage_per_user'] ?>x</strong> (sudah dipakai: <?= $v['usage_count'] ?>x)
-                                    </div>
-                                    <div class=\"condition-item\">
-                                        <span class=\"condition-icon\">📅</span>
-                                        Valid hingga <strong><?= date('d M Y', strtotime($v['valid_until'])) ?></strong>
-                                    </div>
-                                </div>
-                                
-                                <?php if ($v['terms_conditions']): ?>
-                                    <span class=\"terms-toggle\" onclick=\"event.stopPropagation(); toggleTerms(this)\">Lihat S&K</span>
-                                    <div class=\"terms-content\"><?= nl2br(htmlspecialchars($v['terms_conditions'])) ?></div>
-                                <?php endif; ?>
-                            </div>
-                            
-                            <div class=\"voucher-footer\">
-                                <button class=\"btn-use\" onclick=\"event.stopPropagation(); useVoucher('<?= htmlspecialchars($v['code']) ?>')\">
-                                    Gunakan Sekarang
-                                </button>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
-            
-            <?php if (!empty($discount)): ?>
-                <div class=\"section-title\">
-                    <span>💰</span> Discount Vouchers
-                    <div class=\"section-subtitle\"><?= count($discount) ?> tersedia</div>
-                </div>
-                <div class=\"voucher-grid\">
-                    <?php foreach ($discount as $v): ?>
-                        <div class=\"voucher-card\" onclick=\"copyVoucherCode('<?= htmlspecialchars($v['code']) ?>')\">\n                            <div class=\"voucher-header\">
-                                <?php if ($v['image']): ?>
-                                    <img src=\"/uploads/vouchers/<?= htmlspecialchars($v['image']) ?>\" class=\"voucher-icon\" alt=\"Icon\">
-                                <?php endif; ?>
-                                <div class=\"voucher-code\"><?= htmlspecialchars($v['code']) ?></div>
-                                <div class=\"voucher-name\"><?= htmlspecialchars($v['name']) ?></div>
-                            </div>
-                            
-                            <div class=\"voucher-body\">
-                                <div class=\"voucher-value\">
-                                    <?php if ($v['discount_type'] === 'percentage'): ?>
-                                        <?= number_format($v['discount_value'], 0) ?>% OFF
-                                        <?php if ($v['max_discount']): ?>
-                                            <span style=\"font-size: 16px; color: #6B7280;\">(Max: Rp <?= number_format($v['max_discount'], 0, ',', '.') ?>)</span>
-                                        <?php endif; ?>
+                            <div class="voucher-body">
+                                <div class="voucher-value discount-value">
+                                    <?php if ($voucher['discount_type'] === 'percentage'): ?>
+                                        <?= $voucher['discount_value'] ?>% OFF
                                     <?php else: ?>
-                                        Rp <?= number_format($v['discount_value'], 0, ',', '.') ?> OFF
+                                        Rp <?= number_format($voucher['discount_value'], 0, ',', '.') ?> OFF
                                     <?php endif; ?>
                                 </div>
                                 
-                                <?php if ($v['description']): ?>
-                                    <div class=\"voucher-description\"><?= nl2br(htmlspecialchars($v['description'])) ?></div>
-                                <?php endif; ?>
-                                
-                                <div class=\"voucher-conditions\">
-                                    <?php if ($v['min_purchase']): ?>
-                                        <div class=\"condition-item\">
-                                            <span class=\"condition-icon\">📦</span>
-                                            Min. belanja <strong>Rp <?= number_format($v['min_purchase'], 0, ',', '.') ?></strong>
+                                <div class="voucher-details">
+                                    <?php if ($voucher['min_purchase'] > 0): ?>
+                                        <div class="voucher-detail-item">
+                                            <span>📦</span>
+                                            <span>Min. purchase: Rp <?= number_format($voucher['min_purchase'], 0, ',', '.') ?></span>
                                         </div>
                                     <?php endif; ?>
-                                    <div class=\"condition-item\">
-                                        <span class=\"condition-icon\">🔢</span>
-                                        Bisa dipakai <strong><?= $v['max_usage_per_user'] ?>x</strong> (sudah dipakai: <?= $v['usage_count'] ?>x)
-                                    </div>
-                                    <div class=\"condition-item\">
-                                        <span class=\"condition-icon\">📅</span>
-                                        Valid hingga <strong><?= date('d M Y', strtotime($v['valid_until'])) ?></strong>
-                                    </div>
+                                    
+                                    <?php if ($voucher['max_discount'] > 0): ?>
+                                        <div class="voucher-detail-item">
+                                            <span>🔝</span>
+                                            <span>Max. discount: Rp <?= number_format($voucher['max_discount'], 0, ',', '.') ?></span>
+                                        </div>
+                                    <?php endif; ?>
+                                    
+                                    <?php if ($voucher['usage_limit_per_user']): ?>
+                                        <div class="voucher-detail-item">
+                                            <span>🎯</span>
+                                            <span>Used: <?= $voucher['usage_count'] ?> / <?= $voucher['usage_limit_per_user'] ?></span>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
-                                
-                                <?php if ($v['terms_conditions']): ?>
-                                    <span class=\"terms-toggle\" onclick=\"event.stopPropagation(); toggleTerms(this)\">Lihat S&K</span>
-                                    <div class=\"terms-content\"><?= nl2br(htmlspecialchars($v['terms_conditions'])) ?></div>
-                                <?php endif; ?>
                             </div>
                             
-                            <div class=\"voucher-footer\">
-                                <button class=\"btn-use\" onclick=\"event.stopPropagation(); useVoucher('<?= htmlspecialchars($v['code']) ?>')\">
-                                    Gunakan Sekarang
+                            <div class="voucher-footer">
+                                <div class="voucher-expiry">
+                                    ⏰ Valid until <?= date('d M Y', strtotime($voucher['valid_until'])) ?>
+                                </div>
+                                <button onclick="copyCode('<?= $voucher['code'] ?>')" class="btn-copy">
+                                    📋 Copy
                                 </button>
                             </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
+        </div>
+        
+        <!-- Free Shipping Vouchers Section -->
+        <div class="voucher-section">
+            <div class="section-header">
+                <span style="font-size: 32px;">🚚</span>
+                <h2 class="section-title">Free Shipping Vouchers</h2>
+                <span class="section-count" style="background: #10B981;"><?= count($shippingVouchers) ?></span>
+            </div>
             
-        <?php endif; ?>
+            <?php if (empty($shippingVouchers)): ?>
+                <div class="empty-state">
+                    <div class="empty-icon">📦</div>
+                    <h3>No Shipping Vouchers Available</h3>
+                    <p style="color: #6B7280; margin-top: 8px;">Free shipping vouchers will appear here when available</p>
+                </div>
+            <?php else: ?>
+                <div class="voucher-grid">
+                    <?php foreach ($shippingVouchers as $voucher): ?>
+                        <div class="voucher-card shipping">
+                            <div class="voucher-header shipping-header">
+                                <div class="voucher-type">🚚 Free Shipping</div>
+                                <div class="voucher-code"><?= htmlspecialchars($voucher['code']) ?></div>
+                                <div class="voucher-name"><?= htmlspecialchars($voucher['name']) ?></div>
+                            </div>
+                            
+                            <div class="voucher-body">
+                                <div class="voucher-value shipping-value">
+                                    FREE SHIPPING
+                                </div>
+                                
+                                <div class="voucher-details">
+                                    <?php if ($voucher['min_purchase'] > 0): ?>
+                                        <div class="voucher-detail-item">
+                                            <span>📦</span>
+                                            <span>Min. purchase: Rp <?= number_format($voucher['min_purchase'], 0, ',', '.') ?></span>
+                                        </div>
+                                    <?php endif; ?>
+                                    
+                                    <?php if ($voucher['max_discount'] > 0): ?>
+                                        <div class="voucher-detail-item">
+                                            <span>🔝</span>
+                                            <span>Max. shipping cost: Rp <?= number_format($voucher['max_discount'], 0, ',', '.') ?></span>
+                                        </div>
+                                    <?php endif; ?>
+                                    
+                                    <?php if ($voucher['usage_limit_per_user']): ?>
+                                        <div class="voucher-detail-item">
+                                            <span>🎯</span>
+                                            <span>Used: <?= $voucher['usage_count'] ?> / <?= $voucher['usage_limit_per_user'] ?></span>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            
+                            <div class="voucher-footer">
+                                <div class="voucher-expiry">
+                                    ⏰ Valid until <?= date('d M Y', strtotime($voucher['valid_until'])) ?>
+                                </div>
+                                <button onclick="copyCode('<?= $voucher['code'] ?>')" class="btn-copy" style="background: #10B981;">
+                                    📋 Copy
+                                </button>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </div>
     </div>
+</div>
 
-    <script>
-    function toggleTerms(element) {
-        const content = element.nextElementSibling;
-        content.classList.toggle('show');
-        element.textContent = content.classList.contains('show') ? 'Sembunyikan S&K' : 'Lihat S&K';
-    }
+<script>
+function copyCode(code) {
+    navigator.clipboard.writeText(code).then(() => {
+        alert('✅ Voucher code "' + code + '" copied to clipboard!');
+    }).catch(err => {
+        alert('❌ Failed to copy: ' + err);
+    });
+}
+</script>
 
-    function copyVoucherCode(code) {
-        navigator.clipboard.writeText(code).then(() => {
-            alert('✅ Kode voucher \"' + code + '\" berhasil disalin!\\nPaste di checkout untuk menggunakan.');
-        });
-    }
-
-    function useVoucher(code) {
-        // Redirect to shop or save voucher code to session
-        sessionStorage.setItem('pending_voucher', code);
-        alert('Voucher \"' + code + '\" siap digunakan!\\nLanjut ke checkout untuk apply voucher.');
-        window.location.href = '/shop.php';
-    }
-    </script>
-</body>
-</html>
+<?php include __DIR__ . '/../../includes/footer.php'; ?>
